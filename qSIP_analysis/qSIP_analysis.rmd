@@ -1,0 +1,108 @@
+---
+title: "qSIP_analysis"
+author: "Pranav_Sampara"
+date: "02/07/2020"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = FALSE, warning = FALSE)
+```
+
+# Introduction
+qSIP analysis using sequins, MAG coverage, and MAG taxonomy is performed using this R markdown. Briefly, a phyloseq object is created from MAG coverages and taxonomy (GTDB taxonomy output format is required) data.
+Sequins that were spiked in the DNA-SIP fractions will be used in scaling and creating linear regression models for evaluating absolute MAG concentrations.
+This R markdown primarily uses Tidyverse, phyoseq, and HTSSIP packages
+This markdown uses functions from functions_qSIP_MAGs.R
+```{r}
+#Load required libraries
+library(tidyverse)
+library(phyloseq)
+library(HTSSIP)
+library(readxl)
+library(data.table)
+library(ggpubr)
+```
+
+# Load required data 
+
+The following files are required:
+- A fractions file with data regarding 
+    - Buoyant density of each fraction
+    - Isotope
+    - DNA concentration
+    - Replicate number
+    
+- A taxonomy file in the GTDB output format. Load the bacteria and archaea taxonomy outputs separately
+
+- Coverages of MAGs from each fraction of every replicate in the analysis
+
+- GC content of the MAGs
+```{r}
+## Load data
+#Taxonomy
+gtdbtk_bac_summary = read_delim("gtdbtk.bac120.summary.tsv", 
+                                 "\t", escape_double = FALSE, trim_ws = TRUE)
+gtdbtk_archaea = read_delim("gtdbtk_archaea.tsv", 
+                             "\t", escape_double = FALSE, trim_ws = TRUE)
+#GC content
+GC_content = read_delim("GC_content.tsv", 
+                         "\t", escape_double = FALSE, trim_ws = TRUE)
+#Fractions
+fractions_ps = read_csv("fractions_ps.csv")
+```
+
+# Working in a local environment
+
+Create a local environment to load edited HTSSIP functions. The local environment helps in moving between edited HTSSIP functions. and the original HTSSIP package. Please see source file ("functions_qSIP_MAGs.R") for more information on the edited functions
+
+```{r, echo  = FALSE}
+env = new.env()
+environment()
+source("functions_qSIP_MAGs.R", local = env)
+```
+
+#qSIP analysis
+
+Create required phyloseq objects 
+
+```{r}
+taxonomy_ps = rbind(gtdbtk_bac_summary, gtdbtk_archaea) #Combine bacteria and archaea taxonomy files if necessary
+taxonomy.object = env$tax.table(taxonomy_ps) # Create a taxonomy phyloseq object
+samples.object = env$sample.table(fractions_ps) # Create a samples phyloseq object
+phylo.qSIP = env$phylo.table(env$mag.table, taxonomy.object, samples.object) # Make a phyloseq table for downstream qSIP analysis
+```
+
+Calculate atom fraction excess. By bootstrapping confidence intervals, determine incorporators
+
+```{r}
+atomX = env$qSIP_atom_excess(phylo.qSIP,
+                               control_expr='Isotope=="12C"',
+                               treatment_rep='Replicate',
+                               Gi = GC_content)
+#Bootstrap confidence intervals
+df_atomX_boot = qSIP_bootstrap(atomX, n_boot=100)
+df_atomX_boot %>% head
+CI_threshold = 0
+df_atomX_boot = df_atomX_boot %>%
+  mutate(Incorporator = A_CI_low > CI_threshold,
+         OTU = reorder(OTU, -A))
+#Get incorporator info
+n_incorp = df_atomX_boot %>%
+  filter(Incorporator == TRUE) %>%
+  nrow 
+cat('Number of incorporators:', n_incorp, '\n')
+```
+
+Plot the atom fraction excess plot
+
+```{r}
+(atom_f_excess_plot = ggplot(df_atomX_boot, aes(OTU, A, ymin=A_CI_low, ymax=A_CI_high, color=Incorporator)) +
+  geom_pointrange(size=0.25) +
+  geom_linerange() +
+  geom_hline(yintercept=0, linetype='dashed', alpha=0.5) +
+  labs(x='MAGs', y='Atom fraction excess') +
+  theme_bw() +
+  coord_flip() +
+  ggtitle("Isotope incorporating MAGs"))
+```
