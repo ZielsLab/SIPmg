@@ -2,7 +2,9 @@ library(tidyverse)
 library(ggpubr)
 
 # Sequin global scaling function
+
 scale_features <- function(f_tibble, sequin_meta, seq_dilution, log_trans){
+  
   # DESCRIPTION: scale_features calculates global scaling factors for features (contigs or bins),
   # based on linear regression of sequin coverage. Options include log-transformations of 
   # coverage, as well as filtering features based on limit of detection. This function must be called
@@ -34,12 +36,11 @@ scale_features <- function(f_tibble, sequin_meta, seq_dilution, log_trans){
   #   scale_fac -     a master tibble with all of the intermediate values in above calculations
   
 
-
   # Retrieve sample names from feature tibble
     scale_fac <- tibble(Sample = names(f_tibble)) %>% filter(!grepl("Feature", Sample))
   
-  # Determine groups of spike-in concentrations 
-    seq_group <- sequin_meta %>% group_by(Concentration) %>% tally(name="standards")
+  # Merge dilution factors for samples, add log-scaling option
+    scale_fac <- scale_fac %>% inner_join(seq_dilution, by = "Sample") %>% mutate(log_scale = log_trans)
     
   # Make coverage table for features
     scale_fac <- scale_fac %>% 
@@ -54,6 +55,16 @@ scale_features <- function(f_tibble, sequin_meta, seq_dilution, log_trans){
         mag_cov = map(cov_tab, ~ anti_join(., sequins, by = "Feature"))
       )  %>%
       
+      # scale sequin concentrations based on dilution factors
+      mutate(
+        seq_cov = map2(seq_cov, Dilution, ~ mutate(.x, Concentration = Concentration / .y))
+      ) %>%
+    
+      # Determine groups of spike-in concentrations 
+      mutate(
+      seq_group = map(seq_cov, ~.x %>% group_by(Concentration) %>% tally(name="standards"))
+      ) %>%
+      
       # determine limit of detection of spike-ins, based on presence of 5 sequins per conc. 
       mutate(
         #determine lowest concentration where at least 1 sequins is detected 
@@ -61,8 +72,8 @@ scale_features <- function(f_tibble, sequin_meta, seq_dilution, log_trans){
                         tally(name="detected") %>% summarise(Min = min(Concentration)) %>% pull(Min)),
         
         #create tibble comparing number of observed and theoretical spike ins
-        seq_det = map(seq_cov, ~ filter(., Coverage > 0) %>% group_by(., Concentration) %>% 
-                        tally(name="detected") %>% inner_join(seq_group, by = "Concentration")), 
+        seq_det = map2(seq_cov, seq_group, ~ filter(., Coverage > 0) %>% group_by(., Concentration) %>% 
+                        tally(name="detected") %>% inner_join(.y, by = "Concentration")), 
         
         # determine difference between standards and observed spike ins
         seq_det = map(seq_det, ~ mutate(., diff = standards - detected)),
@@ -71,14 +82,20 @@ scale_features <- function(f_tibble, sequin_meta, seq_dilution, log_trans){
       
       # perform linear regression on coverage vs conc., extract lm params, make plots
       mutate(
-        seq_cov_filt = map(seq_cov, ~ filter(., Coverage > 0)), #remove zero coverage values
-        fit = map(seq_cov_filt, ~ lm(log10(Concentration) ~ log10(Coverage) , data = .)),
-        slope = map_dbl(fit, ~summary(.)$coef[2]), 
-        intercept = map_dbl(fit, ~summary(.)$coef[1])) %>%
+        seq_cov_filt = map(seq_cov, ~ filter(., Coverage > 0)), #remove zero coverage values before lm
+                            
+        fit = ifelse(log_scale == "TRUE" , # check log_trans input
+                      map(seq_cov_filt, ~ lm(log10(Concentration) ~ log10(Coverage) , data = .)), #log lm if true
+                      map(seq_cov_filt, ~ lm((Concentration) ~ (Coverage) , data = .)) # lm if false
+                      ), 
+        slope = map_dbl(fit, ~summary(.)$coef[2]), # get slope
+        intercept = map_dbl(fit, ~summary(.)$coef[1]) # get intercept
+        ) %>%
       
       #plot linear regressions
       mutate(
-        plots = map(seq_cov_filt, 
+        plots = ifelse(log_scale == "TRUE" , # check log_trans input
+                       map(seq_cov_filt, # log-scaled plot if true
                          ~ ggplot(data=. , aes(x=log10(Coverage), y= log10(Concentration))) + 
                            geom_point() + 
                            geom_smooth(method = "lm") + 
@@ -86,22 +103,40 @@ scale_features <- function(f_tibble, sequin_meta, seq_dilution, log_trans){
                            stat_cor(aes(label = paste(..rr.label.., ..p.label.., sep = "~`,`~")), label.x = -0.1, label.y = 3.5) + 
                            xlab("Coverage (log[read depth])") + 
                            ylab("DNA Concentration (log[attamoles/uL])") + 
-                           theme_bw()
-                         )) %>%
+                           theme_bw() 
+                            ),
+                         map(seq_cov_filt, # non-scaled plot if true
+                             ~ ggplot(data=. , aes(x=Coverage, y= Concentration)) + 
+                               geom_point() + 
+                               geom_smooth(method = "lm") + 
+                               stat_regline_equation(label.x= 0, label.y = 1000) + 
+                               stat_cor(aes(label = paste(..rr.label.., ..p.label.., sep = "~`,`~")), label.x = 0, label.y = 1500) + 
+                               xlab("Coverage (read depth)") + 
+                               ylab("DNA Concentration (attamoles/uL)") + 
+                               theme_bw()
+                             )
+                         )
+        ) %>%
       
       #flag MAGs below LOD, and scale MAGs by slope and intercept 
       mutate(
         # Scale MAGs based on linear regression
-        mag_ab = map2(mag_cov, slope, ~ mutate(.x, Coverage = log10(Coverage) * .y)), # y = mx (in log scale)
-        mag_ab = map2(mag_ab, intercept, ~ mutate(.x, Coverage = Coverage + .y)), # +b
-        mag_ab = map(mag_ab, ~ mutate(.x, Coverage = 10^Coverage)), #convert back from log10
-        mag_ab = map2(mag_ab, Sample, ~ setnames(.x, 'Coverage', .y)), #put sample name in MAG table
+        mag_ab = ifelse(log_scale == "TRUE" , # check log_trans input
+                        map2(mag_cov, slope, ~ mutate(.x, Concentration = log10(Coverage) * .y)), # y = mx (in log scale) if true
+                        map2(mag_cov, slope, ~ mutate(.x, Concentration = Coverage * .y)) # y = mx if false
+        ),
+        mag_ab = map2(mag_ab, intercept, ~ mutate(.x, Concentration = Concentration + .y)), # +b
+        mag_ab = ifelse(log_scale == "TRUE" , # check log_trans input
+                        map(mag_ab, ~ mutate(.x, Concentration = 10^Concentration)), #convert back from log10 if true
+                        mag_ab), # no change if false
+        mag_ab = map(mag_ab, ~ select(., Feature, Concentration)), # drop Coverage column
+        mag_ab = map2(mag_ab, Sample, ~ setnames(.x, 'Concentration', .y)), #put sample name in MAG table
         
         # Remove MAGs below LOD
         mag_det = mag_ab,
-        mag_det = map2(mag_det, Sample, ~ setnames(.x, .y, 'Coverage')), #get sample name out of header for filter
-        mag_det = map2(mag_det, lod, ~ filter(.x, Coverage > .y)),
-        mag_det = map2(mag_det, Sample, ~ setnames(.x, 'Coverage', .y)) #change header back to sample
+        mag_det = map2(mag_det, Sample, ~ setnames(.x, .y, 'Concentration')), #get sample name out of header for filter
+        mag_det = map2(mag_det, lod, ~ filter(.x, Concentration > .y)),
+        mag_det = map2(mag_det, Sample, ~ setnames(.x, 'Concentration', .y)) #change header back to sample
         )
     
     # compile feature abundance across samples
@@ -120,15 +155,22 @@ scale_features <- function(f_tibble, sequin_meta, seq_dilution, log_trans){
     rownames(mag_det) <- mag_dnames
     
     # make list of results
-    results <- list("mag_tab" = mag_tab, "mag_det" = mag_det, "plots" = plots, "scale_fac" = scale_fac)
+    results <- list("mag_tab" = mag_tab, 
+                    "mag_det" = mag_det, 
+                    "plots" = plots, 
+                    "scale_fac" = scale_fac)
     
     # return results
     return(results)
 
 }
 
+### Example usage #### 
+
 f_tibble <- read_csv(file="mock_import/pool_bin_stat_w_seqins.csv")
 sequins <- read_csv(file="mock_import/sequins_metadata.csv")
+seq_dil <- tibble( Sample = c("S1", "S2", "S3", "S4"), Dilution = c(0.01, 0.01, 0.05, 0.05)) 
+log_scale <- "TRUE"
 
-mag_tab_scaled <- scale_features(f_tibble, sequins)
+mag_tab_scaled <- scale_features(f_tibble, sequins, seq_dil, log_scale)
 
