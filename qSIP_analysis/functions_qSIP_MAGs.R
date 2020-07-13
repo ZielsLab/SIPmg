@@ -3,101 +3,72 @@ library(phyloseq)
 library(HTSSIP)
 
 ### ----------------------------------------------------------------------- 
-# These functions help in making a phyloseq object from the obtained
-# sample taxonomy, fraction buoyant density, and coverage values
+#' These functions help in making a phyloseq object from the obtained
+#' sample taxonomy, fraction buoyant density, and coverage values. 
+#' The scaling functions to obtain absolute concentration of MAGs from 
+#' coverage values using coverage and concentration metadata of sequins 
+#' should be used before sourcing these set of functions
 ### -----------------------------------------------------------------------
 
-### Load sequin table and coverage data
-### Scale coverages and sequins to create linear regression models
-### Finally output a MAG table for input into phyloseq
-
-#Load sequin data
-sequins = read_excel("sequins_for_SIPsim.xlsx", 
-                      col_types = c("text", "numeric", "numeric", 
-                                    "text", "numeric")) # read in sequin concentrations
-
-scale_fac = tibble(
-  filenames = list.files(pattern="checkm_coverage+.*tsv")) %>% #list of coverage filenames
-  mutate(cov_tab = map(filenames, ~read_delim(., "\t", escape_double = FALSE, trim_ws = TRUE))) %>% #read coverage tables
-  mutate(cov_tab = map(cov_tab, ~rename(., Sequence_Id = `Sequence Id`)))  #get rid of spaces in header
-
-scale_fac = scale_fac %>% 
-  mutate(
-    isotope = sapply(strsplit(filenames, "_"), `[`, 3),  #extract isotope info
-    rep = sapply(strsplit(filenames, "_"), `[`, 4), #exrtract replicates
-    fraction = sapply(strsplit(filenames, "_"), `[`, 5), #extract fraction
-    fraction = sapply(strsplit(fraction, ".t"), `[`, 1),
-    Sample = paste0(isotope, "_", rep, "_", fraction) #make sample names 
-  ) %>% 
-  ## merge sequins with coverage tables
-  mutate( 
-    seq_cov = map(cov_tab, ~ select(., Sequence_Id, Coverage)),  #select sequin coverages
-    seq_cov = map(seq_cov, ~ inner_join(., sequins, by = c("Sequence_Id" = "Sequin_ID"))), 
-    mag_cov = map(cov_tab, ~ select(., Sequence_Id, Coverage)), #select sequin coverages
-    mag_cov = map(mag_cov, ~ anti_join(., sequins, by = c("Sequence_Id" = "Sequin_ID")))
-  )  %>%
-  #perform linear regression on coverage vs conc., extract params, make plots
-  mutate(
-    seq_cov = map(seq_cov, ~ filter(., Coverage > 0)), #remove zero coverage values
-    fit = map(seq_cov, ~ lm(log10(`Mix_A (attamoles/uL)`) ~ log10(Coverage) , data = .)),
-    slope = map_dbl(fit, ~summary(.)$coef[2]), 
-    intercept = map_dbl(fit, ~summary(.)$coef[1])) %>%
-  #plot linear regressions
-  mutate(
-    plots = map(seq_cov, 
-                ~ ggplot(data=. , aes(x=log10(Coverage), y= log10(Mix_A))) + 
-                  geom_point() + 
-                  geom_smooth(method = "lm") + 
-                  stat_regline_equation(label.x= 0.5, label.y = 3) + 
-                  stat_cor(aes(label = paste(..rr.label.., ..p.label.., sep = "~`,`~")), label.x = 0.5, label.y = 3.5) + 
-                  xlab("Coverage (log[read depth])") + 
-                  ylab("DNA Concentration (log[attamoles/uL])") + 
-                  theme_bw()
-    )) %>%
-  #scale MAGs by slope and intercept 
-  mutate(
-    mag_ab = map2(mag_cov, slope, ~ mutate(.x, Coverage = log10(Coverage) * .y)), # y = mx (in log scale)
-    mag_ab = map2(mag_ab, intercept, ~ mutate(.x, Coverage = Coverage + .y)), # +b
-    mag_ab = map(mag_ab, ~ mutate(.x, Coverage = 10^Coverage)), #convert back from log10
-    mag_ab = map2(mag_ab, Sample, ~ setnames(.x, 'Coverage', .y)) #put sample name in MAG table
-  )
-mag_tab = scale_fac$mag_ab %>% 
-  reduce(left_join, by="Sequence_Id") %>%
-  column_to_rownames(var = "Sequence_Id")
-mag_tab = as.matrix(mag_tab) #Input for phyloseq OTU table
-mag.table = otu_table(mag_tab, taxa_are_rows = TRUE) #Phyloseq OTU table
-
 #### Making a phyloseq sample object ####
-sample.table = function(fractions_df) {
-  fractions_df = as_tibble(fractions_df)
-  fractions_df_1 = fractions_df %>%
-    mutate(IS_CONTROL = str_detect(Isotope, pattern = "12C"))
-  fractions_df_name = vector("character", nrow(fractions_df_1))
-  fractions_df_name = colnames(mag_tab)
-  rownames(fractions_df_1) = fractions_df_name
-  fractions_df.ps = phyloseq::sample_data(fractions_df_1)
+#'In the following section, a phyloseq sample table
+#'wil be generated
+#'
+#'Input - Fractions metadata file
+#'
+#'Description: fractions metadata containing data on fraction number, replicate,
+#'buoyant density calculated from a refractometer, type of isotope ("12C", "13C", "14N", "15N" etc.),
+#'and DNA concentration of each fraction
+#'
+#'Output - phyloseq-style sample table
+#'
+#'Description: The output will be used to generate the phyloseq master
+#'dataset, which will be further used in evaluating atom fraction excess
+
+sample.table = function(fractions_df) { 
+  fractions_df = as_tibble(fractions_df) #Ensure loaded file is in tibble format
+  fractions_df_1 = fractions_df %>% # Create two columns in the tibble. 
+                                    # One being a logical vector identifying control and heavy isotope
+                                    # The other a sample name identifying each fraction and replicate 
+    mutate(IS_CONTROL = str_detect(Isotope, pattern = "12C"),
+           Sample_name = str_c(Isotope,"rep",Replicate,"fraction",Fraction, sep = "_")) %>%
+    column_to_rownames(var = "Sample_name") # Make sample names as row names
+  fractions_df.ps = phyloseq::sample_data(fractions_df_1) #Create the phyloseq-styled sample object
   return(fractions_df.ps)
 }
 
 #### Make a phyloseq taxa table from GTDB taxonomy input ####
-#Input a concantenated taxa table for bacteria and archaea
+#'In the following section, a MAG table, similar to OTU table in phyloseq
+#'wil be generated
+#'
+#'Input - Concantenated taxa table for bacteria and archaea
+#'
+#'Description: Loads taxonomy of both bacteria and archaea. In the markdown,
+#'individual taxonomy files of archaea and bacteria are concatenated.
+#'
+#'Output - phyloseq-style taxonomy table, but for MAGs
+#'
+#'Description: The output will be used to generate the phyloseq master
+#'dataset, which will be further used in evaluating atom fraction excess
+
 tax.table = function(taxonomy) {
-  classification = select(taxonomy, classification)
-  empties = c("p__", "c__", "o__", "f__", "g__", "s__")
-  taxonomy_list = vector("character", nrow(taxonomy))
+  classification = select(taxonomy, classification) # Get rid of everything except taxonomy
+  empties = c("p__", "c__", "o__", "f__", "g__", "s__") #Create a list of prefixes for taxonomic classes to later extract them
+  taxonomy_list = vector("character", nrow(taxonomy)) #Create an empty vector to run a for loop to extract taxonomy
   for(tax in seq_along(taxonomy_list)) {
     taxonomy_list[[tax]] = unlist(strsplit(taxonomy$classification[[tax]], ";")) %>%
       setdiff(., empties) %>%
       tail(., n = 1)
   }
-  taxonomy = taxonomy %>%
-    mutate(taxa = taxonomy_list) %>%
+  taxonomy = taxonomy %>% #Using the loaded file for taxonomy, obtain just the Bin and taxonomic classification
+                          # Later make the bins as row names to convert the object to a phyloseq-style taxonomy object
+    mutate(taxa = taxonomy_list) %>% 
     select(user_genome, taxa) %>%
     column_to_rownames(var = "user_genome")
-  taxonomy = as.matrix(taxonomy)
+  taxonomy = as.matrix(taxonomy) # Ensure the object is a matrix
   tax.table = phyloseq::tax_table(taxonomy)
 }
-
+#Make a master phyloseq object using the above outputs
 phylo.table = function(mag,taxa,samples) {
   phyloseq::phyloseq(mag, taxa, samples)
 }
@@ -129,7 +100,7 @@ phylo.table = function(mag,taxa,samples) {
 #' @param Gi  The G+C content of unlabeled DNA
 #' @return numeric value: maximum molecular weight of fully-labeled DNA
 #'
-calc_Mheavymax = function(Mlight, isotope='13C', Gi=NA){
+calc_Mheavymax = function(Mlight, isotope='13C', Gi=Gi){
   isotope = toupper(isotope)
   if(isotope=='13C'){
     Mhm = -0.4987282 * Gi + 9.974564 + Mlight
@@ -389,3 +360,4 @@ qSIP_bootstrap = function(atomX, isotope='13C', n_sample=c(3,3),
   df_boot = dplyr::inner_join(atomX$A, df_boot, c('OTU'='OTU'))
   return(df_boot)
 }
+

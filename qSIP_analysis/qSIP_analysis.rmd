@@ -41,15 +41,15 @@ The following files are required:
 ```{r}
 ## Load data
 #Taxonomy
-gtdbtk_bac_summary = read_delim("gtdbtk.bac120.summary.tsv", 
+gtdbtk_bac_summary = read_delim("mock_import/gtdbtk.bac120.summary.tsv", 
                                  "\t", escape_double = FALSE, trim_ws = TRUE)
-gtdbtk_archaea = read_delim("gtdbtk_archaea.tsv", 
+gtdbtk_archaea = read_delim("mock_import/gtdbtk_archaea.tsv", 
                              "\t", escape_double = FALSE, trim_ws = TRUE)
 #GC content
-GC_content = read_delim("GC_content.tsv", 
+GC_content = read_delim("mock_import/GC_content.tsv", 
                          "\t", escape_double = FALSE, trim_ws = TRUE)
 #Fractions
-fractions_ps = read_csv("fractions_ps.csv")
+fractions_ps = read_csv("mock_import/fractions_ps.csv")
 ```
 
 # Working in a local environment
@@ -68,6 +68,10 @@ Create required phyloseq objects
 
 ```{r}
 taxonomy_ps = rbind(gtdbtk_bac_summary, gtdbtk_archaea) #Combine bacteria and archaea taxonomy files if necessary
+#mag_tab is a tibble with absolute concentrations of MAGs obtained by scaling MAG coverages using linear regression models on sequin coverages and concentration
+mag_tab = as.matrix(mag_tab) #Ensuring input for phyloseq OTU table is in a matrix format
+mag.table = phyloseq::otu_table(mag_tab, taxa_are_rows = TRUE) #Phyloseq OTU table
+
 taxonomy.object = env$tax.table(taxonomy_ps) # Create a taxonomy phyloseq object
 samples.object = env$sample.table(fractions_ps) # Create a samples phyloseq object
 phylo.qSIP = env$phylo.table(env$mag.table, taxonomy.object, samples.object) # Make a phyloseq table for downstream qSIP analysis
