@@ -130,30 +130,26 @@ scale_features <- function(f_tibble, sequin_meta, seq_dilution, log_trans){
                         map(mag_ab, ~ mutate(.x, Concentration = 10^Concentration)), #convert back from log10 if true
                         mag_ab), # no change if false
         mag_ab = map(mag_ab, ~ select(., Feature, Concentration)), # drop Coverage column
-        mag_ab = map2(mag_ab, Sample, ~ setnames(.x, 'Concentration', .y)), #put sample name in MAG table
+        mag_ab = map2(mag_ab, Sample, ~ setNames(.x, c("Feature", .y))) , #put sample name in MAG table
         
         # Remove MAGs below LOD
         mag_det = mag_ab,
-        mag_det = map2(mag_det, Sample, ~ setnames(.x, .y, 'Concentration')), #get sample name out of header for filter
+        mag_det = map2(mag_det, Sample, ~ setNames(.x, c("Feature", 'Concentration'))), #get sample name out of header for filter
         mag_det = map2(mag_det, lod, ~ filter(.x, Concentration > .y)),
-        mag_det = map2(mag_det, Sample, ~ setnames(.x, 'Concentration', .y)) #change header back to sample
+        mag_det = map2(mag_det, Sample, ~ setNames(.x, c("Feature", .y))) #change header back to sample
         )
     
     # compile feature abundance across samples
     mag_tab <- scale_fac$mag_ab %>% reduce(left_join, by="Feature")
-    mag_names <- mag_tab[[1]]
-    mag_tab <- data.matrix(mag_tab[,-1])
-    rownames(mag_tab) <- mag_names
+    mag_tab <- data.matrix(column_to_rownames(mag_tab, "Feature"))
     
     # extract plots
     plots <- scale_fac %>% select(Sample, plots)
     
     # extract feature detection 
     mag_det <- scale_fac$mag_det %>% reduce(left_join, by="Feature")
-    mag_dnames <- mag_det[[1]]
-    mag_det <- data.matrix(mag_det[,-1])
-    rownames(mag_det) <- mag_dnames
-    
+    mag_det <- data.matrix(column_to_rownames(mag_det, "Feature"))
+
     # make list of results
     results <- list("mag_tab" = mag_tab, 
                     "mag_det" = mag_det, 
@@ -169,7 +165,7 @@ scale_features <- function(f_tibble, sequin_meta, seq_dilution, log_trans){
 
 f_tibble <- read_csv(file="mock_import/pool_bin_stat_w_seqins.csv")
 sequins <- read_csv(file="mock_import/sequins_metadata.csv")
-seq_dil <- tibble( Sample = c("S1", "S2", "S3", "S4"), Dilution = c(0.01, 0.01, 0.05, 0.05)) 
+seq_dilution <- tibble( Sample = c("S1", "S2", "S3", "S4"), Dilution = c(0.01, 0.01, 0.05, 0.05)) 
 log_scale <- "TRUE"
 
 mag_tab_scaled <- scale_features(f_tibble, sequins, seq_dil, log_scale)
