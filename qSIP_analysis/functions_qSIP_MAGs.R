@@ -38,7 +38,7 @@ library(HTSSIP)
 #' GC content of the MAGs (Object Gi). The table should contain the following columns:
 #' - OTU: MAG identifier such as the `Feature` label from the sequin_scaling.R script
 #' - GC_content: GC content of the `Feature` in the range of 0-1
-
+### -----------------------------------------------------------------------
 #### Making a phyloseq sample object ####
 #'In the following section, a phyloseq sample table
 #'wil be generated
