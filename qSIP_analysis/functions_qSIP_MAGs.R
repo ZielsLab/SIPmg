@@ -9,23 +9,53 @@ library(HTSSIP)
 #' coverage values using coverage and concentration metadata of sequins 
 #' should be used before sourcing these set of functions
 ### -----------------------------------------------------------------------
+### -----------------------------------------------------------------------
+#'Input files required for the functions file to run:
+#'
+#'#Fractions metadata
+#' A fractions file with the following columns
+#' - Replicate: Depends on how many replicates the study has
+#' - Fractions: Typically in the range of 1-24
+#' - Buoyant_density: As calculated from the refractometer for each fraction and replicate
+#' - Isotope: "12C", "13C", "14N", "15N" etc.
+#' - DNA_concentration
+#' - Sample: In the format "'isotope'_rep_#_fraction_#". 
+#'   For instance, "12C_rep_1_fraction_1"
+#'
+#'#MAG absolute concentrations
+#' MAG absolute concentrations obtained from "scaling_sequins.R". 
+#'  "mag_tab" object obtained from the above script is to be used as the input here.
+#'  mag_tab can be obtained in the following way:
+#'  Consider "scaled_output" is the result of the function "scale_features()" from "scaling_sequins.R"
+#'  Example: scaled_output <- scale_features(f_tibble, sequins, seq_dil, log_scale)
+#'  mag_tab <- scaled_output$mag_tab
+#'
+#' #GTDB style taxonomy data
+#' A taxonomy file in the GTDB output format. Load the bacteria and archaea taxonomy outputs separately. 
+#' The markdown requires loading the standard output files from GTDB-Tk separately for bacteria and archaea  
+#' 
+#'  #GC content
+#' GC content of the MAGs (Object Gi). The table should contain the following columns:
+#' - OTU: MAG identifier such as the `Feature` label from the sequin_scaling.R script
+#' - GC_content: GC content of the `Feature` in the range of 0-1
 
 #### Making a phyloseq sample object ####
 #'In the following section, a phyloseq sample table
 #'wil be generated
 #'
-#'Input - Fractions metadata file
+#'Input - Fractions metadata
 #'
 #'Description: fractions metadata containing data on fraction number, replicate,
 #'buoyant density calculated from a refractometer, type of isotope,
 #'and DNA concentration of each fraction
 #'The following columns are required in the metadata file
-#'Fraction number - Typically in the range of 1-24
-#'Replicate number - Depends on how many replicates the study has
-#'Buoyant density - As calculated from the refractometer for each fraction and replicate
-#'Type of isotope - "12C", "13C", "14N", "15N" etc.
-#'DNA concentration of each fraction of each replicate
-#'Sample name - In the format "'isotope'_rep_#_fraction_#". For instance 12C_rep_1_fraction_1
+#' A fractions file with the following columns
+#' - Replicate: Depends on how many replicates the study has
+#' - Fractions: Typically in the range of 1-24
+#' - Buoyant_density: As calculated from the refractometer for each fraction and replicate
+#' - Isotope - "12C", "13C", "14N", "15N" etc.
+#' - DNA_concentration
+#' - Sample - In the format "'isotope'_rep_#_fraction_#". For instance 12C_rep_1_fraction_1
 #'
 #'Output - phyloseq-style sample table
 #'

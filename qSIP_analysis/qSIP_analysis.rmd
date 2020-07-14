@@ -66,7 +66,7 @@ The following files are required:
 
 #GC content
 - GC content of the MAGs. The table should contain the following columns
-    - MAG: MAG identifier such as the `Feature` label from the sequin_scaling.R script
+    - OTU: MAG identifier such as the `Feature` label from the sequin_scaling.R script
     - GC_content: GC content of the `Feature` in the range of 0-1
 ```{r Load data}
 ## Load data
