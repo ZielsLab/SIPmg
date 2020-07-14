@@ -17,8 +17,15 @@ library(HTSSIP)
 #'Input - Fractions metadata file
 #'
 #'Description: fractions metadata containing data on fraction number, replicate,
-#'buoyant density calculated from a refractometer, type of isotope ("12C", "13C", "14N", "15N" etc.),
+#'buoyant density calculated from a refractometer, type of isotope,
 #'and DNA concentration of each fraction
+#'The following columns are required in the metadata file
+#'Fraction number - Typically in the range of 1-24
+#'Replicate number - Depends on how many replicates the study has
+#'Buoyant density - As calculated from the refractometer for each fraction and replicate
+#'Type of isotope - "12C", "13C", "14N", "15N" etc.
+#'DNA concentration of each fraction of each replicate
+#'Sample name - In the format "'isotope'_rep_#_fraction_#". For instance 12C_rep_1_fraction_1
 #'
 #'Output - phyloseq-style sample table
 #'
@@ -30,9 +37,8 @@ sample.table = function(fractions_df) {
   fractions_df_1 = fractions_df %>% # Create two columns in the tibble. 
                                     # One being a logical vector identifying control and heavy isotope
                                     # The other a sample name identifying each fraction and replicate 
-    mutate(IS_CONTROL = str_detect(Isotope, pattern = "12C"),
-           Sample_name = str_c(Isotope,"rep",Replicate,"fraction",Fraction, sep = "_")) %>%
-    column_to_rownames(var = "Sample_name") # Make sample names as row names
+    mutate(IS_CONTROL = str_detect(Isotope, pattern = "12C|14N|16O")) %>% # Please edit this line to add isotope you may be using as control
+    column_to_rownames(var = "Sample") # Make sample names as row names
   fractions_df.ps = phyloseq::sample_data(fractions_df_1) #Create the phyloseq-styled sample object
   return(fractions_df.ps)
 }
@@ -45,6 +51,8 @@ sample.table = function(fractions_df) {
 #'
 #'Description: Loads taxonomy of both bacteria and archaea. In the markdown,
 #'individual taxonomy files of archaea and bacteria are concatenated.
+#'The markdown requires loading the standard output files from GTDB-Tk for
+#'bacteria and archaea
 #'
 #'Output - phyloseq-style taxonomy table, but for MAGs
 #'
@@ -73,9 +81,8 @@ phylo.table = function(mag,taxa,samples) {
   phyloseq::phyloseq(mag, taxa, samples)
 }
 
-#' The following code was adapted from https://github.com/buckleylab/HTSSIP/blob/master/R/qSIP_atom_excess.R
-#' for use with genome-centric metagenomics. This code helps in calculating atom fraction excess
-#' using GC content of MAGs.
+#' This script was adapted from https://github.com/buckleylab/HTSSIP/blob/master/R/qSIP_atom_excess.R
+#' for use with genome-centric metagenomics 
 #' 
 #' See Hungate et al., 2015 for more details
 #'
@@ -360,4 +367,3 @@ qSIP_bootstrap = function(atomX, isotope='13C', n_sample=c(3,3),
   df_boot = dplyr::inner_join(atomX$A, df_boot, c('OTU'='OTU'))
   return(df_boot)
 }
-
