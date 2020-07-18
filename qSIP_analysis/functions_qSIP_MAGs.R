@@ -38,7 +38,7 @@ library(HTSSIP)
 #' GC content of the MAGs (Object Gi). The table should contain the following columns:
 #' - OTU: MAG identifier such as the `Feature` label from the sequin_scaling.R script
 #' - GC_content: GC content of the `Feature` in the range of 0-1
-### -----------------------------------------------------------------------
+
 #### Making a phyloseq sample object ####
 #'In the following section, a phyloseq sample table
 #'wil be generated
@@ -137,7 +137,7 @@ phylo.table = function(mag,taxa,samples) {
 #' @param Gi  The G+C content of unlabeled DNA
 #' @return numeric value: maximum molecular weight of fully-labeled DNA
 #'
-calc_Mheavymax = function(Mlight, isotope='13C', Gi=Gi){
+calc_Mheavymax_MAGs = function(Mlight, isotope='13C', Gi=Gi){
   isotope = toupper(isotope)
   if(isotope=='13C'){
     Mhm = -0.4987282 * Gi + 9.974564 + Mlight
@@ -159,7 +159,7 @@ calc_Mheavymax = function(Mlight, isotope='13C', Gi=Gi){
 #' @param isotope  The isotope for which the DNA is labeled with ('13C' or '18O')
 #' @return numeric value: atom fraction excess (A)
 #'
-calc_atom_excess = function(Mlab, Mlight, Mheavymax, isotope='13C'){
+calc_atom_excess_MAGs = function(Mlab, Mlight, Mheavymax, isotope='13C'){
   isotope=toupper(isotope)
   if(isotope=='13C'){
     x = 0.01111233
@@ -172,7 +172,7 @@ calc_atom_excess = function(Mlab, Mlight, Mheavymax, isotope='13C'){
   A = (Mlab - Mlight) / (Mheavymax - Mlight) * (1 - x)
   return(A)
 }
-#' Reformat a phyloseq object of qSIP_atom_excess analysis
+#' Reformat a phyloseq object of qSIP_atom_excess_MAGs analysis
 #'
 #' @param physeq  A phyloseq object
 #' @param control_expr  An expression for identifying unlabeled control
@@ -181,7 +181,7 @@ calc_atom_excess = function(Mlab, Mlight, Mheavymax, isotope='13C'){
 #' replicate treatments
 #' @return numeric value: atom fraction excess (A)
 #'
-qSIP_atom_excess_format = function(physeq, control_expr, treatment_rep){
+qSIP_atom_excess_format_MAGs = function(physeq, control_expr, treatment_rep){
   # formatting input
   cols = c('IS_CONTROL', 'Buoyant_density', treatment_rep)
   df_OTU = phyloseq2table(physeq,
@@ -223,12 +223,12 @@ qSIP_atom_excess_format = function(physeq, control_expr, treatment_rep){
 #'
 #' \dontrun{
 #' # BD shift (Z) & atom excess (A)
-#' atomX = qSIP_atom_excess(physeq_rep3_t,
+#' atomX = qSIP_atom_excess_MAGs(physeq_rep3_t,
 #'                          control_expr='Treatment=="12C-Control"',
 #'                          treatment_rep='Replicate')
 #' }
 #'
-qSIP_atom_excess = function(physeq,
+qSIP_atom_excess_MAGs = function(physeq,
                             control_expr,
                             treatment_rep=NULL,
                             isotope='13C',
@@ -241,9 +241,9 @@ qSIP_atom_excess = function(physeq,
     no_boot = FALSE
   }
   if(no_boot){
-    df_OTU = qSIP_atom_excess_format(physeq, control_expr, treatment_rep)
+    df_OTU = qSIP_atom_excess_format_MAGs(physeq, control_expr, treatment_rep)
     if(nrow(df_OTU) == 0){
-      stop('No rows in OTU table after qSIP_atom_excess_format(). Check control_exp & treatment_rep')
+      stop('No rows in OTU table after qSIP_atom_excess_format_MAGs(). Check control_exp & treatment_rep')
     }
     # BD shift (Z)
     df_OTU_W = df_OTU %>%
@@ -273,12 +273,12 @@ qSIP_atom_excess = function(physeq,
     mutate_(Mlight = "0.496 * Gi + 307.691")
   ## pt2
   MoreArgs = list(isotope=isotope)
-  dots = list(~mapply(calc_Mheavymax, Mlight=Mlight, Gi=Gi, MoreArgs=MoreArgs))
+  dots = list(~mapply(calc_Mheavymax_MAGs, Mlight=Mlight, Gi=Gi, MoreArgs=MoreArgs))
   dots = stats::setNames(dots, "Mheavymax")
   df_OTU_s = df_OTU_s %>%
     dplyr::mutate_(.dots=dots)
   ## pt3
-  dots = list(~mapply(calc_atom_excess, Mlab=Mlab, Mlight=Mlight,
+  dots = list(~mapply(calc_atom_excess_MAGs, Mlab=Mlab, Mlight=Mlight,
                       Mheavymax=Mheavymax, MoreArgs=MoreArgs))
   dots = stats::setNames(dots, "A")
   df_OTU_s = df_OTU_s %>%
@@ -319,7 +319,7 @@ sample_W = function(df, n_sample){
   return(rbind(df_light, df_lab))
 }
 # shuffling weighted mean densities (W)
-.qSIP_bootstrap = function(atomX,
+.qSIP_bootstrap_MAGs = function(atomX,
                            isotope='13C',
                            n_sample=c(3,3),
                            bootstrap_id = 1){
@@ -333,7 +333,7 @@ sample_W = function(df, n_sample){
     dplyr::select_("-data") %>%
     tidyr::unnest()
   # calculating atom excess
-  atomX = qSIP_atom_excess(physeq=NULL,
+  atomX = qSIP_atom_excess_MAGs(physeq=NULL,
                            df_OTU_W=df_OTU_W,
                            control_expr=NULL,
                            treatment_rep=NULL,
@@ -344,7 +344,7 @@ sample_W = function(df, n_sample){
 }
 #' Calculate bootstrap CI for atom fraction excess using q-SIP method
 #'
-#' @param atomX  A list object created by \code{qSIP_atom_excess()}
+#' @param atomX  A list object created by \code{qSIP_atom_excess_MAGs()}
 #' @param isotope  The isotope for which the DNA is labeled with ('13C' or '18O')
 #' @param n_sample  A vector of length 2.
 #' The sample size for data resampling (with replacement) for 1) control samples
@@ -365,7 +365,7 @@ sample_W = function(df, n_sample){
 #'
 #' \dontrun{
 #' # BD shift (Z) & atom excess (A)
-#' atomX = qSIP_atom_excess(physeq_rep3_t,
+#' atomX = qSIP_atom_excess_MAGs(physeq_rep3_t,
 #'                         control_expr='Treatment=="12C-Con"',
 #'                         treatment_rep='Replicate')
 #'
@@ -375,7 +375,7 @@ sample_W = function(df, n_sample){
 #' head(df_atomX_boot)
 #' }
 #'
-qSIP_bootstrap = function(atomX, isotope='13C', n_sample=c(3,3),
+qSIP_bootstrap_MAGs = function(atomX, isotope='13C', n_sample=c(3,3),
                           n_boot=10, parallel=FALSE, a=0.1){
   # atom excess for each bootstrap replicate
   df_boot_id = data.frame(bootstrap_id = 1:n_boot)
