@@ -3,7 +3,7 @@ library(ggpubr)
 
 # Sequin global scaling function
 
-scale_features_ps <- function(f_tibble, sequin_meta, seq_dilution, log_trans, threshold){
+scale_features_ps <- function(f_tibble, sequin_meta, seq_dilution, log_trans, coe_of_variation){
   
   # DESCRIPTION: scale_features calculates global scaling factors for features (contigs or bins),
   # based on linear regression of sequin coverage. Options include log-transformations of 
@@ -95,7 +95,7 @@ scale_features_ps <- function(f_tibble, sequin_meta, seq_dilution, log_trans, th
                                          sd_cov = sd(Coverage)) %>%
                                na_if(0) %>% 
                                mutate(coe_var = sd_cov*100/mean_cov) %>%
-                               mutate(threshold_detection = coe_var <= threshold))) %>%
+                               mutate(threshold_detection = coe_var <= coe_of_variation))) %>%
     
     #Create a list of samples in which sequins were not detected
     mutate(under_detected = map(grouped_seq_cov, ~.x %>% filter(is.na(mean_cov)) %>% select(Concentration))
@@ -105,7 +105,12 @@ scale_features_ps <- function(f_tibble, sequin_meta, seq_dilution, log_trans, th
     mutate(
       seq_cov_filt = map2(seq_cov,grouped_seq_cov, ~ inner_join(.x, .y , by = "Concentration") %>%
                            filter(., Coverage > 0)), #remove zero coverage values before lm
-      
+      seq_cov_filt = map2(seq_cov_filt, lod, ~.x %>%
+                            mutate(
+                            lod = .y , 
+                            above_lod = Concentration >= lod))) %>% 
+    
+    mutate(
       fit = ifelse(log_scale == "TRUE" , # check log_trans input
                    map(seq_cov_filt, ~ lm(log10(Concentration) ~ log10(Coverage) , data = .)), #log lm if true
                    map(seq_cov_filt, ~ lm((Concentration) ~ (Coverage) , data = .)) # lm if false
@@ -119,13 +124,14 @@ scale_features_ps <- function(f_tibble, sequin_meta, seq_dilution, log_trans, th
       plots = ifelse(log_scale == "TRUE" , # check log_trans input
                      map(seq_cov_filt, # log-scaled plot if true
                          ~ ggplot(data=. , aes(x=log10(Coverage), y= log10(Concentration))) + 
-                           geom_point(aes(color = threshold_detection)) + 
+                           geom_point(aes(color = above_lod, shape = threshold_detection)) + 
                            geom_smooth(method = "lm") + 
                            stat_regline_equation(label.x= -0.1, label.y = 3) + 
                            stat_cor(aes(label = paste(..rr.label.., ..p.label.., sep = "~`,`~")), label.x = -0.1, label.y = 3.5) + 
                            xlab("Coverage (log[read depth])") + 
                            ylab("DNA Concentration (log[attamoles/uL])") + 
-                           scale_color_discrete(name = "Below threshold detection") +
+                           scale_color_discrete(name = "Above l.o.d") +
+                           scale_shape(name = "Below coefficient of variation") +
                            theme_bw() 
                      ),
                      map(seq_cov_filt, # non-scaled plot if true
@@ -174,7 +180,7 @@ scale_features_ps <- function(f_tibble, sequin_meta, seq_dilution, log_trans, th
   plots <- scale_fac %>% select(Sample, plots)
   #Save scaling plots in .pdf format in the working directory
   plots <- plots %>%
-    mutate(save_plots = map2(plots, Sample,  ~ggsave(filename = paste("",.y, ".pdf", sep=""), plot = .x, path = "../mock_output_data/")))
+    mutate(save_plots = map2(plots, Sample,  ~ggsave(filename = paste("",.y, ".pdf", sep=""), plot = .x, path = "../mock_output_data")))
     
   
   # extract feature detection 

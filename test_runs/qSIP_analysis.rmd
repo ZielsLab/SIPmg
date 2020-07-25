@@ -92,7 +92,7 @@ The following files are required: \n
 
 True or False depending on how you would want the MAG coverages to be scaled. Select TRUE if you need MAG concentrations scaled on the log scale \n
 
-#Threshold: \n
+#coe_of_variation: \n
 Acceptable coeffi
 cient of variation for coverage and detection (eg. 20 for 20 % threshold of coefficient of variation) 
 Coverages above the threshold value will be flagged in the plots \n
@@ -110,8 +110,8 @@ seq_dil = read_csv(file = "../mock_input_data/dilutions_data.csv")
 #Log scale BOOLEAN. True or False depending on how you would want the MAG coverages to be scaled. Select TRUE if you need MAG concentrations scaled on the log scale
 log_scale = TRUE
 
-#Threshold. Acceptable coefficient of variation for coverage and detection (eg. 20 - for 20 % threshold of coefficient of variation) (Coverages above the threshold value will be flagged in the plots)
-threshold = 20
+#coe_of_variation. Acceptable coefficient of variation for coverage and detection (eg. 20 - for 20 % threshold of coefficient of variation) (Coverages above the threshold value will be flagged in the plots)
+coe_of_variation = 20
 
 #Taxonomy
 gtdbtk_bac_summary = read_delim("../mock_input_data/gtdbtk.bac120.summary.tsv", 
@@ -144,7 +144,7 @@ taxonomy_ps = rbind(gtdbtk_bac_summary, gtdbtk_archaea) #Combine bacteria and ar
 #mag_tab is a tibble with absolute concentrations of MAGs obtained by scaling MAG coverages using linear regression models on sequin coverages and concentration
 
 #Scale MAG coverages to obtain MAG absolute concentrations and save scaling plots in the working directory
-mag_tab_scaled <- scale_features_ps(f_tibble, sequins, seq_dil, log_scale, threshold)
+mag_tab_scaled <- scale_features_ps(f_tibble, sequins, seq_dil, log_scale, coe_of_variation)
 
 mag_tab = as.matrix(mag_tab_scaled$mag_tab) #Extract absolute abundances as a matrix
 #mag_tab = as.matrix(mag_tab) #Ensuring input for phyloseq OTU table is in a matrix format
