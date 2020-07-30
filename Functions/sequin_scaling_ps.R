@@ -131,7 +131,7 @@ scale_features_ps <- function(f_tibble, sequin_meta, seq_dilution, log_trans, co
                            xlab("Coverage (log[read depth])") + 
                            ylab("DNA Concentration (log[attamoles/uL])") + 
                            scale_color_discrete(name = "Above l.o.d") +
-                           scale_shape(name = "Below coefficient of variation") +
+                           scale_shape(name = "Coefficient of variation", labels = c("below the threshold", "above the threshold")) +
                            theme_bw() 
                      ),
                      map(seq_cov_filt, # non-scaled plot if true

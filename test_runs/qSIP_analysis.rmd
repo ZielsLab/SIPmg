@@ -96,6 +96,22 @@ True or False depending on how you would want the MAG coverages to be scaled. Se
 Acceptable coeffi
 cient of variation for coverage and detection (eg. 20 for 20 % threshold of coefficient of variation) 
 Coverages above the threshold value will be flagged in the plots \n
+
+##Optional analysis:
+#Mean coverage or median coverage of features in a bin
+To obtain a mean or median statistic of coverage of features in a bin, please load the following data in .csv format containing the corresponding columns:
+
+- MAG coverage data file that is previously loaded
+
+Bins data with the following columns: \n
+- Feature: Column containing feature IDs as in the Coverage data \n
+- Bins: Bin IDs the above features belong to
+
+Finally, provide an operator for required statistic: 
+For mean of coverage values per bin (OR) \n
+- opr = "mean"
+For median of coverage values per bin \n
+- opr = "median"
 ```{r Load data}
 ## Load data
 #Coverage metadata
@@ -123,6 +139,12 @@ GC_content <- read_csv(file = "../mock_input_data/GC_content.csv")
 
 #Fractions
 fractions_ps = read_csv("../mock_input_data/fractions_ps.csv")
+
+##Optional
+#Bin data
+#bin_tibble <- read_csv("./mock_import/fake_parsed_bin.csv")
+#Operator
+#opr = "mean"
 ```
 
 ## Source required functions
@@ -133,6 +155,9 @@ Source the `functions_qSIP_MAGs.R` script to load functions to create `phyloseq`
 ```{r Source functions}
 source("../Functions/sequin_scaling_ps.R")
 source("../Functions/functions_qSIP_MAGs.R")
+
+#Optional
+#source("../Functions/pooling_mapping.R")
 ```
 
 #qSIP analysis
@@ -142,6 +167,11 @@ Create required `phyloseq` objects
 ```{r Make phyloseq objects}
 taxonomy_ps = rbind(gtdbtk_bac_summary, gtdbtk_archaea) #Combine bacteria and archaea taxonomy files if necessary
 #mag_tab is a tibble with absolute concentrations of MAGs obtained by scaling MAG coverages using linear regression models on sequin coverages and concentration
+
+#Optional coverage pooling and statistics
+#pooled_bins <- pool_bin_stat(f_tibble, bin_tibble, operator = opr)
+#Save the output file
+#write.csv(pooled_bins, "../mock_output_data/pool_bin_stat.csv", row.names = F)
 
 #Scale MAG coverages to obtain MAG absolute concentrations and save scaling plots in the working directory
 mag_tab_scaled <- scale_features_ps(f_tibble, sequins, seq_dil, log_scale, coe_of_variation)
