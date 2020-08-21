@@ -104,12 +104,11 @@ scale_features_ps <- function(f_tibble, sequin_meta, seq_dilution, log_trans, co
     # perform linear regression on coverage vs conc., extract lm params, make plots
     mutate(
       seq_cov_filt = map2(seq_cov,grouped_seq_cov, ~ inner_join(.x, .y , by = "Concentration") %>%
-                           filter(., Coverage > 0), 
-                           filter(., coe_var <= coe_of_variation)), #remove zero coverage values before lm
+                           filter(., Coverage > 0)), #remove zero coverage values before lm
       seq_cov_filt = map2(seq_cov_filt, lod, ~.x %>%
-                            filter(Concentration >= .y) %>%
                             mutate(
-                            lod = .y))) %>% 
+                            lod = .y , 
+                            above_lod = Concentration >= lod))) %>% 
     
     mutate(
       fit = ifelse(log_scale == "TRUE" , # check log_trans input
@@ -125,12 +124,13 @@ scale_features_ps <- function(f_tibble, sequin_meta, seq_dilution, log_trans, co
       plots = ifelse(log_scale == "TRUE" , # check log_trans input
                      map(seq_cov_filt, # log-scaled plot if true
                          ~ ggplot(data=. , aes(x=log10(Coverage), y= log10(Concentration))) + 
-                           geom_point(aes(shape = threshold_detection)) + 
+                           geom_point(aes(color = above_lod, shape = threshold_detection)) + 
                            geom_smooth(method = "lm") + 
                            stat_regline_equation(label.x= -0.1, label.y = 3) + 
                            stat_cor(aes(label = paste(..rr.label.., ..p.label.., sep = "~`,`~")), label.x = -0.1, label.y = 3.5) + 
                            xlab("Coverage (log[read depth])") + 
                            ylab("DNA Concentration (log[attamoles/uL])") + 
+                           scale_color_discrete(name = "Above l.o.d") +
                            scale_shape(name = "Coefficient of variation", labels = c("below the threshold", "above the threshold")) +
                            theme_bw() 
                      ),
