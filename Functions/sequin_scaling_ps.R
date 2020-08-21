@@ -104,10 +104,10 @@ scale_features_ps <- function(f_tibble, sequin_meta, seq_dilution, log_trans, co
     # perform linear regression on coverage vs conc., extract lm params, make plots
     mutate(
       seq_cov_filt = map2(seq_cov,grouped_seq_cov, ~ inner_join(.x, .y , by = "Concentration") %>%
-                           filter(., Coverage > 0), 
-                           filter(., coe_var <= coe_of_variation)), #remove zero coverage values before lm
+                           filter(., Coverage > 0)),
       seq_cov_filt = map2(seq_cov_filt, lod, ~.x %>%
                             filter(Concentration >= .y) %>%
+                            filter(., coe_var <= coe_of_variation) %>% #remove zero coverage values before lm
                             mutate(
                             lod = .y))) %>% 
     
