@@ -15,9 +15,11 @@ scale_features_ps <- function(f_tibble, sequin_meta, seq_dilution, log_trans, co
   #       (1) a tibble with first column "Feature" that contains bin IDs, and the rest
   #       of the columns represent samples with bins' pooled values. Every sequin is also listed
   #       as a feature.
-  #       (2) a tibble with first column "Feature" that contains contig IDs,and the rest
-  #       of the columns represent samples with contig coverage values. Every sequin is also listed
-  #       as a feature.
+  #       (2) a tibble as outputted by the program `checkm coverage`. If this is the
+  #       input format, the optional function, pooling_functions.R must be run.
+  #       `pooling_functions.R` parses the checkM coverage output to provide a tibble as described in option 1
+  #       Please check `pooling_functions.R` for further details. Please check checkm documentation on the usage 
+  #       for `checkm coverage` program
   #   sequin_meta -     tibble containing sequin names ("Feature column") and concentrations in 
   #       attamoles/uL ("Concentration") column.
   #   log_trans -       Boolean (TRUE or FALSE), should coverages and sequin concentrations 
@@ -180,7 +182,7 @@ scale_features_ps <- function(f_tibble, sequin_meta, seq_dilution, log_trans, co
   plots <- scale_fac %>% select(Sample, plots)
   #Save scaling plots in .pdf format in the working directory
   plots <- plots %>%
-    mutate(save_plots = map2(plots, Sample,  ~ggsave(filename = paste("",.y, ".pdf", sep=""), plot = .x, path = "../mock_output_data")))
+    mutate(save_plots = map2(plots, Sample,  ~ggsave(filename = paste("",.y, ".pdf", sep=""), plot = .x, path = ".")))
     
   
   # extract feature detection 
