@@ -116,7 +116,7 @@ For median of coverage values per bin \n
 ## Load data
 #Coverage metadata
 #Uncomment if your coverage data is in the format mentioned above for this file. Remains commented if you are using the output from `checkm coverage`
-#f_tibble = read_csv(file="../mock_input_data/coverage_metadata.csv")
+f_tibble = read_csv(file="../mock_input_data/coverage_metadata.csv")
 
 #Sequins metadata
 sequins <- read_csv(file="../mock_input_data/sequins_metadata.csv")
@@ -144,9 +144,9 @@ fractions_ps = read_csv("../mock_input_data/fractions.csv")
 ##Optional
 #Bin data
 #Use this line if you are using coverage data from `checkm coverage` program's output. Otherwise ensure your data is in the format specified for this pipeline and comment this next line
-bin_tibble = read_delim("../mock_input_data/checkm_coverage.tsv", "\t", escape_double = FALSE, trim_ws = TRUE)
+#bin_tibble = read_delim("../mock_input_data/checkm_coverage.tsv", "\t", escape_double = FALSE, trim_ws = TRUE)
 #Operator
-operator = "mean"
+#operator = "mean"
 ```
 
 ## Source required functions
@@ -160,7 +160,7 @@ source("../Functions/functions_qSIP_MAGs.R")
 
 #Optional
 #Comment if your coverage data (f_tibble) is in the format specified for this pipeline
-source("../Functions/pooling_mapping.R")
+#source("../Functions/pooling_mapping.R")
 ```
 
 #qSIP analysis
@@ -173,9 +173,9 @@ taxonomy_ps = rbind(gtdbtk_bac_summary, gtdbtk_archaea) #Combine bacteria and ar
 
 #Optional coverage pooling and statistics
 #Comment if your coverage data (f_tibble) is in the format specified for this pipeline. Use this line if you are using the coverage file from `checkm coverage` program's output
-f_tibble = pool_bin_stat(bin_tibble)
+#f_tibble = pool_bin_stat(bin_tibble)
 #Save the output file
-write.csv(f_tibble, "pool_bin_stat.csv", row.names = F)
+#write.csv(f_tibble, "pool_bin_stat.csv", row.names = F)
 
 
 #Scale MAG coverages to obtain MAG absolute concentrations and save scaling plots in the working directory
@@ -208,7 +208,12 @@ df_atomX_boot = df_atomX_boot %>%
 n_incorp = df_atomX_boot %>%
   filter(Incorporator == TRUE) %>%
   nrow 
+#Get incorporator list
+incorporator_list = incorporators_taxonomy(taxonomy = taxonomy_ps, bootstrapped_AFE_table = df_atomX_boot)
+#Print incorporator information
 cat('Number of incorporators:', n_incorp, '\n')
+cat('Incorporators: \n')
+incorporator_list
 ```
 
 Plot the atom fraction excess plot
