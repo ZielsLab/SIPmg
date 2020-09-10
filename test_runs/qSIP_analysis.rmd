@@ -116,13 +116,13 @@ For median of coverage values per bin \n
 ## Load data
 #Coverage metadata
 #Uncomment if your coverage data is in the format mentioned above for this file. Remains commented if you are using the output from `checkm coverage`
-#f_tibble = read_csv(file="f_tibble.csv")
+#f_tibble = read_csv(file="../mock_input_data/coverage_metadata.csv")
 
 #Sequins metadata
-sequins <- read_csv(file="sequins_metadata.csv")
+sequins <- read_csv(file="../mock_input_data/sequins_metadata.csv")
 
 #Dilutions data
-seq_dil = read_csv(file = "dilutions_data.csv")
+seq_dil = read_csv(file = "../mock_input_data/dilutions_data.csv")
 
 #Log scale BOOLEAN. True or False depending on how you would want the MAG coverages to be scaled. Select TRUE if you need MAG concentrations scaled on the log scale
 log_scale = TRUE
@@ -131,20 +131,20 @@ log_scale = TRUE
 coe_of_variation = 20
 
 #Taxonomy
-gtdbtk_bac_summary = read_delim("gtdbtk.bac120.summary.tsv", 
+gtdbtk_bac_summary = read_delim("../mock_input_data/gtdbtk.bac120.summary.tsv", 
                                  "\t", escape_double = FALSE, trim_ws = TRUE)
-gtdbtk_archaea = read_delim("gtdbtk.ar122.summary.tsv", 
+gtdbtk_archaea = read_delim("../mock_input_data/gtdbtk.ar122.summary.tsv", 
                              "\t", escape_double = FALSE, trim_ws = TRUE)
 #GC content
-GC_content <- read_csv(file = "G_content.csv")
+GC_content <- read_csv(file = "../mock_input_data/GC_content.csv")
 
 #Fractions
-fractions_ps = read_csv("fractions.csv")
+fractions_ps = read_csv("../mock_input_data/fractions.csv")
 
 ##Optional
 #Bin data
 #Use this line if you are using coverage data from `checkm coverage` program's output. Otherwise ensure your data is in the format specified for this pipeline and comment this next line
-bin_tibble = read_delim("checkm_coverage.tsv", "\t", escape_double = FALSE, trim_ws = TRUE)
+bin_tibble = read_delim("../mock_input_data/checkm_coverage.tsv", "\t", escape_double = FALSE, trim_ws = TRUE)
 #Operator
 operator = "mean"
 ```
@@ -155,12 +155,12 @@ Source the `sequin_scaling.R` script. Please see source file ("`sequin_scaling.R
 Source the `functions_qSIP_MAGs.R` script to load functions to create `phyloseq` objects and to run qSIP analysis to identify incorporators and atom fraction excess using edited `HTSSIP` functions and the original `HTSSIP` package. Please see source file (`functions_qSIP_MAGs.R`) for more information on the edited functions. \n
 
 ```{r Source functions}
-source("sequin_scaling_ps.R")
-source("functions_qSIP_MAGs.R")
+source("../Functions/sequin_scaling_ps.R")
+source("../Functions/functions_qSIP_MAGs.R")
 
 #Optional
 #Comment if your coverage data (f_tibble) is in the format specified for this pipeline
-source("pooling_mapping.R")
+source("../Functions/pooling_mapping.R")
 ```
 
 #qSIP analysis
@@ -174,8 +174,6 @@ taxonomy_ps = rbind(gtdbtk_bac_summary, gtdbtk_archaea) #Combine bacteria and ar
 #Optional coverage pooling and statistics
 #Comment if your coverage data (f_tibble) is in the format specified for this pipeline. Use this line if you are using the coverage file from `checkm coverage` program's output
 f_tibble = pool_bin_stat(bin_tibble)
-#Changing the column names. Only in this particular example as this data does not correspond to the column name format required for this pipeline
-colnames(f_tibble) = colnames(read_csv("f_tibble_correct_format.csv"))
 #Save the output file
 write.csv(f_tibble, "pool_bin_stat.csv", row.names = F)
 
@@ -224,5 +222,5 @@ Plot the atom fraction excess plot
   theme_bw() +
   coord_flip() +
   ggtitle("Isotope incorporating MAGs"))
-ggsave(filename = "atom_fration_excess.pdf", plot = atom_f_excess_plot, path = ".")
+ggsave(filename = "atom_fration_excess.pdf", plot = atom_f_excess_plot, path = "../mock_output_data")
 ```

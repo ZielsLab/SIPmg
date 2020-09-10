@@ -397,3 +397,39 @@ qSIP_bootstrap_MAGs = function(atomX, isotope='13C', n_sample=c(3,3),
   df_boot = dplyr::inner_join(atomX$A, df_boot, c('OTU'='OTU'))
   return(df_boot)
 }
+
+
+#' This function provides a table with MAGs and their corresponding GTDB taxonomy
+#' as an output. This would be useful in identifying the taxa that have incorporation
+#' The following inputs are required:
+#' 
+#' - taxonomy: A taxonomy tibble obtained in the markdown. This taxonomy tibble is
+#' typically a concatenated list of archaeal and bacterial taxonomy from GTDB-Tk
+#' Please check GTDB-Tk documentation for running the tool
+#' 
+#' - bootstrapped_AFE_table: This is the same df_atomx_boot tibble obtained from
+#' the above code
+#' 
+#' Output:
+#' 
+#' - The df_atomx_boot tibble is mutated to include the taxonomy of all bins
+#' - A tibble with two columns, OTU and Taxonomy, with taxonomy of the incorporator MAGs
+#' 
+incorporators_taxonomy = function(taxonomy, bootstrapped_AFE_table) {
+  taxonomy_classification = taxonomy$classification
+  empties <- c("p__", "c__", "o__", "f__", "g__", "s__")
+  taxonomy_list <- rep(NA, length(taxonomy_classification))
+  i = 1
+  for(tax in taxonomy_classification) {
+    spl <- strsplit(as.character(tax), ";")
+    spl <- setdiff(spl[[1]], empties)
+    cl <- tail(spl, n=1)
+    taxonomy_list[i] <- cl
+    i = i + 1
+  }
+  df_atomX_boot = mutate(bootstrapped_AFE_table, Taxonomy = taxonomy_list)
+  incorporator_list = df_atomX_boot %>%
+    filter(Incorporator == TRUE) %>%
+    select(OTU, Taxonomy)
+  return(incorporator_list)
+}

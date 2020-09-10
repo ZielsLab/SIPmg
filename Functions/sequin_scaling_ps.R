@@ -182,7 +182,7 @@ scale_features_ps <- function(f_tibble, sequin_meta, seq_dilution, log_trans, co
   plots <- scale_fac %>% select(Sample, plots)
   #Save scaling plots in .pdf format in the working directory
   plots <- plots %>%
-    mutate(save_plots = map2(plots, Sample,  ~ggsave(filename = paste("",.y, ".pdf", sep=""), plot = .x, path = ".")))
+    mutate(save_plots = map2(plots, Sample,  ~ggsave(filename = paste("",.y, ".pdf", sep=""), plot = .x, path = "../mock_output_data/")))
     
   
   # extract feature detection 
