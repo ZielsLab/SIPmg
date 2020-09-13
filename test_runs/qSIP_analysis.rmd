@@ -229,3 +229,19 @@ Plot the atom fraction excess plot
   ggtitle("Isotope incorporating MAGs"))
 ggsave(filename = "atom_fration_excess.pdf", plot = atom_f_excess_plot, path = "../mock_output_data")
 ```
+
+## Optional workflow to view abundance vs BD plots of incorporators
+This is an optional workflow that outputs plots with mean and standard deviation of abundance and mean buoyant density across the replicates for the incorporators. The plots are saved in the folder "abundance_plots" in the current directory
+
+#Input parameters
+- incorporator_list - A tibble of incorporators and their taxonomy as obtained from the previous steps of the markdown
+
+- fractions - The same fractions metadata file as loaded previously
+
+- mag_tab - MAG abundance estimates calculated from the `sequin_scaling.R` function in this markdown
+
+```{r Optional abundance plots}
+#Load function for abundance plots
+source("Functions/abundance_plots.R")
+plot_abundance(incorporator_list = incorporator_list, fractions = fractions, mag_tab = mag_tab)
+```
