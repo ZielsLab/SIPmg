@@ -185,7 +185,7 @@ atomX = qSIP_atom_excess_MAGs(phylo.qSIP,
                                treatment_rep='Replicate',
                                Gi = GC_content)
 #Bootstrap confidence intervals
-df_atomX_boot = qSIP_bootstrap(atomX, n_boot=100)
+df_atomX_boot = HTSSIP::qSIP_bootstrap(atomX, n_boot=100, parallel = TRUE) #Change "parallel = FALSE" to compute using a single-core
 df_atomX_boot %>% head
 CI_threshold = 0
 df_atomX_boot = df_atomX_boot %>%
