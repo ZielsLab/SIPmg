@@ -11,7 +11,7 @@ scale_features(
   seq_dilution,
   log_trans = TRUE,
   coe_of_variation = 10000,
-  cook_filtering = F
+  cook_filtering
 )
 }
 \arguments{

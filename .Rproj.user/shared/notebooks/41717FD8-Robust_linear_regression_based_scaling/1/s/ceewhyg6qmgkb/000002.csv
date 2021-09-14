@@ -1,0 +1,7 @@
+"0","## Load data
+#Coverage metadata
+#Uncomment if your coverage data is in the format mentioned above for this file. Remains commented if you are using the output from `checkm coverage`
+f_tibble <- read_csv(""cov_df.csv"")
+"
+"2","Error in read_csv(""cov_df.csv"") : could not find function ""read_csv""
+"
