@@ -1,0 +1,614 @@
+<!DOCTYPE html>
+<html lang="" xml:lang="">
+<head>
+
+  <meta charset="utf-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+  <title>Chapter 3 Using qSIPmg R package | qSIPmg R package vignette</title>
+  <meta name="description" content="This vignette explains the use of qSIPmg package for statisitical analyses and isotope incorporating features from a qSIP metagenomics study." />
+  <meta name="generator" content="bookdown 0.24 and GitBook 2.6.7" />
+
+  <meta property="og:title" content="Chapter 3 Using qSIPmg R package | qSIPmg R package vignette" />
+  <meta property="og:type" content="book" />
+  
+  
+  <meta property="og:description" content="This vignette explains the use of qSIPmg package for statisitical analyses and isotope incorporating features from a qSIP metagenomics study." />
+  
+
+  <meta name="twitter:card" content="summary" />
+  <meta name="twitter:title" content="Chapter 3 Using qSIPmg R package | qSIPmg R package vignette" />
+  
+  <meta name="twitter:description" content="This vignette explains the use of qSIPmg package for statisitical analyses and isotope incorporating features from a qSIP metagenomics study." />
+  
+
+<meta name="author" content="Pranav Sampara, Kate Waring, and Ryan Ziels" />
+
+
+
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="black" />
+  
+  
+<link rel="prev" href="background.html"/>
+<link rel="next" href="scaling-coverage-data.html"/>
+<script src="libs/jquery-3.6.0/jquery-3.6.0.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/fuse.js@6.4.6/dist/fuse.min.js"></script>
+<link href="libs/gitbook-2.6.7/css/style.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-table.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-bookdown.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-highlight.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-search.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-fontsettings.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-clipboard.css" rel="stylesheet" />
+
+
+
+
+
+
+
+
+<script src="libs/accessible-code-block-0.0.1/empty-anchor.js"></script>
+<link href="libs/anchor-sections-1.0.1/anchor-sections.css" rel="stylesheet" />
+<script src="libs/anchor-sections-1.0.1/anchor-sections.js"></script>
+
+
+<style type="text/css">
+code.sourceCode > span { display: inline-block; line-height: 1.25; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode { white-space: pre; position: relative; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+code.sourceCode { white-space: pre-wrap; }
+code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+    color: #aaaaaa;
+  }
+pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa;  padding-left: 4px; }
+div.sourceCode
+  {  background-color: #f8f8f8; }
+@media screen {
+code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+code span.al { color: #ef2929; } /* Alert */
+code span.an { color: #8f5902; font-weight: bold; font-style: italic; } /* Annotation */
+code span.at { color: #c4a000; } /* Attribute */
+code span.bn { color: #0000cf; } /* BaseN */
+code span.cf { color: #204a87; font-weight: bold; } /* ControlFlow */
+code span.ch { color: #4e9a06; } /* Char */
+code span.cn { color: #000000; } /* Constant */
+code span.co { color: #8f5902; font-style: italic; } /* Comment */
+code span.cv { color: #8f5902; font-weight: bold; font-style: italic; } /* CommentVar */
+code span.do { color: #8f5902; font-weight: bold; font-style: italic; } /* Documentation */
+code span.dt { color: #204a87; } /* DataType */
+code span.dv { color: #0000cf; } /* DecVal */
+code span.er { color: #a40000; font-weight: bold; } /* Error */
+code span.ex { } /* Extension */
+code span.fl { color: #0000cf; } /* Float */
+code span.fu { color: #000000; } /* Function */
+code span.im { } /* Import */
+code span.in { color: #8f5902; font-weight: bold; font-style: italic; } /* Information */
+code span.kw { color: #204a87; font-weight: bold; } /* Keyword */
+code span.op { color: #ce5c00; font-weight: bold; } /* Operator */
+code span.ot { color: #8f5902; } /* Other */
+code span.pp { color: #8f5902; font-style: italic; } /* Preprocessor */
+code span.sc { color: #000000; } /* SpecialChar */
+code span.ss { color: #4e9a06; } /* SpecialString */
+code span.st { color: #4e9a06; } /* String */
+code span.va { color: #000000; } /* Variable */
+code span.vs { color: #4e9a06; } /* VerbatimString */
+code span.wa { color: #8f5902; font-weight: bold; font-style: italic; } /* Warning */
+</style>
+
+
+<link rel="stylesheet" href="style.css" type="text/css" />
+</head>
+
+<body>
+
+
+
+  <div class="book without-animation with-summary font-size-2 font-family-1" data-basepath=".">
+
+    <div class="book-summary">
+      <nav role="navigation">
+
+<ul class="summary">
+<li><a href="./">qSIPmg vignette</a></li>
+
+<li class="divider"></li>
+<li class="chapter" data-level="1" data-path="index.html"><a href="index.html"><i class="fa fa-check"></i><b>1</b> Introduction</a></li>
+<li class="chapter" data-level="2" data-path="background.html"><a href="background.html"><i class="fa fa-check"></i><b>2</b> Background</a><ul>
+<li class="chapter" data-level="2.1" data-path="background.html"><a href="background.html#stable-isotope-probing"><i class="fa fa-check"></i><b>2.1</b> Stable isotope probing</a></li>
+<li class="chapter" data-level="2.2" data-path="background.html"><a href="background.html#quantitative-metagenomics"><i class="fa fa-check"></i><b>2.2</b> Quantitative metagenomics</a></li>
+<li class="chapter" data-level="2.3" data-path="background.html"><a href="background.html#quantitative-sip-qsip"><i class="fa fa-check"></i><b>2.3</b> Quantitative SIP (qSIP)</a></li>
+<li class="chapter" data-level="2.4" data-path="background.html"><a href="background.html#for-details-on-sip-quantitative-metagenomics-and-qsip-please-refer-to-the-following-works"><i class="fa fa-check"></i><b>2.4</b> For details on SIP, quantitative metagenomics, and qSIP, please refer to the following works:</a><ul>
+<li class="chapter" data-level="2.4.1" data-path="background.html"><a href="background.html#sip"><i class="fa fa-check"></i><b>2.4.1</b> SIP</a></li>
+<li class="chapter" data-level="2.4.2" data-path="background.html"><a href="background.html#quantitative-metagenomics-1"><i class="fa fa-check"></i><b>2.4.2</b> Quantitative metagenomics</a></li>
+<li class="chapter" data-level="2.4.3" data-path="background.html"><a href="background.html#qsip"><i class="fa fa-check"></i><b>2.4.3</b> qSIP</a></li>
+<li class="chapter" data-level="2.4.4" data-path="background.html"><a href="background.html#htssip-r-package"><i class="fa fa-check"></i><b>2.4.4</b> HTSSIP R package</a></li>
+</ul></li>
+</ul></li>
+<li class="chapter" data-level="3" data-path="using-qsipmg-r-package.html"><a href="using-qsipmg-r-package.html"><i class="fa fa-check"></i><b>3</b> Using qSIPmg R package</a><ul>
+<li class="chapter" data-level="3.1" data-path="using-qsipmg-r-package.html"><a href="using-qsipmg-r-package.html#example-workflow"><i class="fa fa-check"></i><b>3.1</b> Example workflow</a></li>
+<li class="chapter" data-level="3.2" data-path="using-qsipmg-r-package.html"><a href="using-qsipmg-r-package.html#load-required-data"><i class="fa fa-check"></i><b>3.2</b> Load required data</a><ul>
+<li class="chapter" data-level="3.2.1" data-path="using-qsipmg-r-package.html"><a href="using-qsipmg-r-package.html#mag-coverage-data"><i class="fa fa-check"></i><b>3.2.1</b> MAG coverage data</a></li>
+<li class="chapter" data-level="3.2.2" data-path="using-qsipmg-r-package.html"><a href="using-qsipmg-r-package.html#sequin-metadata"><i class="fa fa-check"></i><b>3.2.2</b> Sequin metadata</a></li>
+<li class="chapter" data-level="3.2.3" data-path="using-qsipmg-r-package.html"><a href="using-qsipmg-r-package.html#dilutions-data"><i class="fa fa-check"></i><b>3.2.3</b> Dilutions data</a></li>
+<li class="chapter" data-level="3.2.4" data-path="using-qsipmg-r-package.html"><a href="using-qsipmg-r-package.html#fractions-metadata"><i class="fa fa-check"></i><b>3.2.4</b> Fractions metadata</a></li>
+<li class="chapter" data-level="3.2.5" data-path="using-qsipmg-r-package.html"><a href="using-qsipmg-r-package.html#gtdb-style-taxonomy-data"><i class="fa fa-check"></i><b>3.2.5</b> GTDB style taxonomy data</a></li>
+<li class="chapter" data-level="3.2.6" data-path="using-qsipmg-r-package.html"><a href="using-qsipmg-r-package.html#mag-absolute-concentrations"><i class="fa fa-check"></i><b>3.2.6</b> MAG absolute concentrations</a></li>
+<li class="chapter" data-level="3.2.7" data-path="using-qsipmg-r-package.html"><a href="using-qsipmg-r-package.html#gc-content"><i class="fa fa-check"></i><b>3.2.7</b> GC content</a></li>
+<li class="chapter" data-level="3.2.8" data-path="using-qsipmg-r-package.html"><a href="using-qsipmg-r-package.html#log-scale-boolean"><i class="fa fa-check"></i><b>3.2.8</b> Log scale BOOLEAN</a></li>
+<li class="chapter" data-level="3.2.9" data-path="using-qsipmg-r-package.html"><a href="using-qsipmg-r-package.html#coefficient-of-variation"><i class="fa fa-check"></i><b>3.2.9</b> Coefficient of variation</a></li>
+</ul></li>
+<li class="chapter" data-level="3.3" data-path="using-qsipmg-r-package.html"><a href="using-qsipmg-r-package.html#coverage-normalization-and-scaling"><i class="fa fa-check"></i><b>3.3</b> Coverage normalization and scaling</a><ul>
+<li class="chapter" data-level="3.3.1" data-path="using-qsipmg-r-package.html"><a href="using-qsipmg-r-package.html#this-function-uses-the-following-datasets"><i class="fa fa-check"></i><b>3.3.1</b> This function uses the following datasets:</a></li>
+</ul></li>
+<li class="chapter" data-level="3.4" data-path="using-qsipmg-r-package.html"><a href="using-qsipmg-r-package.html#preparation-of-scaled-data-for-qsip-analysis"><i class="fa fa-check"></i><b>3.4</b> Preparation of scaled data for qSIP analysis</a></li>
+<li class="chapter" data-level="3.5" data-path="using-qsipmg-r-package.html"><a href="using-qsipmg-r-package.html#estimation-of-atom-fraction-excess"><i class="fa fa-check"></i><b>3.5</b> Estimation of atom fraction excess</a></li>
+<li class="chapter" data-level="3.6" data-path="using-qsipmg-r-package.html"><a href="using-qsipmg-r-package.html#plot-the-atom-fraction-excess-plot"><i class="fa fa-check"></i><b>3.6</b> Plot the atom fraction excess plot</a></li>
+<li class="chapter" data-level="3.7" data-path="using-qsipmg-r-package.html"><a href="using-qsipmg-r-package.html#check-incorporator-list"><i class="fa fa-check"></i><b>3.7</b> Check incorporator list</a></li>
+<li class="chapter" data-level="3.8" data-path="using-qsipmg-r-package.html"><a href="using-qsipmg-r-package.html#workflow-to-view-abundance-vs-bd-plots-of-incorporators"><i class="fa fa-check"></i><b>3.8</b> Workflow to view abundance vs BD plots of incorporators</a></li>
+<li class="chapter" data-level="3.9" data-path="using-qsipmg-r-package.html"><a href="using-qsipmg-r-package.html#session-information"><i class="fa fa-check"></i><b>3.9</b> Session information</a></li>
+</ul></li>
+<li class="chapter" data-level="4" data-path="scaling-coverage-data.html"><a href="scaling-coverage-data.html"><i class="fa fa-check"></i><b>4</b> Scaling coverage data</a><ul>
+<li class="chapter" data-level="4.1" data-path="scaling-coverage-data.html"><a href="scaling-coverage-data.html#basic-approach-for-scaling"><i class="fa fa-check"></i><b>4.1</b> Basic approach for scaling</a></li>
+<li class="chapter" data-level="4.2" data-path="scaling-coverage-data.html"><a href="scaling-coverage-data.html#choice-of-regression-model"><i class="fa fa-check"></i><b>4.2</b> Choice of regression model</a></li>
+<li class="chapter" data-level="4.3" data-path="scaling-coverage-data.html"><a href="scaling-coverage-data.html#scaling-the-data"><i class="fa fa-check"></i><b>4.3</b> Scaling the data</a></li>
+<li class="chapter" data-level="4.4" data-path="scaling-coverage-data.html"><a href="scaling-coverage-data.html#comparison-of-the-fits"><i class="fa fa-check"></i><b>4.4</b> Comparison of the fits</a></li>
+<li class="chapter" data-level="4.5" data-path="scaling-coverage-data.html"><a href="scaling-coverage-data.html#decision-on-the-method-to-scale-coverages"><i class="fa fa-check"></i><b>4.5</b> Decision on the method to scale coverages</a></li>
+<li class="chapter" data-level="4.6" data-path="scaling-coverage-data.html"><a href="scaling-coverage-data.html#session-information-1"><i class="fa fa-check"></i><b>4.6</b> Session information</a></li>
+</ul></li>
+<li class="chapter" data-level="5" data-path="qsip-metagenomics-and-identification-of-isotope-incorporators.html"><a href="qsip-metagenomics-and-identification-of-isotope-incorporators.html"><i class="fa fa-check"></i><b>5</b> qSIP metagenomics and identification of isotope incorporators</a><ul>
+<li class="chapter" data-level="5.1" data-path="qsip-metagenomics-and-identification-of-isotope-incorporators.html"><a href="qsip-metagenomics-and-identification-of-isotope-incorporators.html#why-perform-multiple-hypothesis-testing-with-fdr-correction"><i class="fa fa-check"></i><b>5.1</b> Why perform multiple hypothesis testing with FDR correction?</a></li>
+<li class="chapter" data-level="5.2" data-path="qsip-metagenomics-and-identification-of-isotope-incorporators.html"><a href="qsip-metagenomics-and-identification-of-isotope-incorporators.html#comparison-of-the-two-methods"><i class="fa fa-check"></i><b>5.2</b> Comparison of the two methods</a><ul>
+<li class="chapter" data-level="5.2.1" data-path="qsip-metagenomics-and-identification-of-isotope-incorporators.html"><a href="qsip-metagenomics-and-identification-of-isotope-incorporators.html#afe-method"><i class="fa fa-check"></i><b>5.2.1</b> AFE method</a></li>
+<li class="chapter" data-level="5.2.2" data-path="qsip-metagenomics-and-identification-of-isotope-incorporators.html"><a href="qsip-metagenomics-and-identification-of-isotope-incorporators.html#multiple-testing"><i class="fa fa-check"></i><b>5.2.2</b> Multiple testing</a></li>
+<li class="chapter" data-level="5.2.3" data-path="qsip-metagenomics-and-identification-of-isotope-incorporators.html"><a href="qsip-metagenomics-and-identification-of-isotope-incorporators.html#comparison-of-the-two-methods-1"><i class="fa fa-check"></i><b>5.2.3</b> Comparison of the two methods</a></li>
+</ul></li>
+<li class="chapter" data-level="5.3" data-path="qsip-metagenomics-and-identification-of-isotope-incorporators.html"><a href="qsip-metagenomics-and-identification-of-isotope-incorporators.html#session-information-2"><i class="fa fa-check"></i><b>5.3</b> Session information</a></li>
+</ul></li>
+</ul>
+
+      </nav>
+    </div>
+
+    <div class="book-body">
+      <div class="body-inner">
+        <div class="book-header" role="navigation">
+          <h1>
+            <i class="fa fa-circle-o-notch fa-spin"></i><a href="./">qSIPmg R package vignette</a>
+          </h1>
+        </div>
+
+        <div class="page-wrapper" tabindex="-1" role="main">
+          <div class="page-inner">
+
+            <section class="normal" id="section-">
+<div id="using-qsipmg-r-package" class="section level1">
+<h1><span class="header-section-number">Chapter 3</span> Using qSIPmg R package</h1>
+<p>This R package was designed to facilitate statistical analyses using qSIP metagenomic data. Particularly, coverage and taxonomic classification of metagenome-assembled genomes and metadata of fractionated DNA is used to identify incorporators and quantify isotopic enrichment.</p>
+<p>Overall, the package can perform the following:</p>
+<ol style="list-style-type: decimal">
+<li><p>Coverage normalization and scaling based on internal reference standards to calculate genome (or feature of interest) concentration.</p></li>
+<li><p>Statistical analysis based on either of</p></li>
+</ol>
+<ul>
+<li>AFE mathematical model by Hungate et al. (2015) or</li>
+<li>Multiple hypothesis testing for shifts in centroid buoyant density.</li>
+</ul>
+<ol start="3" style="list-style-type: decimal">
+<li>Data visualization for identification of isotope incorporators.</li>
+</ol>
+<div id="example-workflow" class="section level2">
+<h2><span class="header-section-number">3.1</span> Example workflow</h2>
+<p>qSIP analysis using sequins, MAG coverage, and MAG taxonomy is performed using this R markdown. Briefly, coverages are normalized, MAG coverages are then scaled based on linear regression models from sequin coverage and concentrations, a phyloseq object is created from MAG absolute concentrations and taxonomy (GTDB taxonomy output format is required) data. 
+Note: Sequins that were spiked in the DNA-SIP fractions will be used in scaling and creating linear regression models for evaluating absolute MAG concentrations. Please see <code>sequin_scaling.R</code> 
+For normalizing coverage values please see <code>pooling_funs.R</code> </p>
+<p>This R markdown primarily uses <code>Tidyverse</code>, <code>phyloseq</code>, and <code>HTSSIP</code> packages 
+This markdown uses functions from <code>functions_qSIP_MAGs.R</code> </p>
+<p>Data for this example is here.</p>
+<p>For this data, MetaSIPSim (developed by <a href="https://bmcbioinformatics.biomedcentral.com/articles/10.1186/s12859-020-3372-6">Barnett et al, 2020</a>) was used to simulate a data set from a hypothetical SIP workflow performed on the MBARC-26 mock community (as defined in <a href="https://www.nature.com/articles/sdata201681">Singer et al, 2016</a>). The data set was further augmented with simulated post-fractionation sequin spike-ins and the data set was simulated to have all 26 organisms as incorporators. Some of the 26 organisms also had plasmids, which were assembled as distinct genomic units, adding the total genomic features in the simulated study to be 38</p>
+<div class="sourceCode" id="cb1"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1-1"><a href="using-qsipmg-r-package.html#cb1-1"></a><span class="co">#Load required libraries</span></span>
+<span id="cb1-2"><a href="using-qsipmg-r-package.html#cb1-2"></a><span class="kw">library</span>(tidyverse)</span>
+<span id="cb1-3"><a href="using-qsipmg-r-package.html#cb1-3"></a><span class="kw">library</span>(phyloseq)</span>
+<span id="cb1-4"><a href="using-qsipmg-r-package.html#cb1-4"></a><span class="kw">library</span>(HTSSIP)</span>
+<span id="cb1-5"><a href="using-qsipmg-r-package.html#cb1-5"></a><span class="kw">library</span>(data.table)</span>
+<span id="cb1-6"><a href="using-qsipmg-r-package.html#cb1-6"></a><span class="kw">library</span>(ggpubr)</span>
+<span id="cb1-7"><a href="using-qsipmg-r-package.html#cb1-7"></a><span class="kw">library</span>(qSIPmg)</span>
+<span id="cb1-8"><a href="using-qsipmg-r-package.html#cb1-8"></a><span class="kw">set.seed</span>(<span class="dt">seed =</span> <span class="dv">1000</span>)</span></code></pre></div>
+</div>
+<div id="load-required-data" class="section level2">
+<h2><span class="header-section-number">3.2</span> Load required data</h2>
+<p>The following files are required: </p>
+<div id="mag-coverage-data" class="section level3">
+<h3><span class="header-section-number">3.2.1</span> MAG coverage data</h3>
+<p>Pooled coverages data as a comma separated file (.csv file) across samples for <code>Features</code> including sequins that were used as spike-ins. The followings columns are required: </p>
+<ol style="list-style-type: decimal">
+<li><p>Feature: A character string describing the <code>Feature</code> label</p></li>
+<li><p>Sample: The label for these n number of columns should be in the format of “‘isotope’_rep_#_fraction_#”. For instance, “12C_rep_1_fraction_1”. The number of sample columns should be the same as the product of (replicates, fractions, isotopes)</p></li>
+</ol>
+</div>
+<div id="sequin-metadata" class="section level3">
+<h3><span class="header-section-number">3.2.2</span> Sequin metadata</h3>
+<p>Load the sequins metadata as a comma separated file (.csv file) which has the following columns: </p>
+<ol style="list-style-type: decimal">
+<li><p>Feature: As described above</p></li>
+<li><p>Length: Length of the sequin in bp</p></li>
+<li><p>GC_content: GC content of the sequin</p></li>
+<li><p>Sequence: Sequin nucleotide sequence</p></li>
+<li><p>Concentration: Concentration of the sequin in attamoles/uL</p></li>
+</ol>
+</div>
+<div id="dilutions-data" class="section level3">
+<h3><span class="header-section-number">3.2.3</span> Dilutions data</h3>
+<p>Load dilutions data as a comma separated file (.csv file) that contains the following columns </p>
+<ol style="list-style-type: decimal">
+<li><p>Sample: Similar to the sample name as described above.</p></li>
+<li><p>Dilution: Dilution of sequins added to the fraction before sequencing.</p></li>
+</ol>
+</div>
+<div id="fractions-metadata" class="section level3">
+<h3><span class="header-section-number">3.2.4</span> Fractions metadata</h3>
+<p>A fractions file as a comma separated file (.csv file) with the following columns: </p>
+<ol style="list-style-type: decimal">
+<li><p>Replicate: Depends on how many replicates the study has </p></li>
+<li><p>Fractions: Typically in the range of 1-24 </p></li>
+<li><p>Buoyant_density: As calculated from the refractometer for each fraction and replicate </p></li>
+<li><p>Isotope - “12C”, “13C”, “14N”, “15N” etc. </p></li>
+<li><p>DNA_concentration </p></li>
+<li><p>Sample - In the format “‘isotope’_rep_#_fraction_#”. For instance 12C_rep_1_fraction_1 </p></li>
+</ol>
+</div>
+<div id="gtdb-style-taxonomy-data" class="section level3">
+<h3><span class="header-section-number">3.2.5</span> GTDB style taxonomy data</h3>
+<p>A taxonomy file in the GTDB output format (.tsv format). Load the bacteria and archaea taxonomy outputs separately. The markdown requires loading the standard output files from GTDB-Tk separately for bacteria and archaea</p>
+</div>
+<div id="mag-absolute-concentrations" class="section level3">
+<h3><span class="header-section-number">3.2.6</span> MAG absolute concentrations</h3>
+<p>MAG absolute concentrations obtained from scaling_sequins.R. 
+<code>mag_tab</code> object obtained from the above script is to be used as the input here</p>
+</div>
+<div id="gc-content" class="section level3">
+<h3><span class="header-section-number">3.2.7</span> GC content</h3>
+<p>GC content of the MAGs as a comma separated file (.csv file). The table should contain the following columns: </p>
+<ol style="list-style-type: decimal">
+<li><p>OTU: MAG identifier such as the <code>Feature</code> label from the <code>sequin_scaling.R</code> script </p></li>
+<li><p>GC_content: GC content of the <code>Feature</code> in the range of 0-1 </p></li>
+</ol>
+</div>
+<div id="log-scale-boolean" class="section level3">
+<h3><span class="header-section-number">3.2.8</span> Log scale BOOLEAN</h3>
+<p>True or False depending on how you would want the MAG coverages to be scaled. Select TRUE if you need MAG concentrations scaled on the log scale </p>
+</div>
+<div id="coefficient-of-variation" class="section level3">
+<h3><span class="header-section-number">3.2.9</span> Coefficient of variation</h3>
+<p>Acceptable coefficient of variation for coverage and detection (eg. 20 for 20 % threshold of coefficient of variation)</p>
+<p>Coverages above the threshold value will be flagged in the plots. Here a value of 20 is used. </p>
+<div class="sourceCode" id="cb2"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb2-1"><a href="using-qsipmg-r-package.html#cb2-1"></a><span class="co">## Load data</span></span>
+<span id="cb2-2"><a href="using-qsipmg-r-package.html#cb2-2"></a><span class="co">#Coverage metadata</span></span>
+<span id="cb2-3"><a href="using-qsipmg-r-package.html#cb2-3"></a><span class="co">#Uncomment if your coverage data is in the format mentioned above for this file. Remains commented if you are using the output from `checkm coverage`</span></span>
+<span id="cb2-4"><a href="using-qsipmg-r-package.html#cb2-4"></a>f_tibble &lt;-<span class="st"> </span><span class="kw">read_csv</span>(<span class="st">&quot;mock_input_data/coverage_metadata.csv&quot;</span>)</span>
+<span id="cb2-5"><a href="using-qsipmg-r-package.html#cb2-5"></a></span>
+<span id="cb2-6"><a href="using-qsipmg-r-package.html#cb2-6"></a><span class="co">#Sequins metadata</span></span>
+<span id="cb2-7"><a href="using-qsipmg-r-package.html#cb2-7"></a>sequins &lt;-<span class="st"> </span><span class="kw">read_csv</span>(<span class="dt">file=</span><span class="st">&quot;mock_input_data/sequins_metadata.csv&quot;</span>)</span>
+<span id="cb2-8"><a href="using-qsipmg-r-package.html#cb2-8"></a></span>
+<span id="cb2-9"><a href="using-qsipmg-r-package.html#cb2-9"></a><span class="co">#Dilutions data</span></span>
+<span id="cb2-10"><a href="using-qsipmg-r-package.html#cb2-10"></a>seq_dil =<span class="st"> </span><span class="kw">read_csv</span>(<span class="dt">file =</span> <span class="st">&quot;mock_input_data/dilutions_data.csv&quot;</span>)</span>
+<span id="cb2-11"><a href="using-qsipmg-r-package.html#cb2-11"></a></span>
+<span id="cb2-12"><a href="using-qsipmg-r-package.html#cb2-12"></a><span class="co">#Log scale BOOLEAN. True or False depending on how you would want the MAG coverages to be scaled. Select TRUE if you need MAG concentrations scaled on the log scale</span></span>
+<span id="cb2-13"><a href="using-qsipmg-r-package.html#cb2-13"></a>log_scale =<span class="st"> </span><span class="ot">TRUE</span></span>
+<span id="cb2-14"><a href="using-qsipmg-r-package.html#cb2-14"></a></span>
+<span id="cb2-15"><a href="using-qsipmg-r-package.html#cb2-15"></a><span class="co">#coe_of_variation. Acceptable coefficient of variation for coverage and detection (eg. 20 - for 20 % threshold of coefficient of variation) (Coverages above the threshold value will be flagged in the plots)</span></span>
+<span id="cb2-16"><a href="using-qsipmg-r-package.html#cb2-16"></a>coe_of_variation =<span class="st"> </span><span class="dv">20</span> </span>
+<span id="cb2-17"><a href="using-qsipmg-r-package.html#cb2-17"></a></span>
+<span id="cb2-18"><a href="using-qsipmg-r-package.html#cb2-18"></a><span class="co">#Taxonomy</span></span>
+<span id="cb2-19"><a href="using-qsipmg-r-package.html#cb2-19"></a>gtdbtk_bac_summary =<span class="st"> </span><span class="kw">read_delim</span>(<span class="st">&quot;mock_input_data/gtdbtk.bac120.summary.tsv&quot;</span>, </span>
+<span id="cb2-20"><a href="using-qsipmg-r-package.html#cb2-20"></a>                                 <span class="st">&quot;</span><span class="ch">\t</span><span class="st">&quot;</span>, <span class="dt">escape_double =</span> <span class="ot">FALSE</span>, <span class="dt">trim_ws =</span> <span class="ot">TRUE</span>)</span>
+<span id="cb2-21"><a href="using-qsipmg-r-package.html#cb2-21"></a>gtdbtk_archaea =<span class="st"> </span><span class="kw">read_delim</span>(<span class="st">&quot;mock_input_data/gtdbtk.ar122.summary.tsv&quot;</span>, </span>
+<span id="cb2-22"><a href="using-qsipmg-r-package.html#cb2-22"></a>                             <span class="st">&quot;</span><span class="ch">\t</span><span class="st">&quot;</span>, <span class="dt">escape_double =</span> <span class="ot">FALSE</span>, <span class="dt">trim_ws =</span> <span class="ot">TRUE</span>)</span>
+<span id="cb2-23"><a href="using-qsipmg-r-package.html#cb2-23"></a><span class="co">#GC content</span></span>
+<span id="cb2-24"><a href="using-qsipmg-r-package.html#cb2-24"></a>GC_content &lt;-<span class="st"> </span><span class="kw">read_csv</span>(<span class="dt">file =</span> <span class="st">&quot;mock_input_data/GC_content.csv&quot;</span>)</span>
+<span id="cb2-25"><a href="using-qsipmg-r-package.html#cb2-25"></a></span>
+<span id="cb2-26"><a href="using-qsipmg-r-package.html#cb2-26"></a><span class="co">#Fractions</span></span>
+<span id="cb2-27"><a href="using-qsipmg-r-package.html#cb2-27"></a>fractions =<span class="st"> </span><span class="kw">read_csv</span>(<span class="st">&quot;mock_input_data/fractions.csv&quot;</span>)</span></code></pre></div>
+</div>
+</div>
+<div id="coverage-normalization-and-scaling" class="section level2">
+<h2><span class="header-section-number">3.3</span> Coverage normalization and scaling</h2>
+<p>Coverage data of MAGs (or features of interest) and sequins is scaled using sequin concentration to obtain absolute concentration of MAGs (or features of interest). For this step, either linear regression or robust linear regression can be used.</p>
+<p>If linear regression is used, the function <code>scale_features_lm</code> is used. The functions in <code>sequin_scaling_lm.R</code> are used for this step.</p>
+<p>If robust linear regression is used, the outliers impact on the regression models is minimized. For robust linear regression, <code>scale_features_rlm</code> is used. The functions in <code>sequin_scaling_rlm.R</code> are used for this step. In this example workflow, robust linear regression is used to scale coverage data in log10 scale.</p>
+<p>For more discussion on the coice of regression method and comparison of the two methods please see this <a href="scaling-coverage-data.html#scaling-coverage-data">vignette</a></p>
+<div id="this-function-uses-the-following-datasets" class="section level3">
+<h3><span class="header-section-number">3.3.1</span> This function uses the following datasets:</h3>
+<ol style="list-style-type: decimal">
+<li>Coverage data (<code>f_tibble</code>)</li>
+<li>Sequins metadata (<code>sequins</code>)</li>
+<li>Dilution of sequins used to add into the fractions (<code>seq_dil</code>)</li>
+</ol>
+<p>The regression scaling plots are saved in the project folder within a subfolder <code>sequin_scaling_plots</code></p>
+<div class="sourceCode" id="cb3"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb3-1"><a href="using-qsipmg-r-package.html#cb3-1"></a>taxonomy_tibble =<span class="st"> </span><span class="kw">rbind</span>(gtdbtk_bac_summary, gtdbtk_archaea) <span class="co">#Combine bacteria and archaea taxonomy files if it has not been done yet</span></span>
+<span id="cb3-2"><a href="using-qsipmg-r-package.html#cb3-2"></a><span class="co">#mag_tab is a tibble with absolute concentrations of MAGs obtained by scaling MAG coverages using linear regression models on sequin coverages and concentration</span></span>
+<span id="cb3-3"><a href="using-qsipmg-r-package.html#cb3-3"></a></span>
+<span id="cb3-4"><a href="using-qsipmg-r-package.html#cb3-4"></a><span class="co">##Scale MAG coverages to obtain MAG absolute concentrations and save scaling plots in the working directory</span></span>
+<span id="cb3-5"><a href="using-qsipmg-r-package.html#cb3-5"></a><span class="co">#For rlm scaling using scale_features_rlm</span></span>
+<span id="cb3-6"><a href="using-qsipmg-r-package.html#cb3-6"></a><span class="co">#For rlm scaling using scale_features_lm</span></span>
+<span id="cb3-7"><a href="using-qsipmg-r-package.html#cb3-7"></a>mag_tab_scaled &lt;-<span class="st"> </span><span class="kw">scale_features_rlm</span>(f_tibble, sequins, seq_dil, log_scale, <span class="dt">coe_of_variation =</span> coe_of_variation)</span>
+<span id="cb3-8"><a href="using-qsipmg-r-package.html#cb3-8"></a>mag_tab =<span class="st"> </span><span class="kw">as.matrix</span>(mag_tab_scaled<span class="op">$</span>mag_tab) <span class="co">#Extract absolute abundances as a matrix</span></span></code></pre></div>
+<div id="example-of-a-scaling-plot" class="section level4">
+<h4><span class="header-section-number">3.3.1.1</span> Example of a scaling plot</h4>
+<p>An example of a scaling plot is as below</p>
+<p><img src="qSIPmg-vignette_files/figure-html/example%20scaling%20plot-1.png" width="672" /></p>
+</div>
+</div>
+</div>
+<div id="preparation-of-scaled-data-for-qsip-analysis" class="section level2">
+<h2><span class="header-section-number">3.4</span> Preparation of scaled data for qSIP analysis</h2>
+<p>The scaled abundance data, taxonomy data, and metadata is then converted to phyloseq objects and a master phyloseq object is created for qSIP analysis.</p>
+<div class="sourceCode" id="cb4"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb4-1"><a href="using-qsipmg-r-package.html#cb4-1"></a>mag.table =<span class="st"> </span>phyloseq<span class="op">::</span><span class="kw">otu_table</span>(mag_tab, <span class="dt">taxa_are_rows =</span> <span class="ot">TRUE</span>) <span class="co">#Phyloseq OTU table</span></span>
+<span id="cb4-2"><a href="using-qsipmg-r-package.html#cb4-2"></a></span>
+<span id="cb4-3"><a href="using-qsipmg-r-package.html#cb4-3"></a>taxonomy.object =<span class="st"> </span><span class="kw">tax.table</span>(taxonomy_tibble) <span class="co"># Create a taxonomy phyloseq object</span></span>
+<span id="cb4-4"><a href="using-qsipmg-r-package.html#cb4-4"></a>samples.object =<span class="st"> </span><span class="kw">sample.table</span>(fractions) <span class="co"># Create a samples phyloseq object</span></span>
+<span id="cb4-5"><a href="using-qsipmg-r-package.html#cb4-5"></a>phylo.qSIP =<span class="st"> </span><span class="kw">phylo.table</span>(mag.table, taxonomy.object, samples.object) <span class="co"># Make a phyloseq table for downstream qSIP analysis</span></span></code></pre></div>
+</div>
+<div id="estimation-of-atom-fraction-excess" class="section level2">
+<h2><span class="header-section-number">3.5</span> Estimation of atom fraction excess</h2>
+<p>THe following steps estimate the atom fraction excess (AFE) in the MAGs. This calculation is based on the mathematical model suggested by <a href="https://journals.asm.org/doi/full/10.1128/AEM.02280-15">Hungate et al. (2015)</a>. In the article, the authors suggest that GC contents of the individual biological features of interest should be accounted for to have a better estimate of AFE. Through the power of metagenomic analysis and the recovery of MAGs, one can estimate the GC content of features of interest and thereby obtain a better estimate of AFE. Thus, here the user would use the GC contents of MAGs in the AFE estimations and obtain isotopic enrichment of individual MAGs.</p>
+<p>An important consideration is that the AFE calculations are based on a mathematical model and are not an absolute estimate of isotopic enrichment. One of the goals of AFE estimation is to determine isotope incorporators. Another way to determine incorporators is by comparing the centroid buoyant density. A statistically significant shift in centroid buoyant density between the unlabeled and labeled organism implies isotope incorporation. For this method, please see this <a href="qsip-metagenomics-and-identification-of-isotope-incorporators.html#qsip-metagenomics-and-identification-of-isotope-incorporators">vignette</a> which discusses multiple hypothesis testing, statistical analysis for determination of isotope incorporators, and a comparison of the two methods.</p>
+<p>In this example workflow, the approach reported in <a href="https://journals.asm.org/doi/full/10.1128/AEM.02280-15">Hungate et al. (2015)</a> is used to determine incorporators.</p>
+<p>For this step, the following are used:</p>
+<ol style="list-style-type: decimal">
+<li>Master phyloseq object from the previous step</li>
+<li>GC content</li>
+</ol>
+<p>Thanks to <a href="https://journals.plos.org/plosone/article?id=10.1371/journal.pone.0189616">HTSSIP R package</a>, bootstrapping can be performed faster with multithreading.</p>
+<div class="sourceCode" id="cb5"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb5-1"><a href="using-qsipmg-r-package.html#cb5-1"></a>atomX =<span class="st"> </span><span class="kw">qSIP_atom_excess_MAGs</span>(phylo.qSIP,</span>
+<span id="cb5-2"><a href="using-qsipmg-r-package.html#cb5-2"></a>                               <span class="dt">control_expr=</span><span class="st">&#39;Isotope==&quot;12C&quot;&#39;</span>,</span>
+<span id="cb5-3"><a href="using-qsipmg-r-package.html#cb5-3"></a>                               <span class="dt">treatment_rep=</span><span class="st">&#39;Replicate&#39;</span>,</span>
+<span id="cb5-4"><a href="using-qsipmg-r-package.html#cb5-4"></a>                               <span class="dt">Gi =</span> GC_content)</span>
+<span id="cb5-5"><a href="using-qsipmg-r-package.html#cb5-5"></a><span class="co">#Bootstrap confidence intervals</span></span>
+<span id="cb5-6"><a href="using-qsipmg-r-package.html#cb5-6"></a>df_atomX_boot =<span class="st"> </span><span class="kw">qSIP_bootstrap</span>(atomX, <span class="dt">n_boot=</span><span class="dv">100</span>, <span class="dt">parallel =</span> <span class="ot">TRUE</span>) <span class="co">#Change &quot;parallel = FALSE&quot; to compute using a single-core</span></span></code></pre></div>
+</div>
+<div id="plot-the-atom-fraction-excess-plot" class="section level2">
+<h2><span class="header-section-number">3.6</span> Plot the atom fraction excess plot</h2>
+<p>Plot the atom fraction excess data with 5 % and 95 % quantiles as the confidence limits. In the same way as reported in <a href="https://journals.asm.org/doi/full/10.1128/AEM.02280-15">Hungate et al. (2015)</a>, a MAG is considered an incorporator if the lower confidence interval of its AFE is above zero.</p>
+<div class="sourceCode" id="cb6"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb6-1"><a href="using-qsipmg-r-package.html#cb6-1"></a>CI_threshold =<span class="st"> </span><span class="dv">0</span></span>
+<span id="cb6-2"><a href="using-qsipmg-r-package.html#cb6-2"></a>df_atomX_boot =<span class="st"> </span>df_atomX_boot <span class="op">%&gt;%</span></span>
+<span id="cb6-3"><a href="using-qsipmg-r-package.html#cb6-3"></a><span class="st">  </span><span class="kw">mutate</span>(<span class="dt">Incorporator =</span> A_CI_low <span class="op">&gt;</span><span class="st"> </span>CI_threshold,</span>
+<span id="cb6-4"><a href="using-qsipmg-r-package.html#cb6-4"></a>         <span class="dt">OTU =</span> <span class="kw">reorder</span>(OTU, <span class="op">-</span>A))</span>
+<span id="cb6-5"><a href="using-qsipmg-r-package.html#cb6-5"></a></span>
+<span id="cb6-6"><a href="using-qsipmg-r-package.html#cb6-6"></a>(<span class="dt">atom_f_excess_plot =</span> <span class="kw">ggplot</span>(df_atomX_boot, <span class="kw">aes</span>(OTU, A, <span class="dt">ymin=</span>A_CI_low, <span class="dt">ymax=</span>A_CI_high, <span class="dt">color=</span>Incorporator)) <span class="op">+</span></span>
+<span id="cb6-7"><a href="using-qsipmg-r-package.html#cb6-7"></a><span class="st">  </span><span class="kw">geom_pointrange</span>(<span class="dt">size=</span><span class="fl">0.25</span>) <span class="op">+</span></span>
+<span id="cb6-8"><a href="using-qsipmg-r-package.html#cb6-8"></a><span class="st">  </span><span class="kw">geom_linerange</span>() <span class="op">+</span></span>
+<span id="cb6-9"><a href="using-qsipmg-r-package.html#cb6-9"></a><span class="st">  </span><span class="kw">geom_hline</span>(<span class="dt">yintercept=</span><span class="dv">0</span>, <span class="dt">linetype=</span><span class="st">&#39;dashed&#39;</span>, <span class="dt">alpha=</span><span class="fl">0.5</span>) <span class="op">+</span></span>
+<span id="cb6-10"><a href="using-qsipmg-r-package.html#cb6-10"></a><span class="st">  </span><span class="kw">labs</span>(<span class="dt">x=</span><span class="st">&#39;MAGs&#39;</span>, <span class="dt">y=</span><span class="st">&#39;Atom fraction excess&#39;</span>) <span class="op">+</span></span>
+<span id="cb6-11"><a href="using-qsipmg-r-package.html#cb6-11"></a><span class="st">  </span><span class="kw">theme_bw</span>() <span class="op">+</span></span>
+<span id="cb6-12"><a href="using-qsipmg-r-package.html#cb6-12"></a><span class="st">  </span><span class="kw">coord_flip</span>() <span class="op">+</span></span>
+<span id="cb6-13"><a href="using-qsipmg-r-package.html#cb6-13"></a><span class="st">  </span><span class="kw">ggtitle</span>(<span class="st">&quot;Isotope incorporating MAGs&quot;</span>))</span></code></pre></div>
+<p><img src="qSIPmg-vignette_files/figure-html/Plot%20atom%20fraction%20excess-1.png" width="672" /></p>
+<div class="sourceCode" id="cb7"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb7-1"><a href="using-qsipmg-r-package.html#cb7-1"></a><span class="kw">ggsave</span>(<span class="dt">filename =</span> <span class="st">&quot;atom_fration_excess.pdf&quot;</span>, <span class="dt">plot =</span> atom_f_excess_plot)</span></code></pre></div>
+</div>
+<div id="check-incorporator-list" class="section level2">
+<h2><span class="header-section-number">3.7</span> Check incorporator list</h2>
+<div class="sourceCode" id="cb8"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb8-1"><a href="using-qsipmg-r-package.html#cb8-1"></a><span class="co">#Get incorporator info</span></span>
+<span id="cb8-2"><a href="using-qsipmg-r-package.html#cb8-2"></a>n_incorp =<span class="st"> </span>df_atomX_boot <span class="op">%&gt;%</span></span>
+<span id="cb8-3"><a href="using-qsipmg-r-package.html#cb8-3"></a><span class="st">  </span><span class="kw">filter</span>(Incorporator <span class="op">==</span><span class="st"> </span><span class="ot">TRUE</span>) <span class="op">%&gt;%</span></span>
+<span id="cb8-4"><a href="using-qsipmg-r-package.html#cb8-4"></a><span class="st">  </span>nrow </span>
+<span id="cb8-5"><a href="using-qsipmg-r-package.html#cb8-5"></a><span class="co">#Get incorporator list</span></span>
+<span id="cb8-6"><a href="using-qsipmg-r-package.html#cb8-6"></a>incorporator_list =<span class="st"> </span><span class="kw">incorporators_taxonomy</span>(<span class="dt">taxonomy =</span> taxonomy_tibble, <span class="dt">bootstrapped_AFE_table =</span> df_atomX_boot)</span>
+<span id="cb8-7"><a href="using-qsipmg-r-package.html#cb8-7"></a><span class="co">#Print incorporator information</span></span>
+<span id="cb8-8"><a href="using-qsipmg-r-package.html#cb8-8"></a><span class="kw">cat</span>(<span class="st">&#39;Number of incorporators:&#39;</span>, n_incorp, <span class="st">&#39;</span><span class="ch">\n</span><span class="st">&#39;</span>)</span></code></pre></div>
+<pre><code>## Number of incorporators: 25</code></pre>
+<div class="sourceCode" id="cb10"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb10-1"><a href="using-qsipmg-r-package.html#cb10-1"></a><span class="kw">print</span>(incorporator_list, <span class="dt">n =</span> <span class="kw">nrow</span>(incorporator_list))</span></code></pre></div>
+<pre><code>## # A tibble: 25 x 2
+##    OTU         taxonomy                       
+##    &lt;fct&gt;       &lt;chr&gt;                          
+##  1 NC_000913.3 Terriglobusroseus              
+##  2 NC_003450.3 Segniliparusrotundus           
+##  3 NC_008261.1 Nocardiopsisdassonvillei       
+##  4 NC_010067.1 Olsenellauli                   
+##  5 NC_014008.1 Meiothermus_Bsilvanus          
+##  6 NC_014168.1 Meiothermus_Bsilvanus          
+##  7 NC_014210.1 Hungateiclostridiumthermocellum
+##  8 NC_014211.1 Clostridium_Pperfringens       
+##  9 NC_014212.1 Desulfosporosinusacidiphilus   
+## 10 NC_014213.1 Desulfosporosinusacidiphilus   
+## 11 NC_014214.1 Desulfosporosinusacidiphilus   
+## 12 NC_014363.1 Desulfosporosinusmeridiei      
+## 13 NC_015761.1 Streptococcuspyogenes          
+## 14 NC_017033.1 Thermobacilluscomposti         
+## 15 NC_018014.1 Hirschiabaltica                
+## 16 NC_019792.1 Pseudomonas_Astutzeri_AE       
+## 17 NC_019897.1 Pseudomonas_Astutzeri_AE       
+## 18 NC_019936.1 Frateuriaaurantia              
+## 19 NC_019937.1 Sediminispirochaetasmaragdinae 
+## 20 NC_019938.1 Fervidobacteriumpennivorans    
+## 21 NC_019939.1 Coraliomargaritaakajimensis    
+## 22 NC_019964.1 Halovivaxruber                 
+## 23 NC_019974.1 Natronobacteriumgregoryi       
+## 24 NC_019975.1 Natronococcusoccultus          
+## 25 NC_019976.1 Natronococcusoccultus</code></pre>
+</div>
+<div id="workflow-to-view-abundance-vs-bd-plots-of-incorporators" class="section level2">
+<h2><span class="header-section-number">3.8</span> Workflow to view abundance vs BD plots of incorporators</h2>
+<p>This is an optional workflow that outputs a data table for easy visualization of plots, such as buoyant density vs absolute abundance for the incorporators.</p>
+<p>To obtain the data table, the following parameters are required:</p>
+<ol style="list-style-type: decimal">
+<li><p>fractions - The same fractions metadata file as loaded previously</p></li>
+<li><p>mag_tab - MAG abundance estimates calculated from the <code>sequin_scaling.R</code> function</p></li>
+<li><p>df_atomx_boot - Bootstrapped AFE table from the <code>functions_qSIP_MAGs.R</code> function</p></li>
+</ol>
+<div class="sourceCode" id="cb12"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb12-1"><a href="using-qsipmg-r-package.html#cb12-1"></a><span class="co">#Load function for abundance plots</span></span>
+<span id="cb12-2"><a href="using-qsipmg-r-package.html#cb12-2"></a>data_vis_table =<span class="st"> </span><span class="kw">sip_vis</span>(<span class="dt">fractions =</span> fractions, <span class="dt">mag_tab =</span> mag_tab, <span class="dt">afe_tab =</span> df_atomX_boot, <span class="dt">taxonomy =</span> taxonomy_tibble)</span>
+<span id="cb12-3"><a href="using-qsipmg-r-package.html#cb12-3"></a></span>
+<span id="cb12-4"><a href="using-qsipmg-r-package.html#cb12-4"></a>(<span class="dt">plot_bd =</span> <span class="kw">ggplot</span>(data_vis_table, <span class="kw">aes</span>(<span class="dt">x =</span> buoyant_density, <span class="dt">y =</span> normalized_abundance, </span>
+<span id="cb12-5"><a href="using-qsipmg-r-package.html#cb12-5"></a>                        <span class="dt">shape =</span> replicate, <span class="dt">color =</span> isotope)) <span class="op">+</span></span>
+<span id="cb12-6"><a href="using-qsipmg-r-package.html#cb12-6"></a><span class="st">  </span><span class="kw">geom_point</span>() <span class="op">+</span></span>
+<span id="cb12-7"><a href="using-qsipmg-r-package.html#cb12-7"></a><span class="st">  </span><span class="co">#scale_alpha_discrete(range = c(1,0.4)) +</span></span>
+<span id="cb12-8"><a href="using-qsipmg-r-package.html#cb12-8"></a><span class="st">  </span><span class="kw">scale_color_manual</span>(<span class="dt">values=</span><span class="kw">c</span>(<span class="st">&quot;gold&quot;</span>, <span class="st">&quot;deepskyblue2&quot;</span>)) <span class="op">+</span></span>
+<span id="cb12-9"><a href="using-qsipmg-r-package.html#cb12-9"></a><span class="st">  </span><span class="kw">geom_line</span>() <span class="op">+</span></span>
+<span id="cb12-10"><a href="using-qsipmg-r-package.html#cb12-10"></a><span class="st">  </span><span class="kw">theme_bw</span>() <span class="op">+</span></span>
+<span id="cb12-11"><a href="using-qsipmg-r-package.html#cb12-11"></a><span class="st">  </span><span class="kw">xlab</span>(<span class="st">&quot;Buoyant density (g/mL)&quot;</span>) <span class="op">+</span></span>
+<span id="cb12-12"><a href="using-qsipmg-r-package.html#cb12-12"></a><span class="st">  </span><span class="kw">ylab</span>(<span class="st">&quot;Normalized abundance (attaM)&quot;</span>) <span class="op">+</span></span>
+<span id="cb12-13"><a href="using-qsipmg-r-package.html#cb12-13"></a><span class="st">  </span><span class="kw">theme</span>(<span class="dt">axis.text.x =</span> <span class="kw">element_text</span>(<span class="dt">angle =</span> <span class="dv">90</span>, <span class="dt">hjust =</span> <span class="dv">1</span>)) <span class="op">+</span></span>
+<span id="cb12-14"><a href="using-qsipmg-r-package.html#cb12-14"></a><span class="st">  </span><span class="co">#scale_x_continuous(breaks = x_ticks, limits = c(1.69, 1.73)) +</span></span>
+<span id="cb12-15"><a href="using-qsipmg-r-package.html#cb12-15"></a><span class="st">  </span><span class="kw">facet_wrap</span>(<span class="op">~</span>taxonomy, <span class="dt">ncol =</span> <span class="dv">4</span>))</span></code></pre></div>
+<p><img src="qSIPmg-vignette_files/figure-html/SIP%20plots-1.png" width="672" /></p>
+<div class="sourceCode" id="cb13"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb13-1"><a href="using-qsipmg-r-package.html#cb13-1"></a><span class="co"># Comparison of centroid buoyant densities of labeled and unlabeled MAGs</span></span>
+<span id="cb13-2"><a href="using-qsipmg-r-package.html#cb13-2"></a></span>
+<span id="cb13-3"><a href="using-qsipmg-r-package.html#cb13-3"></a>(<span class="kw">ggplot</span>(data_vis_table <span class="op">%&gt;%</span></span>
+<span id="cb13-4"><a href="using-qsipmg-r-package.html#cb13-4"></a><span class="st">  </span><span class="kw">group_by</span>(feature, isotope) <span class="op">%&gt;%</span></span>
+<span id="cb13-5"><a href="using-qsipmg-r-package.html#cb13-5"></a><span class="st">  </span><span class="kw">mutate</span>(<span class="dt">centroid_BD =</span> <span class="kw">weighted.mean</span>(<span class="dt">x =</span> buoyant_density,</span>
+<span id="cb13-6"><a href="using-qsipmg-r-package.html#cb13-6"></a>                                     <span class="dt">w =</span> absolute_abundance)) , <span class="kw">aes</span>(isotope, centroid_BD, <span class="dt">fill =</span> isotope)) <span class="op">+</span></span>
+<span id="cb13-7"><a href="using-qsipmg-r-package.html#cb13-7"></a><span class="st">  </span><span class="kw">geom_boxplot</span>() <span class="op">+</span></span>
+<span id="cb13-8"><a href="using-qsipmg-r-package.html#cb13-8"></a><span class="st">  </span><span class="kw">theme_bw</span>() <span class="op">+</span></span>
+<span id="cb13-9"><a href="using-qsipmg-r-package.html#cb13-9"></a><span class="st">  </span><span class="kw">facet_wrap</span>(<span class="op">~</span>taxonomy, <span class="dt">ncol =</span> <span class="dv">4</span>))</span></code></pre></div>
+<p><img src="qSIPmg-vignette_files/figure-html/SIP%20plots-2.png" width="672" /></p>
+</div>
+<div id="session-information" class="section level2">
+<h2><span class="header-section-number">3.9</span> Session information</h2>
+<div class="sourceCode" id="cb14"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb14-1"><a href="using-qsipmg-r-package.html#cb14-1"></a><span class="kw">sessionInfo</span>()</span></code></pre></div>
+<pre><code>## R version 4.0.3 (2020-10-10)
+## Platform: x86_64-w64-mingw32/x64 (64-bit)
+## Running under: Windows 10 x64 (build 19042)
+## 
+## Matrix products: default
+## 
+## locale:
+## [1] LC_COLLATE=English_Canada.1252  LC_CTYPE=English_Canada.1252   
+## [3] LC_MONETARY=English_Canada.1252 LC_NUMERIC=C                   
+## [5] LC_TIME=English_Canada.1252    
+## 
+## attached base packages:
+## [1] stats     graphics  grDevices utils     datasets  methods   base     
+## 
+## other attached packages:
+##  [1] qSIPmg_0.3.0      ggpubr_0.4.0      data.table_1.14.2 HTSSIP_1.4.1     
+##  [5] phyloseq_1.34.0   forcats_0.5.1     stringr_1.4.0     dplyr_1.0.7      
+##  [9] purrr_0.3.4       readr_2.0.2       tidyr_1.1.4       tibble_3.1.5     
+## [13] ggplot2_3.3.5     tidyverse_1.3.1  
+## 
+## loaded via a namespace (and not attached):
+##   [1] colorspace_2.0-2    ggsignif_0.6.3      ellipsis_0.3.2     
+##   [4] rio_0.5.27          XVector_0.30.0      fs_1.5.0           
+##   [7] rstudioapi_0.13     farver_2.1.0        bit64_4.0.5        
+##  [10] fansi_0.5.0         lubridate_1.8.0     xml2_1.3.2         
+##  [13] codetools_0.2-18    splines_4.0.3       knitr_1.36         
+##  [16] ade4_1.7-18         polynom_1.4-0       jsonlite_1.7.2     
+##  [19] broom_0.7.9         cluster_2.1.2       dbplyr_2.1.1       
+##  [22] compiler_4.0.3      httr_1.4.2          backports_1.2.1    
+##  [25] lazyeval_0.2.2      assertthat_0.2.1    Matrix_1.3-4       
+##  [28] fastmap_1.1.0       cli_3.0.1           htmltools_0.5.2    
+##  [31] tools_4.0.3         igraph_1.2.7        gtable_0.3.0       
+##  [34] glue_1.4.2          reshape2_1.4.4      Rcpp_1.0.5         
+##  [37] carData_3.0-4       Biobase_2.50.0      cellranger_1.1.0   
+##  [40] jquerylib_0.1.4     vctrs_0.3.8         Biostrings_2.58.0  
+##  [43] rhdf5filters_1.2.0  multtest_2.46.0     ape_5.5            
+##  [46] nlme_3.1-153        iterators_1.0.13    xfun_0.27          
+##  [49] openxlsx_4.2.4      rvest_1.0.2         lifecycle_1.0.1    
+##  [52] rstatix_0.7.0       zlibbioc_1.36.0     MASS_7.3-53        
+##  [55] scales_1.1.1        vroom_1.5.5         hms_1.1.1          
+##  [58] parallel_4.0.3      biomformat_1.18.0   rhdf5_2.34.0       
+##  [61] yaml_2.2.1          curl_4.3.2          sass_0.4.0         
+##  [64] stringi_1.5.3       highr_0.9           S4Vectors_0.28.0   
+##  [67] foreach_1.5.1       permute_0.9-5       BiocGenerics_0.36.1
+##  [70] zip_2.2.0           rlang_0.4.10        pkgconfig_2.0.3    
+##  [73] evaluate_0.14       lattice_0.20-45     Rhdf5lib_1.12.0    
+##  [76] labeling_0.4.2      bit_4.0.4           tidyselect_1.1.1   
+##  [79] plyr_1.8.6          magrittr_2.0.1      bookdown_0.24      
+##  [82] R6_2.5.1            IRanges_2.24.0      generics_0.1.1     
+##  [85] DBI_1.1.1           pillar_1.6.4        haven_2.4.3        
+##  [88] foreign_0.8-81      withr_2.4.2         mgcv_1.8-38        
+##  [91] survival_3.2-13     abind_1.4-5         modelr_0.1.8       
+##  [94] crayon_1.4.1        car_3.0-11          fdrtool_1.2.16     
+##  [97] utf8_1.2.2          tzdb_0.1.2          rmarkdown_2.11     
+## [100] grid_4.0.3          readxl_1.3.1        vegan_2.5-7        
+## [103] reprex_2.0.1        digest_0.6.27       stats4_4.0.3       
+## [106] munsell_0.5.0       bslib_0.3.1</code></pre>
+
+</div>
+</div>
+            </section>
+
+          </div>
+        </div>
+      </div>
+<a href="background.html" class="navigation navigation-prev " aria-label="Previous page"><i class="fa fa-angle-left"></i></a>
+<a href="scaling-coverage-data.html" class="navigation navigation-next " aria-label="Next page"><i class="fa fa-angle-right"></i></a>
+    </div>
+  </div>
+<script src="libs/gitbook-2.6.7/js/app.min.js"></script>
+<script src="libs/gitbook-2.6.7/js/clipboard.min.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-search.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-sharing.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-fontsettings.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-bookdown.js"></script>
+<script src="libs/gitbook-2.6.7/js/jquery.highlight.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-clipboard.js"></script>
+<script>
+gitbook.require(["gitbook"], function(gitbook) {
+gitbook.start({
+"sharing": {
+"github": false,
+"facebook": true,
+"twitter": true,
+"linkedin": false,
+"weibo": false,
+"instapaper": false,
+"vk": false,
+"whatsapp": false,
+"all": ["facebook", "twitter", "linkedin", "weibo", "instapaper"]
+},
+"fontsettings": {
+"theme": "white",
+"family": "sans",
+"size": 2
+},
+"edit": {
+"link": null,
+"text": null
+},
+"history": {
+"link": null,
+"text": null
+},
+"view": {
+"link": null,
+"text": null
+},
+"download": null,
+"search": {
+"engine": "fuse",
+"options": null
+},
+"toc": {
+"collapse": "section"
+},
+"link": "GitHub repo link"
+});
+});
+</script>
+
+</body>
+
+</html>
