@@ -336,5 +336,8 @@ incorporators_taxonomy = function(taxonomy, bootstrapped_AFE_table) {
   incorporator_list = bootstrapped_AFE_table %>%
     dplyr::filter(.data$Incorporator == TRUE) %>%
     dplyr::select(.data$OTU, .data$Taxonomy)
+  prefixes = c("p__|c__|o__|f__|g__|s__")
+  incorporator_list = dplyr::mutate(incorporator_list, Taxonomy = str_remove(incorporator_list[[2]], prefixes)) %>%
+    rename("taxonomy" = "Taxonomy")
   return(incorporator_list)
 }

@@ -12,8 +12,9 @@ fdr_multiple_hypothesis_testing(atomX, alpha)
 \item{alpha}{Numerical value - Significance level for hypothesis testing}
 }
 \value{
-A data.frame of FDR adjusted p-values for each MAG and a BOOLEAN
-of whether or not the MAG is an incorporator based on a set significance level
+A dataframe of FDR adjusted p-values for each MAG and a BOOLEAN
+of whether or not the MAG is an incorporator based on a set significance level.
+Weights used to run t-tests are also presented
 }
 \description{
 Welch's  two sample t-tests are used to calculate p-values and FDR correction

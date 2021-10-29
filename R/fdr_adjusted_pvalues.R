@@ -31,7 +31,7 @@ p_table = p_table %>%
   dplyr::mutate(p_values = as.numeric(p_values))
 
 #Run FDR correction for multiple hypothesis testing using fdrtool package
-fdr_table = fdrtool::fdrtool(p_table$p_values, statistic = "pvalue")
+fdr_table = fdrtool::fdrtool(p_table$p_values, statistic = "pvalue", verbose = FALSE)
 
 p_table = p_table %>%
   dplyr::mutate(adj_p_values = fdr_table$qval) %>%
