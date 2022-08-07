@@ -132,22 +132,22 @@ scale_features_lm <- function(f_tibble, sequin_meta, seq_dilution,
     dplyr::mutate(
       plots = ifelse(log_trans == "TRUE" , # check log_trans input
                      purrr::map(seq_cov_filt, # log-scaled plot if true
-                                ~ ggplot2::ggplot(data=. , aes(x=log10(Coverage), y= log10(Concentration))) +
-                                  geom_point(aes(shape = threshold_detection)) +
+                                ~ ggplot2::ggplot(data=. , ggplot2::aes(x=log10(Coverage), y= log10(Concentration))) +
+                                  geom_point(ggplot2::aes(shape = threshold_detection)) +
                                   geom_smooth(method = "lm") +
                                   ggpubr::stat_regline_equation(label.x= -0.1, label.y = 3) +
-                                  ggpubr::stat_cor(aes(label = paste(..rr.label.., ..p.label.., sep = "~`,`~")), label.x = -0.1, label.y = 3.5) +
+                                  ggpubr::stat_cor(ggplot2::aes(label = paste(..rr.label.., ..p.label.., sep = "~`,`~")), label.x = -0.1, label.y = 3.5) +
                                   xlab("Coverage (log[read depth])") +
                                   ylab("DNA Concentration (log[attamoles/uL])") +
                                   scale_shape(name = "Coefficient of variation", labels = c(paste("below the threshold (",coe_of_variation,")"), paste("above the threshold(",coe_of_variation,")"))) +
                                   theme_bw()
                      ),
                      purrr::map(seq_cov_filt, # non-scaled plot if true
-                                ~ ggplot2::ggplot(data=. , aes(x=Coverage, y= Concentration)) +
-                                  geom_point(aes(shape = threshold_detection)) +
+                                ~ ggplot2::ggplot(data=. , ggplot2::aes(x=Coverage, y= Concentration)) +
+                                  geom_point(ggplot2::aes(shape = threshold_detection)) +
                                   geom_smooth(method = "lm") +
                                   ggpubr::stat_regline_equation(label.x= 0) +
-                                  ggpubr::stat_cor(aes(label = paste(..rr.label.., ..p.label.., sep = "~`,`~")), label.x = 0) +
+                                  ggpubr::stat_cor(ggplot2::aes(label = paste(..rr.label.., ..p.label.., sep = "~`,`~")), label.x = 0) +
                                   xlab("Coverage (read depth)") +
                                   ylab("DNA Concentration (attamoles/uL)") +
                                   scale_shape(name = "Coefficient of variation", labels = c(paste("below the threshold (",coe_of_variation,")"), paste("above the threshold(",coe_of_variation,")"))) +
@@ -182,7 +182,7 @@ scale_features_lm <- function(f_tibble, sequin_meta, seq_dilution,
     scale_fac = scale_fac %>%
       dplyr::mutate(cooksd = purrr::map(fit, ~ stats::cooks.distance(.)), #calculate Cooks distance
                     influential_data = purrr::map(cooksd, ~as.numeric(names(.)[(. > (4/length(.)))])), #Identify row IDs which have data points higher than Cooks threshold
-                    cooksd_plot = purrr::map(cooksd, ~ ggplot2::ggplot(as_tibble(.), aes(y = value, x = seq(1, length(.)))) +
+                    cooksd_plot = purrr::map(cooksd, ~ ggplot2::ggplot(as_tibble(.), ggplot2::aes(y = value, x = seq(1, length(.)))) +
                                                geom_point() + geom_hline(yintercept = 4/length(.)) +
                                                ggtitle("Cooks distance - \n horizontal line is 4/n (n is the # of data)") +
                                                xlab("#") + ylab("cooks distance")), #Plot Cooks distance
@@ -221,7 +221,7 @@ scale_features_lm <- function(f_tibble, sequin_meta, seq_dilution,
       dplyr::filter(slope_filtered > 0) %>%
       dplyr::mutate(
         cooksd_filtered = purrr::map(fit_filtered_lm, ~ stats::cooks.distance(.)), #Recalculate Cooks distance to validate if the pipeline to filter out outliers worked
-        cooksd_plot_filtered = purrr::map(cooksd_filtered, ~ ggplot2::ggplot(as_tibble(.), aes(y = value, x = seq(1, length(.)))) +
+        cooksd_plot_filtered = purrr::map(cooksd_filtered, ~ ggplot2::ggplot(as_tibble(.), ggplot2::aes(y = value, x = seq(1, length(.)))) +
                                             geom_point() + geom_hline(yintercept = 4/length(.)) +
                                             ggtitle("Cooks distance - \n horizontal line is 4/n (n is the # of data)") + xlab("#") + ylab("cooks distance"))
       ) %>%
@@ -235,22 +235,22 @@ scale_features_lm <- function(f_tibble, sequin_meta, seq_dilution,
       dplyr::mutate(
         plots_filtered_lm = ifelse(log_trans == "TRUE" , # check log_trans input
                                    purrr::map(seq_cov_filt_round2, # log-scaled plot if true
-                                              ~ ggplot2::ggplot(data=. , aes(x=log10(Coverage), y= log10(Concentration))) +
-                                                geom_point(aes(shape = threshold_detection)) +
+                                              ~ ggplot2::ggplot(data=. , ggplot2::aes(x=log10(Coverage), y= log10(Concentration))) +
+                                                geom_point(ggplot2::aes(shape = threshold_detection)) +
                                                 geom_smooth(method = "lm") +
                                                 ggpubr::stat_regline_equation(label.x= -0.1, label.y = 3) +
-                                                ggpubr::stat_cor(aes(label = paste(..rr.label.., ..p.label.., sep = "~`,`~")), label.x = -0.1, label.y = 3.5) +
+                                                ggpubr::stat_cor(ggplot2::aes(label = paste(..rr.label.., ..p.label.., sep = "~`,`~")), label.x = -0.1, label.y = 3.5) +
                                                 xlab("Coverage (log[read depth])") +
                                                 ylab("DNA Concentration (log[attamoles/uL])") +
                                                 scale_shape(name = "Coefficient of variation", labels = c(paste("below the threshold (",coe_of_variation,")"), paste("above the threshold(",coe_of_variation,")"))) +
                                                 theme_bw()
                                    ),
                                    purrr::map(seq_cov_filt_round2, # non-scaled plot if true
-                                              ~ ggplot2::ggplot(data=. , aes(x=Coverage, y= Concentration)) +
-                                                geom_point(aes(shape = threshold_detection)) +
+                                              ~ ggplot2::ggplot(data=. , ggplot2::aes(x=Coverage, y= Concentration)) +
+                                                geom_point(ggplot2::aes(shape = threshold_detection)) +
                                                 geom_smooth(method = "lm") +
-                                                ggpubr::stat_regline_equation(label.x= 0, label.y.npc = 0.9, aes(label = paste(..adj.rr.label.., ..eq.label.., sep = "~`,`~"))) +
-                                                ggpubr::stat_cor(aes(label = paste(..rr.label.., ..p.label.., sep = "~`,`~")), label.x = 0,label.y.npc = 0.8) +
+                                                ggpubr::stat_regline_equation(label.x= 0, label.y.npc = 0.9, ggplot2::aes(label = paste(..adj.rr.label.., ..eq.label.., sep = "~`,`~"))) +
+                                                ggpubr::stat_cor(ggplot2::aes(label = paste(..rr.label.., ..p.label.., sep = "~`,`~")), label.x = 0,label.y.npc = 0.8) +
                                                 xlab("Coverage (read depth)") +
                                                 ylab("DNA Concentration (attamoles/uL)") +
                                                 scale_shape(name = "Coefficient of variation", labels = c(paste("below the threshold (",coe_of_variation,")"), paste("above the threshold(",coe_of_variation,")"))) +
