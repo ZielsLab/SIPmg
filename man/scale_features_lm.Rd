@@ -13,8 +13,7 @@ scale_features_lm(
   lod_limit = 0,
   save_plots = T,
   plot_dir = "sequin_scaling_plots_lm",
-  cook_filtering = T,
-  plot_scale_factor = 3
+  cook_filtering = T
 )
 }
 \arguments{
@@ -37,8 +36,6 @@ scale_features_lm(
 \item{plot_dir}{Directory where plots are to be saved. Will create a directory "sequin_scaling_plots_lm" if it does not exist.}
 
 \item{cook_filtering}{Boolean (TRUE or FALSE), should data points be filtered based on Cook's distance metric. Cooks distance can be useful in detecting influential outliers in an ordinary least square’s regression model, which can negatively influence the model. A threshold of Cooks distance of 4/n (where n is the sample size) is chosen, and any data point with Cooks distance > 4/n is filtered out. It is typical to choose 4/n as the threshold in detecting the outliers in the data. Default = TRUE}
-
-\item{plot_scale_factor}{multiplicative scaling factor of saved regression plots. Default = 3}
 }
 \value{
 a list of tibbles containing

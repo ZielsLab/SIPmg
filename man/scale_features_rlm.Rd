@@ -12,8 +12,7 @@ scale_features_rlm(
   coe_of_variation = 250,
   lod_limit = 0,
   save_plots = T,
-  plot_dir = "sequin_scaling_plots_rlm",
-  plot_scale_factor = 3
+  plot_dir = "sequin_scaling_plots_rlm"
 )
 }
 \arguments{
@@ -34,8 +33,6 @@ scale_features_rlm(
 \item{save_plots}{Boolean (TRUE or FALSE), should sequin scaling be saved? Default = TRUE}
 
 \item{plot_dir}{Directory where plots are to be saved. Will create a directory "sequin_scaling_plots_rlm" if it does not exist.}
-
-\item{plot_scale_factor}{multiplicative scaling factor of saved regression plots. Default = 3}
 }
 \value{
 a list of tibbles containing
