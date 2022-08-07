@@ -25,17 +25,17 @@ scale_features_rlm(
 
 \item{seq_dilution}{tibble with first column "Sample" with \strong{same sample names as in f_tibble}, and a second column "Dilution" showing ratio of sequins added to final sample volume (e.g. a value of 0.01 for a dilution of 1 volume sequin to 99 volumes sample)}
 
-\item{log_trans}{Boolean (TRUE or FALSE), should coverages and sequin concentrations be log-scaled?}
+\item{log_trans}{Boolean (TRUE or FALSE), should coverages and sequin concentrations be log-scaled? Default = TRUE}
 
-\item{coe_of_variation}{Acceptable coefficient of variation for coverage and detection (eg. 20 - for 20 \% threshold of coefficient of variation). Coverages above the threshold value will be flagged in the plots.}
+\item{coe_of_variation}{Acceptable coefficient of variation for coverage and detection (eg. 20 - for 20 \% threshold of coefficient of variation). Coverages above the threshold value will be flagged in the plots. Default = 250}
 
 \item{lod_limit}{(Decimal range 0-1) Threshold for the percentage of minimum detected sequins per concentration group. Default = 0}
 
-\item{save_plots}{Boolean (TRUE or FALSE), should sequin scaling be saved? Default is TRUE}
+\item{save_plots}{Boolean (TRUE or FALSE), should sequin scaling be saved? Default = TRUE}
 
 \item{plot_dir}{Directory where plots are to be saved. Will create a directory "sequin_scaling_plots_rlm" if it does not exist.}
 
-\item{plot_scale_factor}{multiplicative scaling factor of saved regression plots. Default is 3}
+\item{plot_scale_factor}{multiplicative scaling factor of saved regression plots. Default = 3}
 }
 \value{
 a list of tibbles containing

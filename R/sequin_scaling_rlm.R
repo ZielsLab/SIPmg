@@ -7,12 +7,12 @@
 #' (2) a tibble as outputted by the program "checkm coverage" from the tool CheckM (https://github.com/Ecogenomics/CheckM). If this is the input format, the optional function, pooling_functions.R must be run. `pooling_functions.R` parses the checkM coverage output to provide a tibble as described in option 1. Please check `pooling_functions.R` for further details. Please check CheckM documentation (https://github.com/Ecogenomics/CheckM) on the usage for "checkm coverage" program
 #'@param sequin_meta tibble containing sequin names ("Feature column") and concentrations in attamoles/uL ("Concentration") column.
 #'@param seq_dilution tibble with first column "Sample" with **same sample names as in f_tibble**, and a second column "Dilution" showing ratio of sequins added to final sample volume (e.g. a value of 0.01 for a dilution of 1 volume sequin to 99 volumes sample)
-#'@param coe_of_variation Acceptable coefficient of variation for coverage and detection (eg. 20 - for 20 % threshold of coefficient of variation). Coverages above the threshold value will be flagged in the plots.
-#'@param log_trans Boolean (TRUE or FALSE), should coverages and sequin concentrations be log-scaled?
+#'@param coe_of_variation Acceptable coefficient of variation for coverage and detection (eg. 20 - for 20 % threshold of coefficient of variation). Coverages above the threshold value will be flagged in the plots. Default = 250
+#'@param log_trans Boolean (TRUE or FALSE), should coverages and sequin concentrations be log-scaled? Default = TRUE
 #'@param lod_limit (Decimal range 0-1) Threshold for the percentage of minimum detected sequins per concentration group. Default = 0
-#'@param save_plots Boolean (TRUE or FALSE), should sequin scaling be saved? Default is TRUE
+#'@param save_plots Boolean (TRUE or FALSE), should sequin scaling be saved? Default = TRUE
 #'@param plot_dir Directory where plots are to be saved. Will create a directory "sequin_scaling_plots_rlm" if it does not exist.
-#'@param plot_scale_factor multiplicative scaling factor of saved regression plots. Default is 3
+#'@param plot_scale_factor multiplicative scaling factor of saved regression plots. Default = 3
 #'@import magrittr MASS
 #'@importFrom rlang .data
 #'@return a list of tibbles containing

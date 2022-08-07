@@ -9,8 +9,12 @@ scale_features_lm(
   sequin_meta,
   seq_dilution,
   log_trans = TRUE,
-  coe_of_variation = 10000,
-  cook_filtering
+  coe_of_variation = 250,
+  lod_limit = 0,
+  save_plots = T,
+  plot_dir = "sequin_scaling_plots_lm",
+  cook_filtering = T,
+  plot_scale_factor = 3
 )
 }
 \arguments{
@@ -26,7 +30,15 @@ scale_features_lm(
 
 \item{coe_of_variation}{Acceptable coefficient of variation for coverage and detection (eg. 20 - for 20 \% threshold of coefficient of variation). Coverages above the threshold value will be flagged in the plots.}
 
-\item{cook_filtering}{Boolean (TRUE or FALSE), should data points be filtered based on Cook's distance metric. Cooks distance can be useful in detecting influential outliers in an ordinary least square’s regression model, which can negatively influence the model. A threshold of Cooks distance of 4/n (where n is the sample size) is chosen, and any data point with Cooks distance > 4/n is filtered out. It is typical to choose 4/n as the threshold in detecting the outliers in the data}
+\item{lod_limit}{(Decimal range 0-1) Threshold for the percentage of minimum detected sequins per concentration group. Default = 0}
+
+\item{save_plots}{Boolean (TRUE or FALSE), should sequin scaling be saved? Default = TRUE}
+
+\item{plot_dir}{Directory where plots are to be saved. Will create a directory "sequin_scaling_plots_lm" if it does not exist.}
+
+\item{cook_filtering}{Boolean (TRUE or FALSE), should data points be filtered based on Cook's distance metric. Cooks distance can be useful in detecting influential outliers in an ordinary least square’s regression model, which can negatively influence the model. A threshold of Cooks distance of 4/n (where n is the sample size) is chosen, and any data point with Cooks distance > 4/n is filtered out. It is typical to choose 4/n as the threshold in detecting the outliers in the data. Default = TRUE}
+
+\item{plot_scale_factor}{multiplicative scaling factor of saved regression plots. Default = 3}
 }
 \value{
 a list of tibbles containing
@@ -34,7 +46,7 @@ a list of tibbles containing
 \item mag_tab: a tibble with first column "Feature" that contains bin (or contig IDs), and the rest of the columns represent samples with features' scaled abundances (attamoles/uL)
 \item mag_det: a tibble with first column "Feature" that contains bin (or contig IDs),
 \item plots: linear regression plots for scaling MAG coverage values to absolute abundance
-\item scale_fac_old: a master tibble with all of the intermediate values in above calculations
+\item scale_fac: a master tibble with all of the intermediate values in above calculations
 }
 }
 \description{
