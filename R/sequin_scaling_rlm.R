@@ -12,7 +12,6 @@
 #'@param lod_limit (Decimal range 0-1) Threshold for the percentage of minimum detected sequins per concentration group. Default = 0
 #'@param save_plots Boolean (TRUE or FALSE), should sequin scaling be saved? Default = TRUE
 #'@param plot_dir Directory where plots are to be saved. Will create a directory "sequin_scaling_plots_rlm" if it does not exist.
-#'@param plot_scale_factor multiplicative scaling factor of saved regression plots. Default = 3
 #'@import magrittr MASS
 #'@importFrom rlang .data
 #'@return a list of tibbles containing
@@ -24,8 +23,7 @@
 
 scale_features_rlm <- function(f_tibble, sequin_meta, seq_dilution,
                                    log_trans = TRUE, coe_of_variation=250,
-                                   lod_limit = 0, save_plots = T, plot_dir="sequin_scaling_plots_rlm",
-                                   plot_scale_factor = 3){
+                                   lod_limit = 0, save_plots = T, plot_dir="sequin_scaling_plots_rlm"){
   # Retrieve sample names from feature tibble
   scale_fac <- dplyr::tibble(Sample = names(f_tibble) %>%
                                stringr::str_subset(pattern = "Feature", negate = TRUE))
@@ -189,7 +187,7 @@ scale_features_rlm <- function(f_tibble, sequin_meta, seq_dilution,
   #Save scaling plots in .pdf format in the regression plots directory
   if(save_plots == "TRUE"){
   plots <- plots %>%
-    dplyr::mutate(save_plots = purrr::map2(plots, Sample,  ~ ggplot2::ggsave(filename = paste("rlm_scaled_",.y, ".pdf", sep=""), plot = .x, path = plot_dir, scale = plot_scale_factor)))
+    dplyr::mutate(save_plots = purrr::map2(plots, Sample,  ~ ggplot2::ggsave(filename = paste("rlm_scaled_",.y, ".pdf", sep=""), plot = .x, path = plot_dir, width=7,height=7, units = "in")))
 }
 
   # extract feature detection

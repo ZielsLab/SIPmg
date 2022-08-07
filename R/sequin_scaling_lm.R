@@ -13,7 +13,6 @@
 #'@param lod_limit (Decimal range 0-1) Threshold for the percentage of minimum detected sequins per concentration group. Default = 0
 #'@param save_plots Boolean (TRUE or FALSE), should sequin scaling be saved? Default = TRUE
 #'@param plot_dir Directory where plots are to be saved. Will create a directory "sequin_scaling_plots_lm" if it does not exist.
-#'@param plot_scale_factor multiplicative scaling factor of saved regression plots. Default = 3
 #'@import magrittr MASS
 #'@importFrom rlang .data
 #'@return a list of tibbles containing
@@ -26,7 +25,7 @@
 scale_features_lm <- function(f_tibble, sequin_meta, seq_dilution,
                                   log_trans = TRUE, coe_of_variation=250,
                                   lod_limit = 0, save_plots = T, plot_dir="sequin_scaling_plots_lm",
-                                  cook_filtering = T, plot_scale_factor = 3){
+                                  cook_filtering = T){
   # Retrieve sample names from feature tibble
   # Retrieve sample names from feature tibble
   scale_fac <- dplyr::tibble(Sample = names(f_tibble) %>%
@@ -297,16 +296,16 @@ scale_features_lm <- function(f_tibble, sequin_meta, seq_dilution,
   #Save scaling plots in .pdf format in the regression plots directory
   if(save_plots == "TRUE"){
   plots <- plots %>%
-   dplyr::mutate(save_plots = purrr::map2(plots, Sample,  ~ ggplot2::ggsave(filename = paste("lm_scaled_",.y, ".pdf", sep=""), plot = .x, path = plot_dir, scale = plot_scale_factor)))
+   dplyr::mutate(save_plots = purrr::map2(plots, Sample,  ~ ggplot2::ggsave(filename = paste("lm_scaled_",.y, ".pdf", sep=""), plot = .x, path = plot_dir, width=7,height=7, units = "in")))
   }
   if(save_plots == "TRUE"){
   if(cook_filtering == "TRUE") {
     dir.create(paste(plot_dir,"/cook_filtering", sep = ""))
     plots <- plots %>%
       dplyr::mutate(
-        save_cooksd_plot = purrr::map2(cooksd_plot, Sample, ~ ggplot2::ggsave(filename = paste("cooksd_",.y, ".pdf", sep=""), plot = .x, path = paste(plot_dir,"/cook_filtering", sep = ""), scale = plot_scale_factor)),
-        save_cooksd_filtered_plot = purrr::map2(cooksd_plot_filtered, Sample, ~ ggplot2::ggsave(filename = paste("cooksd_filtered_",.y, ".pdf", sep=""), plot = .x, path = paste(plot_dir,"/cook_filtering", sep = ""),scale = plot_scale_factor)),
-        save_plots_filtered = purrr::map2(plots_filtered_lm, Sample,  ~ ggplot2::ggsave(filename = paste("cooks_distance_filtered_lm_scaled",.y, ".pdf", sep=""), plot = .x, path = paste(plot_dir,"/cook_filtering", sep = ""),scale = plot_scale_factor))
+        save_cooksd_plot = purrr::map2(cooksd_plot, Sample, ~ ggplot2::ggsave(filename = paste("cooksd_",.y, ".pdf", sep=""), plot = .x, path = paste(plot_dir,"/cook_filtering", sep = ""), width=7,height=7, units = "in")),
+        save_cooksd_filtered_plot = purrr::map2(cooksd_plot_filtered, Sample, ~ ggplot2::ggsave(filename = paste("cooksd_filtered_",.y, ".pdf", sep=""), plot = .x, path = paste(plot_dir,"/cook_filtering", sep = ""),width=7,height=7, units = "in")),
+        save_plots_filtered = purrr::map2(plots_filtered_lm, Sample,  ~ ggplot2::ggsave(filename = paste("cooks_distance_filtered_lm_scaled",.y, ".pdf", sep=""), plot = .x, path = paste(plot_dir,"/cook_filtering", sep = ""),width=7,height=7, units = "in"))
       )
   }
   }
