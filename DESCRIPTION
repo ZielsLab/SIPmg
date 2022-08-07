@@ -1,6 +1,8 @@
 Package: qSIPmg
-Title: Statistical analysis to identify isotope incorporating MAGs using the principles of quantitative stable isotope probing (qSIP)
-Version: 0.3.0
+Title: Statistical analysis to identify isotope incorporating MAGs
+        using the principles of quantitative stable isotope probing
+        (qSIP)
+Version: 1.0.0
 Authors@R: 
     c(person(given = "Pranav",
            family = "Sampara",
@@ -13,9 +15,17 @@ Authors@R:
 Description: Statistical analysis to identify a stable isotope incorporating taxa obtained as metagenome-assembled genomes (MAGs). Scaled absolute abundances are utilized which are obtained from relative abundance of MAGs and sequins (spike-ins) of known concentration over a range of coverages. Using absolute abundances and bootstrapping, atom fraction excess of MAGs is estimated, and thereby, incorporators of a stable isotope are identified. Please refer Hungate et al. (2015) (doi:10.1128/AEM.02280-15) for details on quantitative stable isotope probing. Additionally, the bouyant density plots for stable isotope incorporating MAGs will also be provided.
 License: GPL-2
 Encoding: UTF-8
-LazyData: true
 Roxygen: list(markdown = TRUE)
-RoxygenNote: 7.1.1
-Imports: HTSSIP, dplyr, lazyeval, phyloseq,
-    plyr, stringr, tibble, tidyr, magrittr,
-    ggplot2, ggpubr, purrr, rlang, MASS, fdrtool
+RoxygenNote: 7.1.2
+Imports: HTSSIP, dplyr, lazyeval, phyloseq, plyr, stringr, tibble,
+        tidyr, magrittr, ggplot2, ggpubr, purrr, rlang, MASS, fdrtool
+VignetteBuilder: knitr
+NeedsCompilation: no
+Packaged: 2021-11-02 00:22:19 UTC; psampara
+Author: Pranav Sampara [aut, cre],
+  Ryan Ziels [aut]
+Maintainer: Pranav Sampara <pranav.sai.4@gmail.com>
+Depends: R (>= 3.5.0)
+Suggests: 
+    rmarkdown,
+    knitr

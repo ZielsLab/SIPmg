@@ -9,7 +9,11 @@ scale_features_rlm(
   sequin_meta,
   seq_dilution,
   log_trans = TRUE,
-  coe_of_variation = 10000
+  coe_of_variation = 250,
+  lod_limit = 0,
+  save_plots = T,
+  plot_dir = "sequin_scaling_plots_rlm",
+  plot_scale_factor = 3
 )
 }
 \arguments{
@@ -24,13 +28,21 @@ scale_features_rlm(
 \item{log_trans}{Boolean (TRUE or FALSE), should coverages and sequin concentrations be log-scaled?}
 
 \item{coe_of_variation}{Acceptable coefficient of variation for coverage and detection (eg. 20 - for 20 \% threshold of coefficient of variation). Coverages above the threshold value will be flagged in the plots.}
+
+\item{lod_limit}{(Decimal range 0-1) Threshold for the percentage of minimum detected sequins per concentration group. Default = 0}
+
+\item{save_plots}{Boolean (TRUE or FALSE), should sequin scaling be saved? Default is TRUE}
+
+\item{plot_dir}{Directory where plots are to be saved. Will create a directory "sequin_scaling_plots_rlm" if it does not exist.}
+
+\item{plot_scale_factor}{multiplicative scaling factor of saved regression plots. Default is 3}
 }
 \value{
 a list of tibbles containing
 \itemize{
 \item mag_tab: a tibble with first column "Feature" that contains bin (or contig IDs), and the rest of the columns represent samples with features' scaled abundances (attamoles/uL)
 \item mag_det: a tibble with first column "Feature" that contains bin (or contig IDs),
-\item plots: linear regression plots for scaling MAG coverage values to absolute abundance
+\item plots: linear regression plots for scaling MAG coverage values to absolute abundance (optional)
 \item scale_fac: a master tibble with all of the intermediate values in above calculations
 }
 }

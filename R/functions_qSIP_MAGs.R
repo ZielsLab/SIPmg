@@ -249,29 +249,30 @@ sample_W = function(df, n_sample){
   return(rbind(df_light, df_lab))
 }
 # shuffling weighted mean densities (W)
-.qSIP_bootstrap_MAGs = function(atomX,
-                                isotope='13C',
-                                n_sample=c(3,3),
-                                bootstrap_id = 1){
+.qSIP_bootstrap = function(atomX,
+                           isotope='13C',
+                           n_sample=c(3,3),
+                           bootstrap_id = 1){
   # making a new (subsampled with replacement) dataset
   n_sample = c(3,3)  # control, treatment
   dots = stats::setNames(list(~lapply(data, sample_W, n_sample=n_sample)), "ret")
   df_OTU_W = atomX$W %>%
     dplyr::group_by_("OTU") %>%
     tidyr::nest() %>%
-    dplyr::mutate_(.dots=dots) %>%
-    dplyr::select_("-data") %>%
-    tidyr::unnest()
-  # calculating atom excess
-  atomX = qSIP_atom_excess_MAGs(physeq=NULL,
-                                df_OTU_W=df_OTU_W,
-                                control_expr=NULL,
-                                treatment_rep=NULL,
-                                isotope=isotope)
+    dplyr::mutate(temp = purrr::map(data, ~sample_W(.x, n_sample))) %>%
+    dplyr::select(-data) %>%
+    tidyr::unnest(cols = c(temp))
 
+  # calculating atom excess
+  atomX = qSIPmg::qSIP_atom_excess_MAGs(physeq=NULL,
+                                        df_OTU_W=df_OTU_W,
+                                        control_expr=NULL,
+                                        treatment_rep=NULL,
+                                        isotope=isotope, Gi = GC_content)
   atomX$bootstrap_id = bootstrap_id
   return(atomX)
 }
+
 
 # #Calculate bootstrap CI for atom fraction excess using q-SIP method
 #
@@ -340,4 +341,129 @@ incorporators_taxonomy = function(taxonomy, bootstrapped_AFE_table) {
   incorporator_list = dplyr::mutate(incorporator_list, Taxonomy = str_remove(incorporator_list[[2]], prefixes)) %>%
     rename("taxonomy" = "Taxonomy")
   return(incorporator_list)
+}
+
+#' Remove MAGs with NAs from atomX table
+#'
+#' This function enables removing NAs from the atomX table.
+#'
+#' @param atomX A list object created by \code{qSIP_atom_excess_MAGs()}
+#' @return A list of 2 data.frame objects without MAGs which have NAs. 'W' contains the weighted mean buoyant density (W) values for each OTU in each treatment/control. 'A' contains the atom fraction excess values for each OTU. For the 'A' table, the 'Z' column is buoyant density shift, and the 'A' column is atom fraction excess.
+#' @export
+
+
+filter_na = function(atomX) {
+
+  a_w = atomX$W
+  a_a = atomX$A
+
+  a_w_1 = a_w %>% dplyr::mutate(OTU_na_list = if_else(is.nan(W), OTU, "A"))
+  na_otu = unique(a_w_1 %>% select(OTU_na_list) %>% filter(str_detect(OTU_na_list, "A", negate = T)))
+
+  a_w = a_w_1 %>% filter(!OTU %in% na_otu$OTU_na_list) %>% select(-OTU_na_list)
+  a_a = a_a %>% filter(!OTU %in% na_otu$OTU_na_list)
+
+  a_list = list(W = a_w, A = a_a)
+  return(a_list)
+}
+
+
+#' Calculate adjusted bootstrap CI after for multiple testing for atom fraction excess using q-SIP method. Multiple hypothesis tests are corrected by
+#
+#' @param atomX  A list object created by \code{qSIP_atom_excess_MAGs()}
+#' @param isotope  The isotope for which the DNA is labeled with ('13C' or '18O')
+#' @param n_sample  A vector of length 2. The sample size for data resampling (with replacement) for 1) control samples and 2) treatment samples.
+#' @param n_boot  Number of bootstrap replicates.
+#' @param a  A numeric value. The alpha for calculating confidence intervals.
+#' @param parallel  Parallel processing. See \code{.parallel} option in \code{dplyr::mdply()} for more details.
+#' @param ci_adjust_method Confidence interval adjustment method. Please choose 'FCR', 'Bonferroni', or 'none' (if no adjustment is needed). Default is FCR and also provides unadjusted CI.
+#' @return A data.frame of atom fraction excess values (A) and atom fraction excess confidence intervals adjusted for multiple testing.
+#' @export
+
+qSIP_bootstrap_fcr = function(atomX, isotope='13C', n_sample=c(3,3), ci_adjust_method ='fcr',
+                                        n_boot=10, parallel=FALSE, a=0.1){
+  # atom excess for each bootstrap replicate
+  num_tests = nrow(atomX$A)
+  a_bonferroni = a/num_tests
+  df_boot_id = data.frame(bootstrap_id = 1:n_boot)
+  df_boot = plyr::mdply(df_boot_id, .qSIP_bootstrap,
+                        atomX = atomX,
+                        isotope=isotope,
+                        n_sample=n_sample,
+                        .parallel=parallel)
+
+  # calculating atomX CIs for each OTU
+  mutate_call1 = lazyeval::interp(~ stats::quantile(A, a/2, na.rm=TRUE),
+                                  A = as.name("A"))
+  mutate_call2 = lazyeval::interp(~ stats::quantile(A, 1-a/2, na.rm=TRUE),
+                                  A = as.name("A"))
+  mutate_call3 = lazyeval::interp(~ stats::quantile(A, a_bonferroni/2, na.rm=TRUE),
+                                  A = as.name("A"))
+  mutate_call4 = lazyeval::interp(~ stats::quantile(A, 1-a_bonferroni/2, na.rm=TRUE),
+                                  A = as.name("A"))
+  mutate_call5 = lazyeval::interp(~ stats::sd(A),
+                                  A = as.name("A"))
+  #mutate_call6 = lazyeval::interp(~ stats::t.test(A, mu = 0, alternative = "greater")$p.value,
+  #                                A = as.name("A"))
+  mutate_call7 = lazyeval::interp(~ stats::sd(Z),
+                                  Z = as.name("Z"))
+  mutate_call8 = lazyeval::interp(~ mean(A),
+                                  A = as.name("A"))
+
+  dots = stats::setNames(list(mutate_call1, mutate_call2),
+                         c("A_CI_low", "A_CI_high"))
+  df_boot_1 = df_boot %>%
+    dplyr::group_by_("OTU") %>%
+    dplyr::summarize_(.dots=dots)
+
+  discoveries = df_boot_1 %>%
+    filter(A_CI_low > 0) %>%
+    nrow()
+
+  a_fcr = a*discoveries/num_tests
+  mutate_call9 = lazyeval::interp(~ stats::quantile(A, a_fcr/2, na.rm=TRUE),
+                                  A = as.name("A"))
+  mutate_call10 = lazyeval::interp(~ stats::quantile(A, 1-a_fcr/2, na.rm=TRUE),
+                                   A = as.name("A"))
+
+  dots = stats::setNames(list(mutate_call1, mutate_call2, mutate_call3, mutate_call4, mutate_call9, mutate_call10,
+                              mutate_call5, mutate_call7, mutate_call8),
+                         c("A_CI_low", "A_CI_high","A_CI_bonferroni_low", "A_CI_bonferroni_high","A_CI_fcr_low", "A_CI_fcr_high",
+                           "A_sd", "delbd_sd", "A_mean"))
+  df_boot = df_boot %>%
+    dplyr::group_by_("OTU") %>%
+    dplyr::summarize_(.dots=dots)
+
+  #df_boot = df_boot %>%
+  #  mutate(adj_p = stats::p.adjust(A_p_values, method = "BH"))
+
+  # combining with atomX summary data
+  df_boot = dplyr::inner_join(atomX$A, df_boot, c('OTU'='OTU'))
+  #df_boot = df_boot %>%
+  #  mutate(significance = (adj_p < a/2))
+  if (isotope == "13C") {
+    df_boot = df_boot %>%
+      dplyr::mutate(A_delbd = Z/0.036,
+             A_delbd_sd = delbd_sd/0.036)
+  } else if (isotope == "15N") {
+    df_boot = df_boot %>%
+      dplyr::mutate(A_delbd = Z/0.016,
+             A_delbd_sd = delbd_sd/0.016)
+  } else {
+    stop("Isotope is not 13C or 15N so delta BD based AFE is not reported")
+  }
+
+  if (ci_adjust_method == "fcr") {
+    df_boot = df_boot %>%
+      dplyr::select(-contains("bonferroni"))
+  } else if (ci_adjust_method == "bonferroni") {
+    df_boot = df_boot %>%
+      dplyr::select(-contains("fcr"))
+  } else if (ci_adjust_method == "none") {
+    df_boot = df_boot %>%
+      dplyr::select(-contains(c("fcr", "bonferroni")))
+  } else {
+    stop("This package does not use the chosen multiple testing method. Please edit in the source code and upload if necessary, thanks!")
+  }
+  return(df_boot)
 }

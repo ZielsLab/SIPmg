@@ -34,7 +34,7 @@ a list of tibbles containing
 \item mag_tab: a tibble with first column "Feature" that contains bin (or contig IDs), and the rest of the columns represent samples with features' scaled abundances (attamoles/uL)
 \item mag_det: a tibble with first column "Feature" that contains bin (or contig IDs),
 \item plots: linear regression plots for scaling MAG coverage values to absolute abundance
-\item scale_fac: a master tibble with all of the intermediate values in above calculations
+\item scale_fac_old: a master tibble with all of the intermediate values in above calculations
 }
 }
 \description{

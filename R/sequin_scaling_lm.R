@@ -16,21 +16,21 @@
 #'  - mag_tab: a tibble with first column "Feature" that contains bin (or contig IDs), and the rest of the columns represent samples with features' scaled abundances (attamoles/uL)
 #'  - mag_det: a tibble with first column "Feature" that contains bin (or contig IDs),
 #'  - plots: linear regression plots for scaling MAG coverage values to absolute abundance
-#'  - scale_fac: a master tibble with all of the intermediate values in above calculations
+#'  - scale_fac_old: a master tibble with all of the intermediate values in above calculations
 #'@export
 
 scale_features_lm <- function(f_tibble, sequin_meta, seq_dilution, log_trans = TRUE, coe_of_variation=10000, cook_filtering){
   # Retrieve sample names from feature tibble
-  scale_fac <- dplyr::tibble(Sample = names(f_tibble) %>%
+  scale_fac_old <- dplyr::tibble(Sample = names(f_tibble) %>%
                                stringr::str_subset(pattern = "Feature", negate = TRUE))
 
   # Merge dilution factors for samples, add log-scaling option
-  scale_fac <- scale_fac %>%
-    dplyr::inner_join(seq_dilution, by = "Sample") %>%
-    dplyr::mutate(log_scale = log_trans)
+  scale_fac_old <- scale_fac_old %>%
+    dplyr::inner_join(seq_dil, by = "Sample") %>%
+    dplyr::mutate(log_scale = T)
 
   # Make coverage table for features
-  scale_fac <- scale_fac %>%
+  scale_fac_old <- scale_fac_old %>%
     dplyr::mutate(
       cov_tab = purrr::map(Sample, ~ dplyr::select(f_tibble, Feature, all_of(.))), # Make list of coverage tables for samples
       cov_tab = purrr::map(cov_tab, ~stats::setNames(., c("Feature", "Coverage")))  #get rid of sample name in header
@@ -51,7 +51,9 @@ scale_features_lm <- function(f_tibble, sequin_meta, seq_dilution, log_trans = T
     dplyr::mutate(
       seq_group = purrr::map(seq_cov, ~.x %>% dplyr::group_by(Concentration) %>%
                                dplyr::tally(name="standards"))
-    ) %>%
+    )
+
+  scale_fac_old = scale_fac_old %>%
 
     # determine limit of detection of spike-ins, based on presence of 5 sequins per conc.
     dplyr::mutate(
@@ -101,8 +103,12 @@ scale_features_lm <- function(f_tibble, sequin_meta, seq_dilution, log_trans = T
                             dplyr::filter(Concentration >= .y) %>%
                             dplyr::filter(., coe_var <= coe_of_variation) %>% #remove zero coverage values before lm
                             dplyr::mutate(
-                            lod = .y))) %>%
+                            lod = .y)))
 
+  scale_fac_old = scale_fac_old %>%
+    filter(!is.infinite(lod))
+
+  scale_fac_old = scale_fac_old %>%
     dplyr::mutate(
       fit = ifelse(log_scale == "TRUE" , # check log_trans input
                    purrr::map(seq_cov_filt, ~ stats::lm(log10(Concentration) ~ log10(Coverage) , data = .)), #log lm if true
@@ -163,7 +169,7 @@ scale_features_lm <- function(f_tibble, sequin_meta, seq_dilution, log_trans = T
       mag_det = purrr::map2(mag_det, Sample, ~ stats::setNames(.x, c("Feature", .y))) #change header back to sample
     )
   if(cook_filtering == "TRUE") {
-  scale_fac = scale_fac %>%
+  scale_fac_old = scale_fac_old %>%
     dplyr::mutate(cooksd = purrr::map(fit, ~ stats::cooks.distance(.)), #calculate Cooks distance
                   influential_data = purrr::map(cooksd, ~as.numeric(names(.)[(. > (4/length(.)))])), #Identify row IDs which have data points higher than Cooks threshold
                   cooksd_plot = purrr::map(cooksd, ~ ggplot2::ggplot(as_tibble(.), aes(y = value, x = seq(1, length(.)))) +
@@ -261,13 +267,13 @@ scale_features_lm <- function(f_tibble, sequin_meta, seq_dilution, log_trans = T
 
 
   # compile feature abundance across samples
-  mag_tab <- scale_fac$mag_ab %>%
+  mag_tab <- scale_fac_old$mag_ab %>%
     purrr::reduce(dplyr::left_join, by="Feature") %>%
     tibble::column_to_rownames(var = "Feature")
   #Create regression plots directory
   dir.create("sequin_scaling_plots")
   # extract plots
-  plots <- scale_fac %>% dplyr::select(Sample, dplyr::contains("plot"))
+  plots <- scale_fac_old %>% dplyr::select(Sample, dplyr::contains("plot"))
   #Save scaling plots in .pdf format in the regression plots directory
   plots <- plots %>%
     dplyr::mutate(save_plots = purrr::map2(plots, Sample,  ~ ggplot2::ggsave(filename = paste("lm_scaled_",.y, ".pdf", sep=""), plot = .x, path = "sequin_scaling_plots/")))
@@ -282,7 +288,7 @@ scale_features_lm <- function(f_tibble, sequin_meta, seq_dilution, log_trans = T
 
 
   # extract feature detection
-  mag_det <- scale_fac$mag_det %>%
+  mag_det <- scale_fac_old$mag_det %>%
     purrr::reduce(dplyr::left_join, by="Feature") %>%
     tibble::column_to_rownames(var = "Feature")
 
@@ -291,7 +297,7 @@ scale_features_lm <- function(f_tibble, sequin_meta, seq_dilution, log_trans = T
   results <- list("mag_tab" = mag_tab,
                   "mag_det" = mag_det,
                   "plots" = plots,
-                  "scale_fac" = scale_fac)
+                  "scale_fac_old" = scale_fac_old)
 
   # return results
   attach(results)
