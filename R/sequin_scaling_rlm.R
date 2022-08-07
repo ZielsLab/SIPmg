@@ -76,10 +76,10 @@ scale_features_rlm <- function(f_tibble, sequin_meta, seq_dilution,
 
       # determine difference between standards and observed spike ins
       seq_det = purrr::map(seq_det, ~ dplyr::mutate(., diff = standards - detected)),
-      seq_det = map(seq_det, ~ mutate(., ratio = detected*100/standards)),
-      lod = map_dbl(seq_det, ~ filter(., ratio > lod_limit) %>%
-                      filter(Concentration == min(Concentration)) %>%
-                      pull(Concentration)),
+      seq_det = purrr::map(seq_det, ~ dplyr::mutate(., ratio = detected*100/standards)),
+      lod = purrr::map_dbl(seq_det, ~ dplyr::filter(., ratio > lod_limit) %>%
+                             dplyr::filter(Concentration == min(Concentration)) %>%
+                             dplyr::pull(Concentration)),
       seq_warning = purrr::map_int(seq_det, ~ dplyr::summarise(., Sum = sum(diff)) %>%
                                      dplyr::pull(Sum)) #positive values give warning later
     ) %>%
@@ -114,8 +114,8 @@ scale_features_rlm <- function(f_tibble, sequin_meta, seq_dilution,
                                      lod = .y))) %>%
 
     dplyr::mutate(
-      seq_cov_filt = map(seq_cov_filt, ~ .x %>%
-                           mutate(
+      seq_cov_filt = purrr::map(seq_cov_filt, ~ .x %>%
+                                  dplyr::mutate(
                              log_10_coverage = log10(Coverage),
                              lod_10_concentration = log10(Concentration))),
       fit = ifelse(log_scale == "TRUE" , # check log_trans input
@@ -198,7 +198,7 @@ scale_features_rlm <- function(f_tibble, sequin_meta, seq_dilution,
     tibble::column_to_rownames(var = "Feature")
 
   mag_det = mag_det %>%
-    dplyr::mutate(across(everything(), .fns = ~replace_na(.,0)))
+    dplyr::mutate(dplyr::across(dplyr::everything(), .fns = ~ tidyr::replace_na(.,0)))
 
 
   # make list of results

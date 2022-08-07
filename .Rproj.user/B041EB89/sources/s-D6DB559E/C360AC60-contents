@@ -78,8 +78,10 @@ scale_features_lm <- function(f_tibble, sequin_meta, seq_dilution,
 
       # determine difference between standards and observed spike ins
       seq_det = purrr::map(seq_det, ~ dplyr::mutate(., diff = standards - detected)),
-      seq_det = map(seq_det, ~ mutate(., ratio = detected*100/standards)),
-      lod = map_dbl(seq_det, ~ filter(., ratio > lod_limit) %>% filter(Concentration == min(Concentration)) %>% pull(Concentration)),
+      seq_det = purrr::map(seq_det, ~ dplyr::mutate(., ratio = detected*100/standards)),
+      lod = purrr::map_dbl(seq_det, ~ dplyr::filter(., ratio > lod_limit) %>%
+                             dplyr::filter(Concentration == min(Concentration)) %>%
+                             dplyr::pull(Concentration)),
       seq_warning = purrr::map_int(seq_det, ~ dplyr::summarise(., Sum = sum(diff)) %>%
                                      dplyr::pull(Sum)) #positive values give warning later
     ) %>%
@@ -114,8 +116,8 @@ scale_features_lm <- function(f_tibble, sequin_meta, seq_dilution,
                                      lod = .y))) %>%
 
     dplyr::mutate(
-      seq_cov_filt = map(seq_cov_filt, ~ .x %>%
-                           mutate(
+      seq_cov_filt = purrr::map(seq_cov_filt, ~ .x %>%
+                           dplyr::mutate(
                              log_10_coverage = log10(Coverage),
                              lod_10_concentration = log10(Concentration))),
       fit = ifelse(log_trans == "TRUE" , # check log_trans input
@@ -158,8 +160,8 @@ scale_features_lm <- function(f_tibble, sequin_meta, seq_dilution,
     dplyr::mutate(
       # Scale MAGs based on linear regression
       mag_ab = ifelse(log_trans == "TRUE" , # check log_trans input
-                      purrr::map2(mag_cov, slope, ~ mutate(.x, Concentration = log10(Coverage) * .y)), # y = mx (in log scale) if true
-                      purrr::map2(mag_cov, slope, ~ mutate(.x, Concentration = Coverage * .y)) # y = mx if false
+                      purrr::map2(mag_cov, slope, ~ dplyr::mutate(.x, Concentration = log10(Coverage) * .y)), # y = mx (in log scale) if true
+                      purrr::map2(mag_cov, slope, ~ dplyr::mutate(.x, Concentration = Coverage * .y)) # y = mx if false
       ),
       mag_ab = purrr::map2(mag_ab, intercept, ~ dplyr::mutate(.x, Concentration = Concentration + .y)),
       mag_ab = ifelse(log_trans == "TRUE" , # check log_trans input
@@ -193,25 +195,25 @@ scale_features_lm <- function(f_tibble, sequin_meta, seq_dilution,
                                                  dplyr::na_if(0) %>%
                                                  dplyr::mutate(coe_var = sd_cov*100/mean_cov) %>%
                                                  dplyr::mutate(threshold_detection = coe_var <= coe_of_variation) %>%
-                                                 drop_na()), #Calculate mean, standard deviation, and coefficient of variation of samples grouped by Concentration
+                                                 tidyr::drop_na()), #Calculate mean, standard deviation, and coefficient of variation of samples grouped by Concentration
         seq_cov_filt_round2 = purrr::map2(seq_cov_filt_temp, seq_cov_filt_temp_grouped, ~ dplyr::select(.x, -mean_cov, -sd_cov, -coe_var, -threshold_detection) %>%
                                             dplyr::inner_join(., .y, by = "Concentration")),
         seq_cov_filt_round2 = purrr::map(seq_cov_filt_round2, ~ dplyr::filter(., Concentration > 0)), #Retain data which have Concentration more than zero
         seq_cov_filt_round2 = purrr::map(seq_cov_filt_round2, ~ dplyr::filter(., Coverage > 0)), #Retain data which have Coverage more than zero
-        seq_cov_filt_round2 = purrr::map(seq_cov_filt_round2, ~ drop_na(.)), #Drop any NAs in the data
+        seq_cov_filt_round2 = purrr::map(seq_cov_filt_round2, ~ tidyr::drop_na(.)), #Drop any NAs in the data
         outliers = purrr::map2(seq_cov_filt_temp, seq_cov_filt_temp_grouped, ~ dplyr::select(.x, -mean_cov, -sd_cov, -coe_var, -threshold_detection) %>%
                                  dplyr::anti_join(., .y, by = "Concentration")), #List outliers in the data
         zero_row_check = purrr::map(seq_cov_filt_round2, ~nrow(.)) # For linear regression, check if any samples have zero data points or only one data point. This precludes linear regression analysis
       ) %>%
       dplyr::filter(zero_row_check > 0) %>% #Filter samples which have one or zero data points in the seq_cov_filt_round2 tibble
       dplyr::mutate(
-        seq_cov_filt_round2 = map(seq_cov_filt_round2, ~ .x %>%
-                             mutate(
+        seq_cov_filt_round2 = purrr::map(seq_cov_filt_round2, ~ .x %>%
+                             dplyr::mutate(
                                log_10_coverage = log10(Coverage),
                                lod_10_concentration = log10(Concentration))),
         fit_filtered_lm = ifelse(log_trans == "TRUE" , # check log_trans input
-                                 purrr::map(seq_cov_filt_round2, ~ lm(lod_10_concentration ~ log_10_coverage , data = .)), #log lm if true
-                                 purrr::map(seq_cov_filt_round2, ~ lm(Concentration ~ Coverage , data =.)) # lm if false
+                                 purrr::map(seq_cov_filt_round2, ~ stats::lm(lod_10_concentration ~ log_10_coverage , data = .)), #log lm if true
+                                 purrr::map(seq_cov_filt_round2, ~ stats::lm(Concentration ~ Coverage , data =.)) # lm if false
         ),
         slope_filtered = purrr::map_dbl(fit_filtered_lm, ~ summary(.)$coef[2]), # get slope
         intercept_filtered = purrr::map_dbl(fit_filtered_lm, ~summary(.)$coef[1])
@@ -258,8 +260,8 @@ scale_features_lm <- function(f_tibble, sequin_meta, seq_dilution,
       dplyr::mutate(
         # Scale MAGs based on robust linear regression
         mag_ab_filtered = ifelse(log_trans == "TRUE" , # check log_trans input
-                                 purrr::map2(mag_cov, slope_filtered, ~ mutate(.x, Concentration = log10(Coverage) * .y)), # y = mx (in log scale) if true
-                                 purrr::map2(mag_cov, slope_filtered, ~ mutate(.x, Concentration = Coverage * .y)) # y = mx if false
+                                 purrr::map2(mag_cov, slope_filtered, ~ dplyr::mutate(.x, Concentration = log10(Coverage) * .y)), # y = mx (in log scale) if true
+                                 purrr::map2(mag_cov, slope_filtered, ~ dplyr::mutate(.x, Concentration = Coverage * .y)) # y = mx if false
         ),
         mag_ab_filtered = purrr::map2(mag_ab_filtered, intercept_filtered, ~ dplyr::mutate(.x, Concentration = Concentration + .y)),
         mag_ab_filtered = ifelse(log_trans == "TRUE" , # check log_trans input
@@ -320,7 +322,7 @@ scale_features_lm <- function(f_tibble, sequin_meta, seq_dilution,
   }
 
   mag_det = mag_det %>%
-    dplyr::mutate(across(everything(), .fns = ~replace_na(.,0)))
+    dplyr::mutate(dplyr::across(dplyr::everything(), .fns = ~ tidyr::replace_na(.,0)))
 
 
   # make list of results
