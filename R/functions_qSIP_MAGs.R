@@ -418,7 +418,7 @@ qSIP_bootstrap_fcr = function(atomX, isotope='13C', n_sample=c(3,3), ci_adjust_m
     dplyr::summarize_(.dots=dots)
 
   discoveries = df_boot_1 %>%
-    filter(A_CI_low > 0) %>%
+    dplyr::filter(A_CI_low > 0) %>%
     nrow()
 
   a_fcr = a*discoveries/num_tests
@@ -443,7 +443,7 @@ qSIP_bootstrap_fcr = function(atomX, isotope='13C', n_sample=c(3,3), ci_adjust_m
   } else if (isotope == "15N") {
     df_boot = atomX$A
     df_boot = df_boot %>%
-      select(-c(Mlight,Mlab,Mheavymax,A))
+      dplyr::select(-c(Mlight,Mlab,Mheavymax,A))
     print("qSIP model does not exist for 15N - only delta BD based AFE estimates are reported")
       } else {
     stop("You have used an isotope that does not have a qSIP model or perhaps the notation you used was wrong? In that case please check documentation on how to specify the isotope")
@@ -459,7 +459,7 @@ qSIP_bootstrap_fcr = function(atomX, isotope='13C', n_sample=c(3,3), ci_adjust_m
       dplyr::mutate(A_delbd = Z/0.016)
   } else {
     df_boot = df_boot %>%
-      select(-delbd_sd)
+      dplyr::select(-delbd_sd)
     print("Isotope is not 13C or 15N so delta BD based AFE is not reported")
   }
 
