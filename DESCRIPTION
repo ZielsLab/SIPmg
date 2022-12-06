@@ -1,7 +1,5 @@
-Package: qSIPmg
+Package: SIPmg
 Title: Statistical analysis to identify isotope incorporating MAGs
-        using the principles of quantitative stable isotope probing
-        (qSIP)
 Version: 1.0.0
 Authors@R: 
     c(person(given = "Pranav",
@@ -16,7 +14,7 @@ Description: Statistical analysis to identify a stable isotope incorporating tax
 License: GPL-2
 Encoding: UTF-8
 Roxygen: list(markdown = TRUE)
-RoxygenNote: 7.1.2
+RoxygenNote: 7.2.2
 Imports: HTSSIP, dplyr, lazyeval, phyloseq, plyr, stringr, tibble,
         tidyr, magrittr, ggplot2, ggpubr, purrr, rlang, MASS, fdrtool
 VignetteBuilder: knitr

@@ -10,7 +10,7 @@ The isotope incorporators could be identified using two methods:
 
 While the first method gives a quantitative estimate of isotopic enrichment in a taxon to determine if it is an incorporator, the second method relies on null hypothesis testing of statistical significance between unlabeled and labeled treatments for a taxon.
 
-In this vignette, we will compare the two methods using the data from the introductory vignette to qSIPmg. 
+In this vignette, we will compare the two methods using the data from the introductory vignette to SIPmg. 
 
 Please refer this study, for the AFE method proposed by [Hungate et al. (2015)]( https://journals.asm.org/doi/10.1128/AEM.02280-15)
 
@@ -44,7 +44,7 @@ library(phyloseq)
 library(HTSSIP)
 library(data.table)
 library(ggpubr)
-library(qSIPmg)
+library(SIPmg)
 set.seed(seed = 1000)
 ```
 
