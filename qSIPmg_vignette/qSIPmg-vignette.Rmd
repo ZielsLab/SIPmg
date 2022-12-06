@@ -42,7 +42,7 @@ Although metagenomics offers a comprehensive account of the metabolic repertoire
 
 ## Quantitative SIP (qSIP)
 
-In quantitative SIP (qSIP), quantitative estimates of isotope incorporation expressed as atom fraction excess (AFE) which quantifies isotopic enrichment based on a mathematical model. Quantitative estimates of isotopic enrichment of DNA facilitate accurate and sensitive estimates of substrate uptake measurements, and growth and mortality rates of individual taxa in a complex community. Moreover, qSIP analysis is less susceptible to GC and enrichment biases, and taxon abundance, making it amenable to quantify isotopic incorporations in a complex community such as the activated sludge microbiome, with in-situ conditions. Integration of qSIP and quantitative metagenomics (qSIP metagenomics) facilitates the exploration of active microbial populations' taxonomic and metabolic diversity with a quantitative estimate of their abundance and isotope incorporation. 
+In quantitative SIP (qSIP), quantitative estimates of isotope incorporation, expressed as atom fraction excess (AFE), are calculated based on a mathematical model. Quantitative estimates of isotopic enrichment of DNA facilitate accurate and sensitive estimates of substrate uptake measurements, and growth and mortality rates of individual taxa in a complex community. Moreover, qSIP analysis is less susceptible to GC and enrichment biases, and taxon abundance, making it amenable to quantify isotopic incorporations in a complex community such as the activated sludge microbiome, with in-situ conditions. Integration of qSIP and quantitative metagenomics (qSIP metagenomics) facilitates the exploration of active microbial populations' taxonomic and metabolic diversity with a quantitative estimate of their abundance and isotope incorporation. 
 
 
 ## For details on SIP, quantitative metagenomics, and qSIP, please refer to the following works:
@@ -73,11 +73,12 @@ This R package was designed to facilitate statistical analyses using qSIP metage
 
 Overall, the package can perform the following:
 
-1. Coverage normalization and scaling based on internal reference standards to calculate genome (or feature of interest) concentration.
+1. Coverage normalization and scaling based on post-fractionation reference standards, called sequins, to calculate genome (or feature of interest) absolute concentration.
 
 2. Statistical analysis based on either of 
-  + AFE mathematical model by Hungate et al. (2015) or
-  + Multiple hypothesis testing for shifts in centroid buoyant density.
+  + AFE mathematical model by [Hungate et al. (2015)](https://journals.asm.org/doi/10.1128/AEM.02280-15) or
+  + Delta buoyant density $AFE_{ΔBD}$ = $\frac{W_{Lab}- W_{Light}}{I_{max}}$.        Where Imax is the maximum linear shift in DNA BD (upon 100% labeling), as        discussed by [Birnie and Rickwood (1978)](https://www.ncbi.nlm.nih.gov/pmc/articles/PMC2595786/)
+  + Analyses as offered by [HTS-SIP](https://cran.r-project.org/web/packages/HTSSIP/index.html)
   
 3. Data visualization for identification of isotope incorporators.
 
@@ -89,8 +90,6 @@ For normalizing coverage values please see `pooling_funs.R` \n
 
 This R markdown primarily uses `Tidyverse`, `phyloseq`, and `HTSSIP` packages \n
 This markdown uses functions from `functions_qSIP_MAGs.R` \n
-
-Data for this example is here.
 
 For this data, MetaSIPSim (developed by [Barnett et al, 2020](https://bmcbioinformatics.biomedcentral.com/articles/10.1186/s12859-020-3372-6)) was used to simulate a data set from a hypothetical SIP workflow performed on the MBARC-26 mock community (as defined in [Singer et al, 2016](https://www.nature.com/articles/sdata201681)). The data set was further augmented with simulated post-fractionation sequin spike-ins and the data set was simulated to have all 26 organisms as incorporators. Some of the 26 organisms also had plasmids, which were assembled as distinct genomic units, adding the total genomic features in the simulated study to be 38
 
@@ -267,7 +266,7 @@ phylo.qSIP = SIPmg::phylo.table(mag.table, taxonomy.object, samples.object) # Ma
 
 The following steps estimate the atom fraction excess (AFE) in the MAGs. This calculation is based on the mathematical model suggested by [Hungate et al. (2015)](https://journals.asm.org/doi/full/10.1128/AEM.02280-15). In the article, the authors suggest that GC contents of the individual biological features of interest should be accounted for to have a better estimate of AFE. Through the power of metagenomic analysis and the recovery of MAGs, one can estimate the GC content of features of interest and thereby obtain a better estimate of AFE. Thus, here the user would use the GC contents of MAGs in the AFE estimations and obtain isotopic enrichment of individual MAGs. 
 
-An important consideration is that the AFE calculations are based on a mathematical model and are not an absolute estimate of isotopic enrichment. One of the goals of AFE estimation is to determine isotope incorporators. Another way to determine incorporators is by comparing the centroid buoyant density. A statistically significant shift in centroid buoyant density between the unlabeled and labeled organism implies isotope incorporation. For this method, please see this [vignette][qSIP metagenomics and identification of isotope incorporators] which discusses multiple hypothesis testing, statistical analysis for determination of isotope incorporators, and a comparison of the two methods.
+An important consideration is that the AFE calculations are based on a mathematical model and are not an absolute estimate of isotopic enrichment. One of the goals of AFE estimation is to determine isotope incorporators. 
 
 In this example workflow, the approach reported in [Hungate et al. (2015)](https://journals.asm.org/doi/full/10.1128/AEM.02280-15) is used to determine incorporators.
 
@@ -284,7 +283,7 @@ atomX = SIPmg::qSIP_atom_excess_MAGs(phylo.qSIP,
                                treatment_rep='Replicate',
                                Gi = GC_content)
 #Bootstrap confidence intervals
-df_atomX_boot = SIPmg::qSIP_bootstrap_fcr(atomX, n_boot=10) #Change "parallel = FALSE" to compute using a single-core
+df_atomX_boot = SIPmg::qSIP_bootstrap_fcr(atomX, n_boot=10 ) #Change "parallel = FALSE" to compute using a single-core
 
 ```
 
@@ -296,7 +295,7 @@ Plot the atom fraction excess data with 5 % and 95 % quantiles as the confidence
 ```{r Plot atom fraction excess}
 CI_threshold = 0
 df_atomX_boot = df_atomX_boot %>%
-  dplyr::mutate(Incorporator = A_CI_low > CI_threshold,
+  dplyr::mutate(Incorporator = A_CI_fcr_low > CI_threshold,
          OTU = reorder(OTU, -A))
 
 (atom_f_excess_plot = ggplot2::ggplot(df_atomX_boot, aes(OTU, A, ymin=A_CI_low, ymax=A_CI_high, color=Incorporator)) +
@@ -415,7 +414,7 @@ See [these]( https://statisticsbyjim.com/basics/remove-outliers/) [discussions](
 
 Robust linear regression is an alternative to this situation. Robust linear regression assigns appropriate weights to the data points, minimizing the influence of outliers on the model performance, without deleting data. In this pipeline, a Huber loss function from the [`MASS` R package](https://cran.r-project.org/web/packages/MASS/MASS.pdf) was used for robust linear regression.
 
-The user is free to choose between the two methods for regression. However, it is recommended to use robust linear regression.
+The user is free to choose between the two methods for regression. 
 
 ## Scaling the data
 
@@ -527,34 +526,16 @@ It can be seen from the above plots that the regression parameters differ based 
 
 # qSIP metagenomics and identification of isotope incorporators
 
-The isotope incorporators could be identified using two methods:
+The isotope incorporators could be identified using the below methods:
 
-1.	Atom fraction excess (AFE) method. E.g. the Hungate et al. (2015) AFE estimation method.
-2.	Multiple hypothesis testing to assess statistical significance 
++ AFE mathematical model by [Hungate et al. (2015)](https://journals.asm.org/doi/10.1128/AEM.02280-15) or
+  + Delta buoyant density $AFE_{ΔBD}$ = $\frac{W_{Lab}- W_{Light}}{I_{max}}$.        Where Imax is the maximum linear shift in DNA BD (upon 100% labeling), as        discussed by [Birnie and Rickwood (1978)](https://www.ncbi.nlm.nih.gov/pmc/articles/PMC2595786/)
+  + MW-HR-SIP [Youngblut et al. ](https://www.frontiersin.org/articles/10.3389/fmicb.2018.00570/full)
 
-While the first method gives a quantitative estimate of isotopic enrichment in a taxon to determine if it is an incorporator, the second method relies on null hypothesis testing of statistical significance between unlabeled and labeled treatments for a taxon.
+While the first two methods gives a quantitative estimate of isotopic enrichment in a taxon to determine if it is an incorporator, the third method relies on differential abundance analysis over multiple overlapping windows. Please refer to Youngblut et al. and [HTS-SIP R package](https://cran.r-project.org/web/packages/HTSSIP/index.html) for more details.
 
-In this vignette, we will compare the two methods using the data from the introductory vignette to SIPmg. 
 
-Please refer this study, for the AFE method proposed by [Hungate et al. (2015)]( https://journals.asm.org/doi/10.1128/AEM.02280-15)
-
-For significance testing, we will use multiple hypothesis testing with Benjamini-Hohberg method to control the false discovery rate (FDR). FDR correction is performed based on the R package [fdrtool]( https://cran.r-project.org/web/packages/fdrtool/fdrtool.pdf). 
-
-## Why perform multiple hypothesis testing with FDR correction?
-
-For a detailed understanding of the issues with multiple testing, please refer the following works and more
-
-1.	https://www.stat.berkeley.edu/~mgoldman/Section0402.pdf 
-
-2.	https://genomebiology.biomedcentral.com/articles/10.1186/s13059-019-1716-1
-
-3.	 https://mb3is.megx.net/gustame/warnings/warning-multiple-testing
-
-Briefly, when the same statistical test is used to test several hypotheses simultaneously, the chance of falsely rejecting the null hypothesis (false positive rate or the rate of type 1 error) increases. This can be controlled using several methods as discussed in the above links. Of these methods, FDR correction is less conservative in controlling the probability of false positives, and thus has greater statistical power than other familywise error rate control methods.
-
-Ok, now let’s compare the two methods in identifying isotope incorporators
-
-## Comparison of the two methods
+## Comparison of the methods
 
 ### AFE method
 
@@ -599,8 +580,8 @@ taxonomy_tibble = dplyr::bind_rows(gtdbtk_bac_summary, gtdbtk_archaea) #Combine 
 ##Scale MAG coverages to obtain MAG absolute concentrations and save scaling plots in the working directory
 #For rlm scaling using scale_features_rlm
 #For rlm scaling using scale_features_lm
-mag_tab_scaled <- SIPmg::scale_features_rlm(f_tibble, sequins, seq_dil, log_scale, coe_of_variation = coe_of_variation)
-mag_tab = as.matrix(mag_tab_scaled$mag_tab) #Extract absolute abundances as a matrix
+mag_tab_scaled_lm <- SIPmg::scale_features_lm(f_tibble, sequins, seq_dil, log_scale, coe_of_variation = coe_of_variation, cook_filtering = TRUE)
+mag_tab = as.matrix(mag_tab_scaled_lm$mag_tab) #Extract absolute abundances as a matrix
 ```
 
 ```{r Make phyloseq objects 2, echo = F}
@@ -618,27 +599,81 @@ atomX = SIPmg::qSIP_atom_excess_MAGs(phylo.qSIP,
                                treatment_rep='Replicate',
                                Gi = GC_content)
 #Bootstrap confidence intervals
-df_atomX_boot = SIPmg::qSIP_bootstrap_fcr(atomX, n_boot=10) #Change "parallel = FALSE" to compute using a single-core
+df_atomX_boot = SIPmg::qSIP_bootstrap_fcr(atomX, n_boot=10)
 CI_threshold = 0
 df_atomX_boot = df_atomX_boot %>%
-  dplyr::mutate(Incorporator = A_CI_low > CI_threshold,
+  dplyr::mutate(Incorporator_qSIP = A_CI_fcr_low > CI_threshold,
+                Incorporator_delbd = A_delbd - A_delbd_sd > 0,
          OTU = reorder(OTU, -A))
+
+df_atomX_boot = df_atomX_boot %>%
+  inner_join(taxonomy_tibble %>% 
+               select(user_genome, classification) %>%
+               rename(OTU = user_genome)) 
 ```
 
-List out the incorporators
+### MW-HR-SIP
+
+Check incorporators in the overlapping windows of 1.71 - 1.74; 1.72 - 1.75; 1.73 - 1.76. The windows must be chosen in a more judicious manner that fits the hypothesis of the study.
+
+```{r, MW-HR-SIP}
+windows = data.frame(density_min=c(1.71,1.72, 1.73), 
+                     density_max=c(1.74,1.75,1.76))
+
+padj_cutoff = 0.05
+ncores = 6
+doParallel::registerDoParallel(ncores)
+
+mw.hr.sip = qSIPmg::HRSIP(physeq = phylo.qSIP, design = ~Isotope,
+                                    density_windows = windows,
+                                    sparsity_threshold = seq(0, 0.3, 0.05), 
+                                    padj_cutoff = padj_cutoff)
+
+mw.hr.sip = mw.hr.sip %>%
+  mutate(incorp = padj < padj_cutoff)
+
+
+```
+
+Compare number of incorporators
 
 ```{r list incorporators 2}
 #Get incorporator info
-n_incorp_AFE = df_atomX_boot %>%
-  dplyr::filter(Incorporator == TRUE) %>%
-  nrow 
-#Get incorporator list
-incorporator_list_AFE = SIPmg::incorporators_taxonomy(taxonomy = taxonomy_tibble, bootstrapped_AFE_table = df_atomX_boot)
+qSIP_incorp = df_atomX_boot %>%
+  select(OTU, classification, A, A_sd, Incorporator_qSIP) %>%
+  filter(Incorporator_qSIP == TRUE) %>%
+  select(-classification)
+n_qSIP_incorp = nrow(qSIP_incorp)
+
+delbd_incorp = df_atomX_boot %>%
+  select(OTU, classification, A_delbd, A_delbd_sd, Incorporator_delbd) %>%
+  filter(Incorporator_delbd == TRUE) %>%
+  select(-classification)
+n_delbd_incorp = nrow(delbd_incorp)
+
+mw.hr.sip_incorp = mw.hr.sip %>%
+  select(OTU, taxa, incorp) %>%
+  filter(incorp == TRUE) %>%
+  rename("Incorporator_mw_hr.sip" = "incorp") %>%
+  select(-taxa)
+n_mw.hr.sip_incorp = nrow(mw.hr.sip_incorp)
+
+all_incorp_tibble = full_join(qSIP_incorp, full_join(delbd_incorp, mw.hr.sip_incorp, by = "OTU"), by = "OTU")
+
 #Print incorporator information
-cat('Number of incorporators:', n_incorp_AFE, '\n')
-rmarkdown::paged_table(incorporator_list_AFE)
+cat('Number of incorporators detected by qSIP:', n_qSIP_incorp, '\n')
+cat('Number of incorporators detected by ΔBD:', n_delbd_incorp, '\n')
+cat('Number of incorporators detected by MW-HR-SIP:', n_mw.hr.sip_incorp, '\n')
+
+rmarkdown::paged_table(all_incorp_tibble)
+
 ```
 
+It is evident here that the AFE estimates using qSIP model or the ΔBD method are not the same, however, both provide the same incorporator information. Although the incorporators may not be the same everytime, we found an overlap between qSIP and ΔBD methods in our metagenome datasets. We also found that qSIP model provided more accurate estimates of AFE compared to ΔBD method. 
+\n
+It also appears that MW-HR-SIP outputs lower number of incorporators. In our study and by [Youngblut et al.](https://www.frontiersin.org/articles/10.3389/fmicb.2018.00570/full), MW-HR-SIP was found to have better sensitivity compared to qSIP or ΔBD methods. It is interesting that the AFE based methods and differential abundance based methods do not provide the same incorporator identity, which is perhaps due to comparistive analysis in only the multiple overlapping windows in the MW-HR-SIP method, while the AFE methods examine the complete BD gradient. Due to the higher sensitivity of the MW-HR-SIP method, we attempted a sequential analysis with first MW-HR-SIP to eliminate likely false positives, and then perform qSIP to estimate AFE. Such a method reduces multiple comparisons and increases confidence in detecting true incorporators due to higher statistical power.
+\n
+We are merely providing the different methods for the user to decide which method to apply for detecting incorporators in their study. The choice of the method is to the user's discretion that fits best their study.
 ## Session information
 
 ```{r}

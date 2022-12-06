@@ -10,7 +10,7 @@ library(tidyverse)
 library(phyloseq)
 library(HTSSIP)
 library(ggpubr)
-library(qSIPmg)
+library(SIPmg)
 set.seed(seed = 1000)
 
 ## ----Load data----------------------------------------------------------------
@@ -29,12 +29,12 @@ seq_dil = readr::read_csv(file = "mock_input_data/dilutions_data.csv")
 log_scale = TRUE
 
 #coe_of_variation. Acceptable coefficient of variation for coverage and detection (eg. 20 - for 20 % threshold of coefficient of variation) (Coverages above the threshold value will be flagged in the plots)
-coe_of_variation = 20 
+coe_of_variation = 20
 
 #Taxonomy
-gtdbtk_bac_summary = readr::read_delim("mock_input_data/gtdbtk.bac120.summary.tsv", 
+gtdbtk_bac_summary = readr::read_delim("mock_input_data/gtdbtk.bac120.summary.tsv",
                                  "\t", escape_double = FALSE, trim_ws = TRUE)
-gtdbtk_archaea = readr::read_delim("mock_input_data/gtdbtk.ar122.summary.tsv", 
+gtdbtk_archaea = readr::read_delim("mock_input_data/gtdbtk.ar122.summary.tsv",
                              "\t", escape_double = FALSE, trim_ws = TRUE)
 #GC content
 GC_content <- readr::read_csv(file = "mock_input_data/GC_content.csv")
@@ -50,7 +50,7 @@ taxonomy_tibble = dplyr::bind_rows(gtdbtk_bac_summary, gtdbtk_archaea) #Combine 
 ##Scale MAG coverages to obtain MAG absolute concentrations and save scaling plots in the working directory
 #For rlm scaling using scale_features_rlm
 #For rlm scaling using scale_features_lm
-mag_tab_scaled <- qSIPmg::scale_features_rlm(f_tibble, sequins, seq_dil, log_scale, coe_of_variation = coe_of_variation)
+mag_tab_scaled <- SIPmg::scale_features_rlm(f_tibble, sequins, seq_dil, log_scale, coe_of_variation = coe_of_variation)
 mag_tab = as.matrix(mag_tab_scaled$mag_tab) #Extract absolute abundances as a matrix
 
 ## ----example scaling plot, echo = FALSE---------------------------------------
@@ -60,17 +60,17 @@ mag_tab_scaled$plots$plots[[1]]
 
 mag.table = phyloseq::otu_table(mag_tab, taxa_are_rows = TRUE) #Phyloseq OTU table
 
-taxonomy.object = qSIPmg::tax.table(taxonomy_tibble) # Create a taxonomy phyloseq object
-samples.object = qSIPmg::sample.table(fractions) # Create a samples phyloseq object
-phylo.qSIP = qSIPmg::phylo.table(mag.table, taxonomy.object, samples.object) # Make a phyloseq table for downstream qSIP analysis
+taxonomy.object = SIPmg::tax.table(taxonomy_tibble) # Create a taxonomy phyloseq object
+samples.object = SIPmg::sample.table(fractions) # Create a samples phyloseq object
+phylo.qSIP = SIPmg::phylo.table(mag.table, taxonomy.object, samples.object) # Make a phyloseq table for downstream qSIP analysis
 
 ## ----Calculate atom fraction excess-------------------------------------------
-atomX = qSIPmg::qSIP_atom_excess_MAGs(phylo.qSIP,
+atomX = SIPmg::qSIP_atom_excess_MAGs(phylo.qSIP,
                                control_expr='Isotope=="12C"',
                                treatment_rep='Replicate',
                                Gi = GC_content)
 #Bootstrap confidence intervals
-df_atomX_boot = qSIPmg::qSIP_bootstrap_fcr(atomX, n_boot=10) #Change "parallel = FALSE" to compute using a single-core
+df_atomX_boot = SIPmg::qSIP_bootstrap_fcr(atomX, n_boot=10) #Change "parallel = FALSE" to compute using a single-core
 
 
 ## ----Plot atom fraction excess------------------------------------------------
@@ -94,18 +94,18 @@ ggplot2::ggsave(filename = "atom_fration_excess.pdf", plot = atom_f_excess_plot)
 #Get incorporator info
 n_incorp = df_atomX_boot %>%
   dplyr::filter(Incorporator == TRUE) %>%
-  nrow 
+  nrow
 #Get incorporator list
-incorporator_list = qSIPmg::incorporators_taxonomy(taxonomy = taxonomy_tibble, bootstrapped_AFE_table = df_atomX_boot)
+incorporator_list = SIPmg::incorporators_taxonomy(taxonomy = taxonomy_tibble, bootstrapped_AFE_table = df_atomX_boot)
 #Print incorporator information
 cat('Number of incorporators:', n_incorp, '\n')
 print(incorporator_list, n = nrow(incorporator_list))
 
 ## ----SIP plots,comment=FALSE, message=FALSE, warning=FALSE--------------------
 #Load function for abundance plots
-data_vis_table = qSIPmg::sip_vis(fractions = fractions, mag_tab = mag_tab, afe_tab = df_atomX_boot, taxonomy = taxonomy_tibble)
+data_vis_table = SIPmg::sip_vis(fractions = fractions, mag_tab = mag_tab, afe_tab = df_atomX_boot, taxonomy = taxonomy_tibble)
 
-(plot_bd = ggplot2::ggplot(data_vis_table, aes(x = buoyant_density, y = normalized_abundance, 
+(plot_bd = ggplot2::ggplot(data_vis_table, aes(x = buoyant_density, y = normalized_abundance,
                         shape = replicate, color = isotope)) +
   geom_point() +
   #scale_alpha_discrete(range = c(1,0.4)) +
@@ -127,7 +127,7 @@ data_vis_table = qSIPmg::sip_vis(fractions = fractions, mag_tab = mag_tab, afe_t
   geom_boxplot() +
   theme_bw() +
   facet_wrap(~taxonomy, ncol = 4))
-  
+
 
 ## ----Load data 2, echo = FALSE------------------------------------------------
 ##Load data
@@ -148,10 +148,10 @@ coe_of_variation = 50
 
 
 ## ----robust linear regression-------------------------------------------------
-mag_tab_scaled_rlm <- qSIPmg::scale_features_rlm(f_tibble, sequins, seq_dil, log_scale, coe_of_variation = coe_of_variation)
+mag_tab_scaled_rlm <- SIPmg::scale_features_rlm(f_tibble, sequins, seq_dil, log_scale, coe_of_variation = coe_of_variation)
 
 ## ----linear regression--------------------------------------------------------
-mag_tab_scaled_lm <- qSIPmg::scale_features_lm(f_tibble, sequins, seq_dil, log_scale, coe_of_variation = coe_of_variation, cook_filtering = TRUE)
+mag_tab_scaled_lm <- SIPmg::scale_features_lm(f_tibble, sequins, seq_dil, log_scale, coe_of_variation = coe_of_variation, cook_filtering = TRUE)
 
 ## ----load images, echo = F----------------------------------------------------
 rlm_example = EBImage::readImage("rlm-example.png")
@@ -205,12 +205,12 @@ seq_dil = readr::read_csv(file = "mock_input_data/dilutions_data.csv")
 log_scale = TRUE
 
 #coe_of_variation. Acceptable coefficient of variation for coverage and detection (eg. 20 - for 20 % threshold of coefficient of variation) (Coverages above the threshold value will be flagged in the plots)
-coe_of_variation = 20 
+coe_of_variation = 20
 
 #Taxonomy
-gtdbtk_bac_summary = readr::read_delim("mock_input_data/gtdbtk.bac120.summary.tsv", 
+gtdbtk_bac_summary = readr::read_delim("mock_input_data/gtdbtk.bac120.summary.tsv",
                                  "\t", escape_double = FALSE, trim_ws = TRUE)
-gtdbtk_archaea = readr::read_delim("mock_input_data/gtdbtk.ar122.summary.tsv", 
+gtdbtk_archaea = readr::read_delim("mock_input_data/gtdbtk.ar122.summary.tsv",
                              "\t", escape_double = FALSE, trim_ws = TRUE)
 #GC content
 GC_content <- readr::read_csv(file = "mock_input_data/GC_content.csv")
@@ -226,24 +226,24 @@ taxonomy_tibble = dplyr::bind_rows(gtdbtk_bac_summary, gtdbtk_archaea) #Combine 
 ##Scale MAG coverages to obtain MAG absolute concentrations and save scaling plots in the working directory
 #For rlm scaling using scale_features_rlm
 #For rlm scaling using scale_features_lm
-mag_tab_scaled <- qSIPmg::scale_features_rlm(f_tibble, sequins, seq_dil, log_scale, coe_of_variation = coe_of_variation)
+mag_tab_scaled <- SIPmg::scale_features_rlm(f_tibble, sequins, seq_dil, log_scale, coe_of_variation = coe_of_variation)
 mag_tab = as.matrix(mag_tab_scaled$mag_tab) #Extract absolute abundances as a matrix
 
 ## ----Make phyloseq objects 2, echo = F----------------------------------------
 
 mag.table = phyloseq::otu_table(mag_tab, taxa_are_rows = TRUE) #Phyloseq OTU table
 
-taxonomy.object = qSIPmg::tax.table(taxonomy_tibble) # Create a taxonomy phyloseq object
-samples.object = qSIPmg::sample.table(fractions) # Create a samples phyloseq object
-phylo.qSIP = qSIPmg::phylo.table(mag.table, taxonomy.object, samples.object) # Make a phyloseq table for downstream qSIP analysis
+taxonomy.object = SIPmg::tax.table(taxonomy_tibble) # Create a taxonomy phyloseq object
+samples.object = SIPmg::sample.table(fractions) # Create a samples phyloseq object
+phylo.qSIP = SIPmg::phylo.table(mag.table, taxonomy.object, samples.object) # Make a phyloseq table for downstream qSIP analysis
 
 ## ----AFE methodGet bootstrapped AFE table 2-----------------------------------
-atomX = qSIPmg::qSIP_atom_excess_MAGs(phylo.qSIP,
+atomX = SIPmg::qSIP_atom_excess_MAGs(phylo.qSIP,
                                control_expr='Isotope=="12C"',
                                treatment_rep='Replicate',
                                Gi = GC_content)
 #Bootstrap confidence intervals
-df_atomX_boot = qSIPmg::qSIP_bootstrap_fcr(atomX, n_boot=10) #Change "parallel = FALSE" to compute using a single-core
+df_atomX_boot = SIPmg::qSIP_bootstrap_fcr(atomX, n_boot=10) #Change "parallel = FALSE" to compute using a single-core
 CI_threshold = 0
 df_atomX_boot = df_atomX_boot %>%
   dplyr::mutate(Incorporator = A_CI_low > CI_threshold,
@@ -253,9 +253,9 @@ df_atomX_boot = df_atomX_boot %>%
 #Get incorporator info
 n_incorp_AFE = df_atomX_boot %>%
   dplyr::filter(Incorporator == TRUE) %>%
-  nrow 
+  nrow
 #Get incorporator list
-incorporator_list_AFE = qSIPmg::incorporators_taxonomy(taxonomy = taxonomy_tibble, bootstrapped_AFE_table = df_atomX_boot)
+incorporator_list_AFE = SIPmg::incorporators_taxonomy(taxonomy = taxonomy_tibble, bootstrapped_AFE_table = df_atomX_boot)
 #Print incorporator information
 cat('Number of incorporators:', n_incorp_AFE, '\n')
 rmarkdown::paged_table(incorporator_list_AFE)
