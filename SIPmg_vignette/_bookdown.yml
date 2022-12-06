@@ -1,6 +1,0 @@
-book_filename: qSIPmg vignette
-delete_merged_file: true
-chapter_name: "Chapter "
-output_dir: docs
-rmd_files: ["index.Rmd", "01_data_scaling_vignette.Rmd", "02_incorporator_identification_vignette.Rmd"]
-clean: [packages.bib, bookdown.bbl]
