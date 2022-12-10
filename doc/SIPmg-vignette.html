@@ -221,9 +221,9 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <div class="sourceCode" id="cb1"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="co">#Load required libraries</span></span>
 <span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(tidyverse)</span>
 <span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; ── Attaching packages ─────────────────────────────────────── tidyverse 1.3.2 ──</span></span>
-<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; ✔ ggplot2 3.3.6      ✔ purrr   0.3.5 </span></span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; ✔ ggplot2 3.4.0      ✔ purrr   0.3.5 </span></span>
 <span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; ✔ tibble  3.1.8      ✔ dplyr   1.0.10</span></span>
-<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; ✔ tidyr   1.2.1      ✔ stringr 1.4.1 </span></span>
+<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; ✔ tidyr   1.2.1      ✔ stringr 1.5.0 </span></span>
 <span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; ✔ readr   2.1.3      ✔ forcats 0.5.2 </span></span>
 <span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; ── Conflicts ────────────────────────────────────────── tidyverse_conflicts() ──</span></span>
 <span id="cb1-9"><a href="#cb1-9" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; ✖ dplyr::filter() masks stats::filter()</span></span>
@@ -414,73 +414,77 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <span id="cb3-7"><a href="#cb3-7" aria-hidden="true" tabindex="-1"></a>mag_tab_scaled <span class="ot">&lt;-</span> SIPmg<span class="sc">::</span><span class="fu">scale_features_rlm</span>(f_tibble, sequins, seq_dil, log_scale, <span class="at">coe_of_variation =</span> coe_of_variation)</span>
 <span id="cb3-8"><a href="#cb3-8" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Warning in rlm.default(x, y, weights, method = method, wt.method = wt.method, :</span></span>
 <span id="cb3-9"><a href="#cb3-9" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; &#39;rlm&#39; failed to converge in 20 steps</span></span>
-<span id="cb3-10"><a href="#cb3-10" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; `geom_smooth()` using formula &#39;y ~ x&#39;</span></span>
-<span id="cb3-11"><a href="#cb3-11" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; `geom_smooth()` using formula &#39;y ~ x&#39;</span></span>
-<span id="cb3-12"><a href="#cb3-12" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; `geom_smooth()` using formula &#39;y ~ x&#39;</span></span>
-<span id="cb3-13"><a href="#cb3-13" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; `geom_smooth()` using formula &#39;y ~ x&#39;</span></span>
-<span id="cb3-14"><a href="#cb3-14" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; `geom_smooth()` using formula &#39;y ~ x&#39;</span></span>
-<span id="cb3-15"><a href="#cb3-15" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; `geom_smooth()` using formula &#39;y ~ x&#39;</span></span>
-<span id="cb3-16"><a href="#cb3-16" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; `geom_smooth()` using formula &#39;y ~ x&#39;</span></span>
-<span id="cb3-17"><a href="#cb3-17" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; `geom_smooth()` using formula &#39;y ~ x&#39;</span></span>
-<span id="cb3-18"><a href="#cb3-18" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; `geom_smooth()` using formula &#39;y ~ x&#39;</span></span>
-<span id="cb3-19"><a href="#cb3-19" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; `geom_smooth()` using formula &#39;y ~ x&#39;</span></span>
-<span id="cb3-20"><a href="#cb3-20" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; `geom_smooth()` using formula &#39;y ~ x&#39;</span></span>
-<span id="cb3-21"><a href="#cb3-21" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; `geom_smooth()` using formula &#39;y ~ x&#39;</span></span>
-<span id="cb3-22"><a href="#cb3-22" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; `geom_smooth()` using formula &#39;y ~ x&#39;</span></span>
-<span id="cb3-23"><a href="#cb3-23" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; `geom_smooth()` using formula &#39;y ~ x&#39;</span></span>
-<span id="cb3-24"><a href="#cb3-24" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; `geom_smooth()` using formula &#39;y ~ x&#39;</span></span>
-<span id="cb3-25"><a href="#cb3-25" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; `geom_smooth()` using formula &#39;y ~ x&#39;</span></span>
-<span id="cb3-26"><a href="#cb3-26" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; `geom_smooth()` using formula &#39;y ~ x&#39;</span></span>
-<span id="cb3-27"><a href="#cb3-27" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; `geom_smooth()` using formula &#39;y ~ x&#39;</span></span>
-<span id="cb3-28"><a href="#cb3-28" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; `geom_smooth()` using formula &#39;y ~ x&#39;</span></span>
-<span id="cb3-29"><a href="#cb3-29" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; `geom_smooth()` using formula &#39;y ~ x&#39;</span></span>
-<span id="cb3-30"><a href="#cb3-30" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; `geom_smooth()` using formula &#39;y ~ x&#39;</span></span>
-<span id="cb3-31"><a href="#cb3-31" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; `geom_smooth()` using formula &#39;y ~ x&#39;</span></span>
-<span id="cb3-32"><a href="#cb3-32" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; `geom_smooth()` using formula &#39;y ~ x&#39;</span></span>
-<span id="cb3-33"><a href="#cb3-33" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; `geom_smooth()` using formula &#39;y ~ x&#39;</span></span>
-<span id="cb3-34"><a href="#cb3-34" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; `geom_smooth()` using formula &#39;y ~ x&#39;</span></span>
-<span id="cb3-35"><a href="#cb3-35" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; `geom_smooth()` using formula &#39;y ~ x&#39;</span></span>
-<span id="cb3-36"><a href="#cb3-36" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; `geom_smooth()` using formula &#39;y ~ x&#39;</span></span>
-<span id="cb3-37"><a href="#cb3-37" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; `geom_smooth()` using formula &#39;y ~ x&#39;</span></span>
-<span id="cb3-38"><a href="#cb3-38" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; `geom_smooth()` using formula &#39;y ~ x&#39;</span></span>
-<span id="cb3-39"><a href="#cb3-39" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Warning in rlm.default(x, y, weights, method = method, wt.method = wt.method, :</span></span>
-<span id="cb3-40"><a href="#cb3-40" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; &#39;rlm&#39; failed to converge in 20 steps</span></span>
-<span id="cb3-41"><a href="#cb3-41" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; `geom_smooth()` using formula &#39;y ~ x&#39;</span></span>
-<span id="cb3-42"><a href="#cb3-42" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; `geom_smooth()` using formula &#39;y ~ x&#39;</span></span>
-<span id="cb3-43"><a href="#cb3-43" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; `geom_smooth()` using formula &#39;y ~ x&#39;</span></span>
-<span id="cb3-44"><a href="#cb3-44" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; `geom_smooth()` using formula &#39;y ~ x&#39;</span></span>
-<span id="cb3-45"><a href="#cb3-45" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; `geom_smooth()` using formula &#39;y ~ x&#39;</span></span>
-<span id="cb3-46"><a href="#cb3-46" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; `geom_smooth()` using formula &#39;y ~ x&#39;</span></span>
-<span id="cb3-47"><a href="#cb3-47" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; `geom_smooth()` using formula &#39;y ~ x&#39;</span></span>
-<span id="cb3-48"><a href="#cb3-48" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; `geom_smooth()` using formula &#39;y ~ x&#39;</span></span>
-<span id="cb3-49"><a href="#cb3-49" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; `geom_smooth()` using formula &#39;y ~ x&#39;</span></span>
-<span id="cb3-50"><a href="#cb3-50" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; `geom_smooth()` using formula &#39;y ~ x&#39;</span></span>
-<span id="cb3-51"><a href="#cb3-51" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; `geom_smooth()` using formula &#39;y ~ x&#39;</span></span>
-<span id="cb3-52"><a href="#cb3-52" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; `geom_smooth()` using formula &#39;y ~ x&#39;</span></span>
-<span id="cb3-53"><a href="#cb3-53" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; `geom_smooth()` using formula &#39;y ~ x&#39;</span></span>
-<span id="cb3-54"><a href="#cb3-54" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; `geom_smooth()` using formula &#39;y ~ x&#39;</span></span>
-<span id="cb3-55"><a href="#cb3-55" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; `geom_smooth()` using formula &#39;y ~ x&#39;</span></span>
-<span id="cb3-56"><a href="#cb3-56" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; `geom_smooth()` using formula &#39;y ~ x&#39;</span></span>
-<span id="cb3-57"><a href="#cb3-57" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; `geom_smooth()` using formula &#39;y ~ x&#39;</span></span>
-<span id="cb3-58"><a href="#cb3-58" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; `geom_smooth()` using formula &#39;y ~ x&#39;</span></span>
-<span id="cb3-59"><a href="#cb3-59" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; `geom_smooth()` using formula &#39;y ~ x&#39;</span></span>
-<span id="cb3-60"><a href="#cb3-60" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; `geom_smooth()` using formula &#39;y ~ x&#39;</span></span>
-<span id="cb3-61"><a href="#cb3-61" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; `geom_smooth()` using formula &#39;y ~ x&#39;</span></span>
-<span id="cb3-62"><a href="#cb3-62" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; `geom_smooth()` using formula &#39;y ~ x&#39;</span></span>
-<span id="cb3-63"><a href="#cb3-63" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; `geom_smooth()` using formula &#39;y ~ x&#39;</span></span>
-<span id="cb3-64"><a href="#cb3-64" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; `geom_smooth()` using formula &#39;y ~ x&#39;</span></span>
-<span id="cb3-65"><a href="#cb3-65" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; `geom_smooth()` using formula &#39;y ~ x&#39;</span></span>
-<span id="cb3-66"><a href="#cb3-66" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; `geom_smooth()` using formula &#39;y ~ x&#39;</span></span>
-<span id="cb3-67"><a href="#cb3-67" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; `geom_smooth()` using formula &#39;y ~ x&#39;</span></span>
-<span id="cb3-68"><a href="#cb3-68" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; `geom_smooth()` using formula &#39;y ~ x&#39;</span></span>
-<span id="cb3-69"><a href="#cb3-69" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; `geom_smooth()` using formula &#39;y ~ x&#39;</span></span>
-<span id="cb3-70"><a href="#cb3-70" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; `geom_smooth()` using formula &#39;y ~ x&#39;</span></span>
-<span id="cb3-71"><a href="#cb3-71" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; `geom_smooth()` using formula &#39;y ~ x&#39;</span></span>
-<span id="cb3-72"><a href="#cb3-72" aria-hidden="true" tabindex="-1"></a>mag_tab <span class="ot">=</span> <span class="fu">as.matrix</span>(mag_tab_scaled<span class="sc">$</span>mag_tab) <span class="co">#Extract absolute abundances as a matrix</span></span></code></pre></div>
+<span id="cb3-10"><a href="#cb3-10" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Warning: The dot-dot notation (`..rr.label..`) was deprecated in ggplot2 3.4.0.</span></span>
+<span id="cb3-11"><a href="#cb3-11" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; ℹ Please use `after_stat(rr.label)` instead.</span></span>
+<span id="cb3-12"><a href="#cb3-12" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; ℹ The deprecated feature was likely used in the SIPmg package.</span></span>
+<span id="cb3-13"><a href="#cb3-13" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;   Please report the issue to the authors.</span></span>
+<span id="cb3-14"><a href="#cb3-14" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; `geom_smooth()` using formula = &#39;y ~ x&#39;</span></span>
+<span id="cb3-15"><a href="#cb3-15" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; `geom_smooth()` using formula = &#39;y ~ x&#39;</span></span>
+<span id="cb3-16"><a href="#cb3-16" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; `geom_smooth()` using formula = &#39;y ~ x&#39;</span></span>
+<span id="cb3-17"><a href="#cb3-17" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; `geom_smooth()` using formula = &#39;y ~ x&#39;</span></span>
+<span id="cb3-18"><a href="#cb3-18" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; `geom_smooth()` using formula = &#39;y ~ x&#39;</span></span>
+<span id="cb3-19"><a href="#cb3-19" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; `geom_smooth()` using formula = &#39;y ~ x&#39;</span></span>
+<span id="cb3-20"><a href="#cb3-20" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; `geom_smooth()` using formula = &#39;y ~ x&#39;</span></span>
+<span id="cb3-21"><a href="#cb3-21" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; `geom_smooth()` using formula = &#39;y ~ x&#39;</span></span>
+<span id="cb3-22"><a href="#cb3-22" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; `geom_smooth()` using formula = &#39;y ~ x&#39;</span></span>
+<span id="cb3-23"><a href="#cb3-23" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; `geom_smooth()` using formula = &#39;y ~ x&#39;</span></span>
+<span id="cb3-24"><a href="#cb3-24" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; `geom_smooth()` using formula = &#39;y ~ x&#39;</span></span>
+<span id="cb3-25"><a href="#cb3-25" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; `geom_smooth()` using formula = &#39;y ~ x&#39;</span></span>
+<span id="cb3-26"><a href="#cb3-26" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; `geom_smooth()` using formula = &#39;y ~ x&#39;</span></span>
+<span id="cb3-27"><a href="#cb3-27" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; `geom_smooth()` using formula = &#39;y ~ x&#39;</span></span>
+<span id="cb3-28"><a href="#cb3-28" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; `geom_smooth()` using formula = &#39;y ~ x&#39;</span></span>
+<span id="cb3-29"><a href="#cb3-29" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; `geom_smooth()` using formula = &#39;y ~ x&#39;</span></span>
+<span id="cb3-30"><a href="#cb3-30" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; `geom_smooth()` using formula = &#39;y ~ x&#39;</span></span>
+<span id="cb3-31"><a href="#cb3-31" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; `geom_smooth()` using formula = &#39;y ~ x&#39;</span></span>
+<span id="cb3-32"><a href="#cb3-32" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; `geom_smooth()` using formula = &#39;y ~ x&#39;</span></span>
+<span id="cb3-33"><a href="#cb3-33" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; `geom_smooth()` using formula = &#39;y ~ x&#39;</span></span>
+<span id="cb3-34"><a href="#cb3-34" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; `geom_smooth()` using formula = &#39;y ~ x&#39;</span></span>
+<span id="cb3-35"><a href="#cb3-35" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; `geom_smooth()` using formula = &#39;y ~ x&#39;</span></span>
+<span id="cb3-36"><a href="#cb3-36" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; `geom_smooth()` using formula = &#39;y ~ x&#39;</span></span>
+<span id="cb3-37"><a href="#cb3-37" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; `geom_smooth()` using formula = &#39;y ~ x&#39;</span></span>
+<span id="cb3-38"><a href="#cb3-38" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; `geom_smooth()` using formula = &#39;y ~ x&#39;</span></span>
+<span id="cb3-39"><a href="#cb3-39" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; `geom_smooth()` using formula = &#39;y ~ x&#39;</span></span>
+<span id="cb3-40"><a href="#cb3-40" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; `geom_smooth()` using formula = &#39;y ~ x&#39;</span></span>
+<span id="cb3-41"><a href="#cb3-41" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; `geom_smooth()` using formula = &#39;y ~ x&#39;</span></span>
+<span id="cb3-42"><a href="#cb3-42" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; `geom_smooth()` using formula = &#39;y ~ x&#39;</span></span>
+<span id="cb3-43"><a href="#cb3-43" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Warning in rlm.default(x, y, weights, method = method, wt.method = wt.method, :</span></span>
+<span id="cb3-44"><a href="#cb3-44" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; &#39;rlm&#39; failed to converge in 20 steps</span></span>
+<span id="cb3-45"><a href="#cb3-45" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; `geom_smooth()` using formula = &#39;y ~ x&#39;</span></span>
+<span id="cb3-46"><a href="#cb3-46" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; `geom_smooth()` using formula = &#39;y ~ x&#39;</span></span>
+<span id="cb3-47"><a href="#cb3-47" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; `geom_smooth()` using formula = &#39;y ~ x&#39;</span></span>
+<span id="cb3-48"><a href="#cb3-48" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; `geom_smooth()` using formula = &#39;y ~ x&#39;</span></span>
+<span id="cb3-49"><a href="#cb3-49" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; `geom_smooth()` using formula = &#39;y ~ x&#39;</span></span>
+<span id="cb3-50"><a href="#cb3-50" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; `geom_smooth()` using formula = &#39;y ~ x&#39;</span></span>
+<span id="cb3-51"><a href="#cb3-51" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; `geom_smooth()` using formula = &#39;y ~ x&#39;</span></span>
+<span id="cb3-52"><a href="#cb3-52" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; `geom_smooth()` using formula = &#39;y ~ x&#39;</span></span>
+<span id="cb3-53"><a href="#cb3-53" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; `geom_smooth()` using formula = &#39;y ~ x&#39;</span></span>
+<span id="cb3-54"><a href="#cb3-54" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; `geom_smooth()` using formula = &#39;y ~ x&#39;</span></span>
+<span id="cb3-55"><a href="#cb3-55" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; `geom_smooth()` using formula = &#39;y ~ x&#39;</span></span>
+<span id="cb3-56"><a href="#cb3-56" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; `geom_smooth()` using formula = &#39;y ~ x&#39;</span></span>
+<span id="cb3-57"><a href="#cb3-57" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; `geom_smooth()` using formula = &#39;y ~ x&#39;</span></span>
+<span id="cb3-58"><a href="#cb3-58" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; `geom_smooth()` using formula = &#39;y ~ x&#39;</span></span>
+<span id="cb3-59"><a href="#cb3-59" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; `geom_smooth()` using formula = &#39;y ~ x&#39;</span></span>
+<span id="cb3-60"><a href="#cb3-60" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; `geom_smooth()` using formula = &#39;y ~ x&#39;</span></span>
+<span id="cb3-61"><a href="#cb3-61" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; `geom_smooth()` using formula = &#39;y ~ x&#39;</span></span>
+<span id="cb3-62"><a href="#cb3-62" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; `geom_smooth()` using formula = &#39;y ~ x&#39;</span></span>
+<span id="cb3-63"><a href="#cb3-63" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; `geom_smooth()` using formula = &#39;y ~ x&#39;</span></span>
+<span id="cb3-64"><a href="#cb3-64" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; `geom_smooth()` using formula = &#39;y ~ x&#39;</span></span>
+<span id="cb3-65"><a href="#cb3-65" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; `geom_smooth()` using formula = &#39;y ~ x&#39;</span></span>
+<span id="cb3-66"><a href="#cb3-66" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; `geom_smooth()` using formula = &#39;y ~ x&#39;</span></span>
+<span id="cb3-67"><a href="#cb3-67" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; `geom_smooth()` using formula = &#39;y ~ x&#39;</span></span>
+<span id="cb3-68"><a href="#cb3-68" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; `geom_smooth()` using formula = &#39;y ~ x&#39;</span></span>
+<span id="cb3-69"><a href="#cb3-69" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; `geom_smooth()` using formula = &#39;y ~ x&#39;</span></span>
+<span id="cb3-70"><a href="#cb3-70" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; `geom_smooth()` using formula = &#39;y ~ x&#39;</span></span>
+<span id="cb3-71"><a href="#cb3-71" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; `geom_smooth()` using formula = &#39;y ~ x&#39;</span></span>
+<span id="cb3-72"><a href="#cb3-72" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; `geom_smooth()` using formula = &#39;y ~ x&#39;</span></span>
+<span id="cb3-73"><a href="#cb3-73" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; `geom_smooth()` using formula = &#39;y ~ x&#39;</span></span>
+<span id="cb3-74"><a href="#cb3-74" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; `geom_smooth()` using formula = &#39;y ~ x&#39;</span></span>
+<span id="cb3-75"><a href="#cb3-75" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; `geom_smooth()` using formula = &#39;y ~ x&#39;</span></span>
+<span id="cb3-76"><a href="#cb3-76" aria-hidden="true" tabindex="-1"></a>mag_tab <span class="ot">=</span> <span class="fu">as.matrix</span>(mag_tab_scaled<span class="sc">$</span>mag_tab) <span class="co">#Extract absolute abundances as a matrix</span></span></code></pre></div>
 <div id="example-of-a-scaling-plot" class="section level4">
 <h4>Example of a scaling plot</h4>
 <p>An example of a scaling plot is as below</p>
-<pre><code>#&gt; `geom_smooth()` using formula &#39;y ~ x&#39;</code></pre>
+<pre><code>#&gt; `geom_smooth()` using formula = &#39;y ~ x&#39;</code></pre>
 <p><img src="data:image/png;base64,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" /><!-- --></p>
 </div>
 </div>
@@ -637,7 +641,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <span id="cb11-8"><a href="#cb11-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_boxplot</span>() <span class="sc">+</span></span>
 <span id="cb11-9"><a href="#cb11-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_bw</span>() <span class="sc">+</span></span>
 <span id="cb11-10"><a href="#cb11-10" aria-hidden="true" tabindex="-1"></a>  <span class="fu">facet_wrap</span>(<span class="sc">~</span>taxonomy, <span class="at">ncol =</span> <span class="dv">4</span>))</span></code></pre></div>
-<p><img src="data:image/png;base64,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" /><!-- --></p>
+<p><img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAASAAAAEgCAIAAACb4TnXAAAACXBIWXMAAA7DAAAOwwHHb6hkAAAgAElEQVR4nO2df0xbZ5rvv0yHNEzZZpmkl0kwSRwwWnUjdUWz9cYJWh/mrhqzwhPNZRCTAIlGXWOv7tYg3Q4SRCPULVx55ypgaUf86G6VEhpZCbpCHhWno1mOdSGnddrJbaRs1OVHIfg4TLa03IzIj0ka+f5xzrGPj88xxz+Owfj9/BPznOe8z/s65/H7vD/O+xSEw2EQCARt+M5mV4BA2M4QByMQNIQ4GIGgIcTBCAQNIQ5GIGgIcTACQUO+u9kVSIsjR45oUexnn322ibZy3ZCsrbwltx0MwKVLlzJb4KlTpzbdVu4aSmArPyEhIoGgIcTBCAQNIQ5GIGgIcTACQUOIgxEIGkIcjEDQEOJgBIKG5I2DsR6b2UyJsHlYzQy5GPEHjdC6/K1fgVwg5xeak8HSS3ea+M+My/y25/hIky7TRnRNI/5Ml7m5hrZsBXKB3O7BVlZWbB4WjCv5Tmn/garZO8sAGJfZ5fHYKIoymxMVsLa6yl8VdYb8DzjrsdlcLpvZbHYx/O8642oemiu42hXtzWJvAcB6Vu/elTP12GU2UxRlFvcPQhujQnFXafN4XHFVEmmu3l2LN3P37lq0qEj9OWNpVGDtseJ3mIfktoPt3fMnGGo2T9fQNE1fbMPQB2ojFnZmarbqwH7uD9/QVO1Fmvb3VQw1u5Qej0dPuH8ZV/NU7Zifs7jQJTxtsz6c9fv9kR7S1DlmN4RP9Pk7TfK3MK7mqZ0v7Ys39HjtmwX7GE3T/j508S7PuLrQS9M0TY/ZozajzA5NHRijaZruPeG7oPZnZt/3I+XH1J9xdaVTgUfr6+rs5wW57WAofL62qsp+2gQAuv0VWFhO9HD5uiMjsJbhir5ofGg526QDYDptr1r49qn8zS/u4P41dfqFG3X7K6LXLTUmmbuUbzF1+keKC2W0Hz0q4qoDU41ldmqGbxHfNF3TSNSLRdb5WyIdsxp2FonKj9SfmfZZ0qnAjicK32BekrdjMDGRrky3v2L2aUCmV5HAuMzdVwsAhHGiRp1t2Vser8mEiM+iH/cfqOI+mDrHlm3N5uGCgnDYYB/L1NDxOaF8EezyAiDUUOsKbH9yvAfLMOzyQlXhc4l1GJfZPF3Dx3vxz6fqWxiX2fyoSMaZRfaX78wKH3VNI34/zcWxb2dqAvRZtPwIMd2y1hXY/hAHAzDLj92YD4ZQ+7xc2AbgD9wYjF1eiIkGEwelyrewywuwFO2UUS8qesQPo5hpX1XtcR3AuBLOv8ghCpjZmaknsjqPH/Hlx2CqsfgyUAECgDwLEZWosuACRXWHwwb7WKf3515ZJX4Mpmv6hd3WQlEAwoYTFm7Es1/uBt3x2qqhLjP6/J0yt5iafmG3tQyvxN+3s+T7FUPN1HBBOHyiz88NDjv7ps0t1DCAqHADTKftF1paqGHA0NZWhPfjNe5+g77/LVOUqbNv2px+BQgAUJDTB48eOXIk7VcGGZf5wgHRoOLUqVOyL+Qe3FfR4/cpTmSkhKytTDRq0wwp2cpbtl0PxnpszUNzBQViWUbG5TtfKsmsdxHygW3nYLqmEX9TMjeYOv2qHEd2Sp1ASAyZ5CAQNIQ4GIGgIdqEiKFxpyN4ytthlMhGF8VaVLe3wyiRczIAgX5rLw1A3zrobihTNpXNM4yyZmv7GcpbNHAw3jUoibiswe1tEOlcKm80AgAbXIx4lUBo3NmLbq+Xc7/+csllMVevXlVftRMnTmxYjhqddAypsZW1RmXKkBpb+UmGHSzQb+2l9a32as/Q7VkgcQ92OdDQYQwF50o+p61WANH+i/1isfh6r5XmFf/lYoexRcHinj17sNEZmpFZY8n08erqKne7Svbs2aPS0IblpKCQbG3VG8pOo/KTDDuYscPrNXE9WKnkUqQHC407HTdewIPqRiOAqY/YtcirFJ/2OscH3Q0I3ilef83pPWcE19kVhQAhTJQ8DaurqxvWKoGOmtvVK0cUEvcM6stRI09gK2VDsjppNio/0a4HCympXB59eAg4PthQBmDyd/dQ2jr4bkMZgFD/KcfMTTTs/uLek5KjCstW4h/UiLMlFeqkQ9YMIUPBqhqy2ah8Q4MerAP4jf0i7ks8TBIifumwBru9HXUD3rpAv9VqBaCnDOsIA9C9UPxkbcJhnQAA7Ia+XFSOdieqEwgZR5tJjn++C0j3sXIhYqDf6qZ1P7YbRj/iJjki8xmh9844JopB7Qbw4AlQave+W4fQey2OiZWgqBzZHmxbQjqWbYA2IWLTvoueb+Suh4K3i9d1hi+GlloHO8oABH41unjIbgz0W3uXTv6wZOLWHiOAah2uP3jIDby+Azz+io2OwSSkMx+QwiTHZhlSWUjWDKVgKz/RLkQUiFkTY2/cW9/18tx16sw5zmF01bpdV4asvQAwcesQvlcUAvAwrKcOjDqso4CeMoB+8HXUhMpJDpVj7vQnObJmSGUhWTOUrK38RJuF5j0/KMQzvsspa3BH3//QVetLH94u/NE/CBP4N2fY+49e645OGALA1EeLobIzXu85AJhst3568JVo2fkTIhK2Adpv9o3twYKLD77Uvf6WEO+Ffr8G4Hovvw4GQH8TDbWv63776x5eVnoIL5XHlRohm8uaWbO1/QzlL2EtYK+8WX/+E7krn5yvf/MKGysQNKN3yQoJhNwjy5t9Q8Elfc1R8XyFrlxPXxoPAQh9PL1ImYyKQgIh98h+iIjYeK+swd0dtHLzGa2DbqOykEDIPXL7yAACYYtD3gcjEDSEOBiBoCG5fSaHRutgsi9oZM1WrhuStZW35LaDAdDihLNNt5W7hhLYyk9IiEggaAhxMAJBQ4iDEQgaQhyMQNAQ4mAEgoYQByMQNIQ4GIGgIdvOwViPzRyfozuXbWXBiqyJjewyrqx90TlMzi80S9E1jfi3l61stmgr2N1e5HYP9pj7h/XYbC6XzWw2u5jI7674Bzj6mfXYbB6Pi6IoiqJsHhaM6DMAMGt31+RMYfXuGqNkizdh5oqK/q7HC2NvWZWztbq6zkbvt3kYj42zFU3iKvwRV34k1StvR6jtXTlDKysrZlFm2GlXoqrKtA7AtCu+yat3ZTK75y257WDfrPEuhlkfzvr9/k4Vqb5mh+7UcPnIMdRsno58/kB4SB5tVEC8LcbVPFU7xqc5X+gSnnYZ4cbsxOMZ7qFnZ6ZQe5zLT6s7XoupGLlOpnxTZ1/F0AcMmA+GKvq4Cs76cNa/b19JvKG9e/eKMpr7Fg6M0TRN954QMjQnbh1/z8W4Ju98SSaze96S2w5W9OiR8J8tzjKemCr7aRPA5VCOfI6mDFdBvC1Tp1/IoKnbX5FIuDHP7+Q9ifcjXhz1MEEub/S0faGb6l7gGyZbW9mKW85y/+4/wCWR3qh1ont0TWctvmmG1ySZCsXk9hjsEZ4ts8h0Ztcdqd3GuMzdVwsAhHGiJqEwMYWchzUdn5lC7S+iB4jrjtfibak8vnzd8VrDkMgxM4RcQ6oOyGV/f7xGQsQoud2D7du3Z2vku2dcZvN0DR9EVSUSqqDw+VpMzTAx/Rcg9GFRuXz5zAdDFZaKaMCbAZQaEunp2OWFqOajIhIiRsltB7sbnQ+IQxT1sTNTs0mU+iQJKQe7vBATiS0sswrC2FoplFl4vBbD3cNx3ZAuRi5v1HNhwX6687R9QTqQUqi5ijUAWUMAAC4uBDszNWupMfGaRdJD0/Oa3A4RX9xVrNyBmU7bL7S0UMOAoa3NgjuqS5UPEYsS3KFr+oXd1kJRAMKGExZuEGOSE+pialWE9+XLUwjzYuQyRlnPhaGKs34d0HS2wvy25/gvErVzZWXF3DxlHxsxwXMh2dZx4zZMU1R3OGywj42YIprDK4ms5hm5fejNkSNHMv3KIGMx9yzcXcqKLZw6dUr2RePcNaRkK2/J7RCRQNjiEAeTYCrZRzKGEDIGcTACQUOIgxEIGqLNLGLMcdkimSiFLACq29thlMg5GfhUfuCOzm5QSL5HIGx1tEkh20sDlETMpZCN6lziUsiCDS5GvEogklcWoXGno79ccllMNg8Jy5qt7Wcob9EmhWx363RvMJFWr5BCFqHgkr68UaLABoWUKmVHa/SjTKDDqORhSSUyTpAOK1KOGp10DKmxlbVGaZEGmuQcE6NNCtkbPR6EZoFEIaLDGuz2dhjZ4OIi7bCOAgBKf+J9twUIBedKPqejSfmKmRCMQpgoex6tygc6fbJmKLGtTcmPvqHnkKzt8WgUIt4ASiViIUQM9FsvldsPjn5U3mgEQsyn2FHdM95TDYTeO+No6Pnz8Z6nQfbpmjivrDjjUTopZLP2BGTzUUvfFvEc7dAmRGzad9HzTSj2UkwPNrQI4HKgoQNYp360i0sXq299vfTJ5/8O1O4qeVJ8l8srq6deS2iRS3Qv2TqwurrKyROjUk1sK2uGkFKjUjOUZbW8QoMQ0cRNcki3fHI9WKDf+v59HfvkT/GgutEIoLH1kiPIz2e84RiFfjdQ9ujpE2EX7yJ9HYf/RjSNKOm1lBLdK8lTU0ugnDVDKgvJiCFZtQ37saRM5wka9mBy10PBpdIdi08P4cHxwYYyAIFfjS4eshsBhD6e+s/vYveROiC09hQoPjl46WdlofdaHBPz4jFYOiEiQYlrP1R8q+7Yv5GjbVJHm0mO39gvRkTSFLIPvnyxEK++McA5jK5aV/LrIat1CAB2H8KLRSEAf7ZP/8JLEw7rBKCnDKCXbgIJJzkIaUK8SCO0WWje84NCPOM9oqzB7Y1cMJqo9U9p3Y8bhflFNsi+oNetrRm6vR3GQL/1EidcRPnPvd5zABDostLfisqW9GCycb+mQ6NNMaSykKwN9lKwlZ9k+X2wUPB28bqu9mhkTFV4fwd7Y59kofnrJYTu3wO3gePrhyg++IpiiWQMtlmGkrWVn2jvYLEh4o176yUno/4V+jL0BLjeG13zOsyioe7Ua0PuHl5WUoK//KnyXqlsLmtmzdb2M5S/hLWAvfJm/flP5C+8eYWVqnIi0U2yQgIh98h2DxZcRHnM5bIGd3fQ6rCOcvt6jcpCAiH3yO0jAwiELQ55H4xA0BDiYASChhAHIxA0JLfPRdRoV4fsqWNZs5XrhmRt5S257WAAtDhCcNNt5a6hBLbyExIiEggaQhyMQNAQ4mAEgoYQByMQNIQ4GIGgIcTBCAQNIQ5GIGhIjjvY03W5BI1C2kY16Rs3C9ZjM5tXVtTlqlPfkK3c5LxExUKzr62gbkQssE2Ghy1aVSg5CotH/J2KV3VNI/7s1SV5LCV7b2a4yK3e5LwjcQ827z5WUFCHyZhXyCZRV1BwzD2fpRom4nFMD8a4zGaKosy2D/h0sZGfc/HvevQz67HZPB4XRVEURdk8LBgXRVGKvcrjtaimYpngCqEoypxWTyK0xWzzsIyreWiu4GoXX2Dkksi6zeWymc1mF6PQ5NW7axsZEtdWbF1OkrDtarvl/CCRg827z7RjYE7aXVmGw3MDaD+zBVxMfPYi4+pasI/RNO0/i6tzBeoKmB26U0PTNH2xDUPN5ukamqb37vkTWdW7j4oEzQ+UPYdxdaGXpmmaHrMvdKXoYk89ti70+Wma9vdVDL29fHrMbgif6PN3mkTNjCl/1oezfr+/U/HsNVkz4i+tD13RXw6xdQ8rI0nU9r1796bU6u1JAgeb//AyYzvnrJS5VPm3jSbm8oeb72FRmGmf5WyTDgBMp9sMKt8irbKfNgGA7nhtlfC5UD5sfrF4JwDo9ldgYVnhEQMA4aquaWSjB963Jvtj//SPU7OWGu5WU6d/pEmUC52Z9lVxSdB1TWctvmnBwwT9ZCjEY9GXVmOZnZphAXZGaj1eolhk4m8mH0kwBpu7rfz7W1l1GMztOUDO/TYDdnkBqOH/0O2vwJ3NqYepc2zZ1mweLigIhw32sUQPY6IxWNWB/Yp3zQ63UMMAgDAMB1gk71kCT78VfWn7D1QpW09Unwh821cKVIYPeUHO76bnifGpGG/Lek2aRvxNAMC4zG97jid2MSVm7ywDCjdaeunYnjHlTqPwuxXRP5bvzOKAkvVE9RGhaxrxN5Hd9GJyfJo+iqnG4rvAjQ6YD4YlYzBRXMfOTM1mxKBsmYwrOi+QMoXP11YJwZ902l3czIS2Yqv3RE7lMXaKShNiT91xqXUZiWZt33Zslx5MCFCo4YKw4YRFOgYznbZfaGmhhgFDW5slM/GjXJmmzr5pMxfBhcMn+vyJuy/f2opsNFXYNNLnMpspIc406djlqqEuM/r8nabOvmlzMzXMXepULj+mekV4P15jJ19frrRIbXVS64ApTrI/YdsJERKcKhW3/iVl89fDjhw5osW7iUpvNGfHVk4bUrKVHPPuY4bLjXPXZGfYNrrX54PFslXmBhL1YJbhcJj8HKUL67E1D83FjvtVzH/kN5XOa2FnKjfynmnZIvsgsJ1CxC1KZM6DkJdsMMnhayvgOOae5/Z18LT5slM/Qj4y7z4W2SskfupinjvRBU467z5maGfAtBvkbo7cyRXuFj/ZcmVm6BFP5GC+toK6WwNz4XA4PNd42VBgaD/Mb5qaG7hVtzU2SxG2NXzIJ+zSmxu4Vcc9+PPuY5HHUZBWOq/NDZhgGpgLX3NWyuvwMO3t3AbAuQG0G3i5WD9jj3iinRyztyDs5Kh0nrMBtpN8bFvpPGdLtJMjNO609gfiZbFwGrHyyF2Bfk7gHJfkeibkGYerIjMWlc5r4fCwBfD9sp2xTfJTbJXOczaMTEg7nIQ6woVK5/sDppF33PMSfe4Rb/9l2r1Yijs5ACju5AhwOZopiZjL0RzVuVTeKOSDoCT5wRAad/aCT9zsdPSXSy6LyeayZtZsbT9DKVLpPGcrqCsYAeImrU0vGyKfDS+bcHl2HtK5DUUd0QVhU9L87C2A4W1FCpidR3ozktrkaLZXe4ZuzwJitwiNOx2ji2Lly4GGDmMoOFfyOc3nAhM8jf1isfh6r5XmFf/lYoexRcEiNyOc+AxNpVlj2RyNCYr67LPPVBra8EzPxNXesFEqE1VvWB/Zb0YpdWWm2p4Uwly2r413NC0Xh0wDqS0NJECDHM0mrgcrlVyK9GChcafjxgt4UN1oBDD1EbsWeZXi017n+KC7AcE7xeuvOb3njOA6u6KQYo7mNJM+ZiQfZIQjR45cvXo1/aI2NCRWSGBRZTkbpuFT0yj1bU8JztF8bQV1E75hCwDm8ofzTt4b5m4zOHyuEpAMWhR1RNEXNxKyoBKHY/QzhHY9mNLQKXB59OEh4PhgQxmAyd/dQ2nr4LsNZQBC/accMzfRsPuLe09KjiosE8n+eGv5X5sKGanPVmvUJuBrK6hDtMuan70FU6MBqHxrwGRo/6XPOWwB5t3vjMA2aUHsJnSLgg4AYKSu7WR42IJ595l2hpNz+mfcf8t1YvwUX7o92gYONhIbk8b+ZYvXN3Z4vR3Ab+wXcV/iYZIQ8UuHNdjt7agb8NYF+q1WKwA9ZVhHGIDuheInaxMO6wQAYDf04px92p2oroZ8fug3oe2W4fBkW0F0mT4Sw1U6r83hmIG/Eg0bLSdtqKsrGLFNhoctCjoATAMDqOMuROV8mYaC9lhb6ZH5pJmfnK+vr6+v/8n/VLj403rHlQ/P8yliozli2X9tra//af35T8Jh9h//W339Gx+Gw+Ew+6/N9fU/Oc/KlRUOv/rqq7Lyr776Sk1NZdWUypSVp2NIqcx0GpU1Q8na2kIIU/nZIf0Q0ddWMHFS+BHgQ8SmfRc938gph4K3i9d1hi+GlloHO8oABH41unjIbgz0W3uXTv6wZOLWHiOAah2uP3jIDby+Azz+io2OwSQoDTNUDq7SH4NlzZDKQrJmKFlb+YkGkxx8iCgQm6P5xr31XS/PXafOnOMcRlet23VlyNoLABO3DuF7RSEAD8N66sAol6OZMoB+8HXUxOaGiARCUmizF3HPDwrxjO9yyhrc3sgFXbW+9OHtwh/9gzCBf3OGvf/ote7ohCEATH20GCo74/WeA4DJduunB1+Jlq1yhppAkCflncQpof1m39geLLj44Evd628J8V7o92sArvfy62AA9DfRUPu67re/7uFlpYfwUnlcqRE2nGLOIFmztf0M5S3aOFjp4TLs4o94iOnBjCZqfan8aGQ8Vfazv6cmGBPnfpwr1gEoN6z9xRmRsFxhAJbNTIpZs7X9DOUzWT4yIBRc0tccFbuLrlxPXxoPAQh9PL1ImYyKQgIh98h+iIjYeK+swd0dtHLzGa2DbqOykEDIPRIcGaCSmGl6AoEgJn0HIxAIiiQYg0XeZlaCvNVM2BxyaHkmgYNZhsWbS2ATpYCYtEVfWSMQCIqoCRElW5oVZdlHo18ypWPbsmMr1w3J2sosR44cyZU1hpw/VUqLIwQ33VbuGkpgKz9R42CWtwZMBv79GQ5fW92IaWCOhIgE7Ujcwap83XvTUdWDVTqvhavEr+XANhm+RtyLoDHXfph06phj/7a1Euiq3skRnfIIh8ObPfYiENJk3n0s4SGLPOKp9JROcds22VUIBNX42goM7Yz478jpi6LzEOfdx8T5kycPtxuS97EN1sHafFBeECPrYITcw9dWUFB3a2ByIBp9+iZGIqlcK53nbMztOQC+X7ZjYC4aq1mG5waQ9EmJGyR/iHwgWSAI2UeLARX/NM+7L4tF0SGPb2LE9PJb3L+NczFnclQ6ryW97Snnp+nlYT225jtnVSUFT0I1M1XKlkEBxmW+sP5S8vdtWoWjZH2SY959rO7WwNxwJTAXc6Zwyqgdg8UewZ/aeC+LqMhAni8w07BUPP7j082ux9bH11YgykpmeNl0a1bTs+mjxJyKn/p4TzMYF0VRFEWZI9lWxZlX469yUrOZoiiz7YNoukvWYzObV1ZWElni7hIbsnk8LjNnQmQgTlOWp+vxspWVleg9rMdmjitcvkWysJ4LCwdO1zz3+I8bGFJZYdn6yApzC2FCI3pQW2XVYWn6BcnMoyrUOFjsqfgAYBmezMjJ+OnyGAAYVxd6aZqm6TH7Qpf0f1j+KuPqWrCP0TTtP4urfEJnxtU8VTvm37t3r5K5yF0xhmaHpg6M0TRN954QEh4raMaVt/bV43jp3pKd0TTMzVO1Y36apumLbUJBidsbCzszhdrjOlPRc39IaEhtheXrEyuUadIWR+hAYhefLG+JMq8A8LUZ2jHwVpILVLk9Tf8tH/jwCbkVAsP4q8y0z3KWyzBpOt3GJ3Q2dfoTZ518LOQJh67prEVICw4IRe0/UDV7Z5kvX1ZTgqlkn8wR8HiuUChHVCXd/opELZKH9y9gZ1FRQkNqKyxXH6VK5gzzH15mgJE66fx4pfNaeBIRcWrn/Ob2VqmnzyBkPzcPCym6Y51E7iq7vADU8Aq6/RXRpOiMy7win5icY3ZYyPIdhuEAC+WnW73mBjAuc/fVAgBhnKhRapE87MzU7NycyrzkaiscVx+p8PsqG6YCDbdliGYEEx0zlfYMutqtUqIziAFN0lCkQuFzAERpWhmX+W3PcckjF381xqci3sa4zF3o8++9mWCvqqWXju0y2HQ0mbW7d5VtRatEd/Jzeootkr2bnZmC/SLdpFO1AVdVheXqIxVm6izSBFsKc2g3vdoQsdJ5TbxVait4F4DnCwHGZbZ5FJ9z+aumGktkmPPBMDcGY5cXYKlJ1NHsFN2V0GhM+cqa7PIzyEVuIoXYKi0ssxuaFt09M1VxVmWmdbUVlqlPnPBbMmEpQk0PNu8+Zrh9bivuPywEYOrsmzZz0U04fKLPL40QZa9yYRY1XBA2nLBwYzBd0y/sthZKmjcwrrBmapiLzToTPLuqNHVNu158L1HzRFUKG05YuAFT4vZGYWemKmpG5K+lXGG5+kiFwdV9aq3mAam+cLk1OHLkiBavTim9cJkdWzltSMlW3qJ6kuMd91uWrREXEiSwHlvz0FxBzNzMRvMfhCyhxsF8v2xnAEbImxRBy2SeBPVE5jwIWw9VPRjZ7EsgpIaqnRxt8a+myMkIhOyQQ8e2abObPua4bJFMlEIWANXt7TBK5JwMfCo/cEdnNyjkfiAQtjqJHGzefSz63mdsemYA4pTSMfCuIZ3vLmtwextEOpfKG4Xj6iNeJRAad/ai2+vl3K+/XHJZTDbPMMqare1nKG9J5GDCFpIkpun5FLLdrdO9wURavUIKWYSCS/ryRokCGxRSqpQdrdGPMoEOo5KHZTwzd4KUWVmzlZQhNRXOiKH065OHqJ3kUFkcn0L2Ro8HoVkgUYjosAa7vR1GNri4SDusowCA0p94320BQsG5ks/paFK+YiYEoxAmbm78nfjp2fCBlqilbEsLx9hq5NGxbbHBYgSFafpAv7X3BlAqEQshYqDfeqncfnD0o/JGIxBiPsWO6p7xnmog9N4ZR0PPn4/3PA2yT9fEeWXFGY8kKWT37JHZkL66uiorT00twobKKktLvxyxgvgLyUiLlApJ/MRr8Vj/7n+5k73l1f+RvfSwalC3VepMO6Nu0YsPEZv2XfR8E4q9FNODDS0CuBxo6ADWqR/t4tLF6ltfL33y+b8DtbtKnhTf5fLK6qnXElpUSnSvJE9NLaKcuOuIlKZSLbFCgkISlJBsi9IvJOVbNhPJ/j9fW0EdN8kQ+6BH5SnucFfjYHO3GdjOqVpSNnZ4vSZukmOn5BLXgwX6re/f17FP/hQPqhuNABpbLzmC/HzGG45R6HcDZY+ePlnn95su0tdx+G9E04jphIh5HnSlyfb5ini3sfF/zruP1WEyHLZwftfm41ws8iK/RbjJcAzJ+pgaBzO8bMJtdcWJezC566HgUumOxaeH8OD4YEMZgMCvRhcP2Y0AQh9P/ed3sftIHRBaewoUnxy89LOy0Hstjol58RhMEiKqqxchERkZMeYKvraCuhHTwOTA5TrhoRa/G/a3jab2Cd+wxSJ7bNsxwy99zqS2L6lxsJWSfSEAABPvSURBVErnOVtBzAuXivCTHL+xX4yIpClkH3z5YiFefWOAcxhdta7k10NW6xAA7D6EF4tCAP5sn/6FlyYc1glATxlAL90EMjHJsc2elW2PFgMqmWPbRMx/eJnhorUsHtvma6sbgcxKmPKwbM8PCvGM94iyBrc3csFootY/pXU/bhTmF9kg+4Jet7Zm6PZ2GAP91kuccBHlP/d6zwFAoMtKfysqW3aSI7Xxd/pTAtmcTVFTSGqGJN+PRo1KgaxOcvAzeaI39TNxbFuW9yKGgreL13W1RyNjqsL7O9gb+yQLzV8vIXT/HrgNHF8/RPHBVxRLVDO21nRKQKPZlJQLyeYkR45NbCSGX/b1tRUcc89dc/LHtlnS9DHtDx6NDRFv3FsvORn1r9CXoSfA9d7omtdhFg11p14bcvfwspIS/OVPlfdKqVnWzNTSZ9aWULefodzBctJWNzEHWKoOM+98OO8UzWmk8uaxWgeLrITZJsNvzR4THdAoR+nhMuyq4j7HhIi6ar2++vWou5Q19LROO6ZrBt0NZZwn9hkB6P5Mv/5VVGhS2saRzSXFrNnafoa2Or62gndeFp5n4ehsWN4aeMdgaKsSHIo7ti3Zk55UncnBH3kanuTmNSud78eeGJeQ0LjT2h/g/2CDi5LLZQ3u7oOjDqvV6piuGeQjRVkhgaANluG5xssG/nS2qKtl5Ni2pI4MEG1K3LrHCBC2CSlPF2+pnnmbJn8g5D75c2yb5a0B08g74qPouYNHkz1FmEDIO5LK0dwO8MthW+TgUQJhi6NmDLZ10WirlNKxbdmxleuGZG3lLTk/BtPiCMFNt5W7hhLYyk9UHp097z4WSbo37z5GDrwhEFShqgfztRnaD0+GI2miuVQQbWSWnkDYAFXHtk2MwHZS7EuVznM2jEyQXoxASExuJ+AjELY4qtfB6sSjLrIORiCoIql1sC2XgI9A2OKonqYnB9QTCMmzXcZgrMdmdqWe0DfN27cRjIt8EZlkuzgYgbAlyW0HW1lZMYsyCk+7zBRFURQV/Q1mPTZznBCMy2ymKMrM/1gzruahuYKrXdyfT9fljT1dlxbFemw2l8tmNptdjLgPFH9mXNwtZvFV4a7Hii2L1DDSuliJenNgXGbX+rrsu/2PY78HgWmXtJnJNG1tNXFm9/witx1s7969/r6Kobe5h9C3cGCMpmm690Q0oXfzVO2Yn6Zp+mLbQhf/HDCurgX7GE3TY3ZOZuocsxvCJ/r8nSYwa1/JP/ZrXz2OLwqzPpz1+/2dCsnTGVcXemlaZCvmLunZkTxPPbYu9PlpmhZax8ZJkjEH3x8ey5h6vPYN9z34+9AlSnzuWzhwUdLMpJpWTHI0R8ltBwMAU6efT5VqOcv9u/8Al55bfA26/RX8Dcy0r6r2uA6ArumsxTcd+wyZSvbJn5RUsm9PXFEALDUKviWwsMwCXBrKqBtG7pJz5qd/nJoVFLgWsDNSSXLmUFRcHK/66FER/42ZaiyzUzOCh/Hfo9y3o6ZpRQo/G/lJzm/23RDGZe6+WgAgjBM1vGx2uIXipkTDMBxgsYGPJCoqMabOsWVbs3m4oEA+afLTb+Xvqzqwf0NJEuaqCp+TiXufRT/uP1CVnKWNm0YAsN0djHGZu9Dnpzu5TOF3BLmll44N6qIhF7N2V34IsXb37vR/jy9qIyIJlBmX+W3PcclzWKjw/c/eWQZ0iSUpmIvluejH5TuzOCC1xC4vAAl+SJKxlbfkfoiYYIadXV6ICeG4kMZUY4mO0URTJPwtz1AkW9gzFMUVJUK3v0IQsjNTs5wwvnwpcuFU4fO1VUJsxrVOdzxOkpS52T+sy8SiRUWPhO8hEjUDAG8pEpem2DQCkOs92MrKirl5yj42YoLnQvxlXdMv7LYWigIQNpywVPG/zabOvmlzMzXMxTadOgC647VVQ11m9Pk7d734nqytXS8+65YUFRNKmU7bL7S0UMOAoa3NgjsAOEtcNBoOn+jzq/yNL2wa6XOZzZQQfZkAU5xkfxLmqoqwFG9mZ8n3K4a47yGmbhZMU1R3xFBGm5Z35PwbzVq8m6j0RnN2bGXaEOMyX7j20voXN7U2xKP0BeYnuR8iEghbGOJg2x5Tp3+kuHCza5GvEAcjEDSEOBiBoCHazCLGZFQRyUZjTqanur0dRomcEjIZBbhEtNC3DroblJOrEAhbGg0cjHcNSiLmcjRHdS6VNwpJLylJfjCExp294BM3Ox395V7l/A/ZPCQsa7a2n6G8JcMOxudotld7hm7PAol7sMuBhg5jKDhX8jnN5wITPI39YrH4eq+V5hX/5WKHsUXBYlJZYdUkQc9IonSVWY+V1DKe6jZrhhLYyk8y7GDGDq/XxPVgpZJLkR4sNO503HgBD6objQCmPmLX1gSdT3ud44PuBgTvFK+/5vSeM4Lr7IpCG+Rozloa72zmC1fp6un/IqT5c5CUrXxDux4spKRyefThIeD4YEMZgMnf3UNp6+C7DWUAQv2nHDM30bD7i3tPSo4qbA2Q5GhOqnpZewjI00bg0KAH6wB+Y7+I+xIPk4SIXzqswW5vR92Aty7Qb7VaAegpwzrCAHQvFD9Zm3BYJwAAu6EvF5Uj61Tb0nNU2kq/SlkzlIdoM8nxz3fjt7FyIWKg3+qmdT+2G0Y/4iY5IvMZoffOOCaKQe0G8OAJUGr3vluH0HstjomVoKgcSQ8mm+h+dXVVVp6aWoR45awZUllI1gylYCs/0SZEbNp30fON3PVQ8Hbxus7wxdBS62BHGYDAr0YXD9mNgX5r79LJH5ZM3NpjBFCtw/UHD7mB13eAx1+x0TGYBKVE90ry1NQSKGfNkMpCsmYoWVv5iXYhokDMmhh74976rpfnrlNnznEOo6vW7boyZO0FgIlbh/C9ohCAh2E9dWDUYR0F9JQB9IOvoya0S7pDIGQcbRaa9/ygEM/4Lqeswe2NXNBV60sf3i780T8IE/g3Z9j7j17rjk4YAsDUR4uhsjNe7zkAmGy3fnrwlWjZ6UxyEAhZRvv3wWJ7sODigy91r78lxHuh368BuN7Lr4MB0N9EQ+3rut/+uoeXlR7CS+VxpUbI5qpL1mxtP0P5S1gL2Ctv1p//RO7KJ+fr37zCxgoEzehdssKtyKuvvppBtfQLyZqhTNna9mR5s28ouKSvOSqer9CV6+lL4yEAoY+nFymTUVFIIOQe2Q8RERvvlTW4u4NWbj6jddBtVBYSCLlHbh8ZQCBsccj7YASChhAHIxA0hDgYgaAhuX0uokYLzeTUMUKmyG0HA6DFWYVSkeQEBNF7ATHvYk+2W4e+5D/rWwdPBR29dLxW5DAEXk1yIIIaW6Fxp+OjRdzjb/kvevynTHUyYChTjcpnNnshLi1effXV/8g00vXTT87X19fXRxe7RUvl7JU3hc/s+Z+K1T75x/r6+jc/jGiJl81F6+afnK+PWXdXY4vXeWNUKPGNer6QDBvKVKPyGzIGS0Sg32rtXWrtbtVHRQxNneJ/n8saTlGLQRaBfquDflJtj6oZzw226hf/IwAAZUdr9DQTAIDA5VG0DkZ/+I0dg60YvRxQa+vGr6zW3tuHUFKCl/l0KGUN73r5QjJoKFONIuR8iKgp/MsBofFpsUgUGDG0vrwRRhOFpfK/ewX/FL01usc59PH0InXKyKvXDMYET1E1NbaqB919bL/1/fs6VqaQ0HjGDGWqUQTSg6VMaNzZu9T6c/6H/2C5zKgjNO60Wh2jaG0Unl9ZtWRt7dslPahXI0PaNiovIA6WGoF+q2O6RhjM68r1S0GZQ0jKGtxer9d7KuhwjoeU1ZK1dff+0+wY0rBR+QJxsOQJjTutvej2RqfKysoPLk5/fE+q1M+PQ4wmajHICmohJTXVttjFB3FK/QENDGnUqHyCOFiShMadjtGD0pNSjY2tGO2ZeSj8HehyjIaq/5rXCTC0vlwnqDmiz16gPybUUmvrJNZwe1YownoqUkimDWnRqDxjm05ysB5b852z/k5T/If0Cg59PL0ILEYPReXXg8oa3N7vtVuHaP6KvrWnaVp4ZzS6MFTW4PaW84doxV5Jxtbr9fqJj65YrVc4aUkJFkcjrx5k0pAGjco3cns3/cYp5JJ3MJI/jpBBcjtEXItmHmZcZjNFUWYuc3CixM2iS+LPjIuiKIqi7t5dk72PQEiB3HawZ9+scfm6PbYu9Plpmvb3VQy9nUJybsbVhV6apmn6pRefZbyehLwltx3sOe4fdmZq1lLDBX+mTv9Iagm5F5ZZACgsJodpEjJGbk9yPIp8qjqwP62STJ1jy7Zm83BBQThM0q0SMkZu92A7Ip9m7yynWZauacTvp2l63/efS7MkAiFCbjsY8GyZBXTHa6t809xkRYLpDQ7d/gohGmRnpvjVJMbFTY4QCJklt0PE53Y8ubMM6HRNI30us5kqKAiHDfaxERM8FxRvMp22X2hpoYYBQ1ubBXcAwNTZN21uoYYBhMPStBUEQsps93Ww5CHrYIQMkushIoGwpSEORiBoCHEwAkFDtJnkkByoEpGJUshC2FEaK48cpSKcokJ2jhJyGW1SyPbSACURcylkozqXuBSyYIOLlPRFiUheWYTGnY7+csllMTKHQBEIWwZtUsh2t073BhNp9QopZBEKLunLGyUKbFBIqVJ2tEY/ygQ6jEoellRm7gTpsCLlkJRZhAyiTQrZGz0ehGaBRCGiwxrs9nYY2eDiIu2wjgIASn/ifbcFCAXnSj6no0n5ipkQjEKYKHvYaGKvSMoJCYQMolGIeAMolYiFEDHQb71Ubj84+lF5oxEIMZ9iR3XPeE81EHrvjKOh58/He54G2adr4ryy4oxHkhSyahLdR3QkC1yrq6tqbicQUkabENFe7RlSOAclwND6g68NCSEii3XqrZ5qAEDZz/5r6cT/+XegdlfJk5J96rbEc4nuE/dRnE6ylwiE9NEmRPyN/SLuSzxMHCJeB67zIWKH1xjot1ppAHrKcA/f2w2UFe54sjbhsE4AAL4HyiSaRiSJzwk5hAbrYIF+6z/fjd9/Vdbg9noHW/Wlh6BvtVPQtzYagcA71obeB91er3fw5P+j5543nKoDQt/8AXj+tUGv19tTveNh4f8VHwv2mYjMV55AyCjahIhN+y56vuFF0hSyD77UvbwnEiIa/+a1J7ev93ITGrtKoAOAsr/6K9z76rrDagV01d9/euMGC6W1MNlBlMrBFRmDEbRGu1nEZ7xHxJyjbDRR63P3564bzpzjLoeCX+mqdOwNQ7e3wxjot14KhmBEcElf/XN3XxkABLqsNx58HTUhCRGVBlEqB1dkDEbQlCy/rhIKLpXuWCxsHRQm8G/OLLJfviZZaJ76aDFUdo/vtL5+iOKDr0QvSmYRs1BpAiFltHcwmRDx9beEeC/0+zUAQogIAPqbaKh9XffbXwvn75UewkvlcaVGIOvChK2MNg5WergMuyL5dSQh4lL50ch4quxnf09NMCbO/ThXrANQblj7izMioVJyAaV5jiNHjqiZAlGpRiCkTJZ304eCS/qao2J30ZXr6UvjIfAZcbgNUrJCAiH3yH6IiNh4r6zB3R20Rg5+NioLCYTcI7ePDCAQtjjkhUsCQUOIgxEIGkIcjEDQEOJgBIKG5PLBo5KTP0Tb9WPOIJhstw59yX/Wtw6eCjp66XityCEgvBo5CISQEcI5yifn6+vr6+vPfxL9+80rbDgcDofZK28Kn9nzPxWrffKP9fX1b34Y0RLuZq+8KSoq/Mn5+khhBEI65GSIGOi3WnuXWrtb9VERQ1On+E6nrOEUtRhkEei3Ougn1faomvHcYKt+8T8CAHfaB80EACBweRStg9HezNgx2IrRyySNNyFtcjJE5Pfsh8anxSJRtMfQ+vJGGE0Ulsr/7hX8U/TW6Mat0MfTi9QpIXV4zWBMRBizv4tASJmc7MESEhp39i61/pzvzQ7KbWMMjTutVscoWhsFp5RVIxDSZps5WKDf6piuEWYodOX6paDM2SBlDW6v1+s9FXQ4x0PKagRC2mwjBwuNO6296PZG5//Kyg8uTn98T6rUzw+ujCZqMcgKaiElNQIhdbaLg4XGnY7Rg9ITgo2NrRjtmXko/B3ocoyGqv+a1wkwtL5cJ6g5og4V6I+JHwmElMnlzb6idTClg+8B6TpYT810D68Zu9pF1sEIGpDLDkYgbHm2S4hIIGxJiIMRCBpCHIxA0BDiYASChhAHIxA0hDhYesy7jxUcc8+ndq/Pl9qNhNyBTNNvEvPuY4bLjXPXnJWbXROClpAejEDQEOJg6SEOEefdxwqitPlilGKk8+5jhnYGTLtB7ubInVzh7jZeHhOKio2JTBG2GMTBMgQf8gkvss4N3KrjHvx59zFD++HJGGml89rcgAmmgbnwNWelvA4P096OSU6OdgMvF+uH5wZu1aU6DCRoTlbfn95+CH4SnhswwTYZrzBpg1ge+TNy4wY6oguRWyT6cX8Ttg6kB8sQlc5ztpE62ZDN9LIh8tnwsgm3ZuO7G0Ud0YXKqsNgbs9hfvYWINgqKCgoqBuBbKGEzYc4WMawDHO/WZOCo2k5NBI6vwhkOnJrQhws43CONmnDyATnYczlDyO9y9xtBoer4n1BUYe5PSfI52dvwXbSwvVkIn3CVibbMek2Q2lcFB1iiQdS4s/iGxR05gZMQMwfYp1IJzZpk+nRCFsD4mDpIZ2riCB+4nlHiTqLWF3sMxIdrvABW/y9MfrEu7YwZCfHFobs9sh9yBiMQNAQ4mAEgoaQEJFA0BDSgxEIGkIcjEDQEOJgBIKGEAcjEDSEOBiBoCHEwQgEDfn/Bi/rRNqhzAIAAAAASUVORK5CYII=" /><!-- --></p>
 </div>
 </div>
 <div id="scaling-coverage-data" class="section level1">
@@ -716,7 +720,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <span id="cb13-2"><a href="#cb13-2" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Warning in rlm.default(x, y, weights, method = method, wt.method = wt.method, :</span></span>
 <span id="cb13-3"><a href="#cb13-3" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; &#39;rlm&#39; failed to converge in 20 steps</span></span>
 <span id="cb13-4"><a href="#cb13-4" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Warning in dir.create(plot_dir): &#39;sequin_scaling_plots_rlm&#39; already exists</span></span>
-<span id="cb13-5"><a href="#cb13-5" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; `geom_smooth()` using formula &#39;y ~ x&#39;</span></span>
+<span id="cb13-5"><a href="#cb13-5" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; `geom_smooth()` using formula = &#39;y ~ x&#39;</span></span>
 <span id="cb13-6"><a href="#cb13-6" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Warning in rlm.default(x, y, weights, method = method, wt.method = wt.method, :</span></span>
 <span id="cb13-7"><a href="#cb13-7" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; &#39;rlm&#39; failed to converge in 20 steps</span></span>
 <span id="cb13-8"><a href="#cb13-8" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Warning in summary.lm(res.lm): essentially perfect fit: summary may be</span></span>
@@ -724,16 +728,18 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <span id="cb13-10"><a href="#cb13-10" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb13-11"><a href="#cb13-11" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Warning in summary.lm(res.lm): essentially perfect fit: summary may be</span></span>
 <span id="cb13-12"><a href="#cb13-12" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; unreliable</span></span>
-<span id="cb13-13"><a href="#cb13-13" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; `geom_smooth()` using formula &#39;y ~ x&#39;</span></span>
-<span id="cb13-14"><a href="#cb13-14" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; `geom_smooth()` using formula &#39;y ~ x&#39;</span></span>
-<span id="cb13-15"><a href="#cb13-15" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; `geom_smooth()` using formula &#39;y ~ x&#39;</span></span>
-<span id="cb13-16"><a href="#cb13-16" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; `geom_smooth()` using formula &#39;y ~ x&#39;</span></span>
+<span id="cb13-13"><a href="#cb13-13" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; `geom_smooth()` using formula = &#39;y ~ x&#39;</span></span>
+<span id="cb13-14"><a href="#cb13-14" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; `geom_smooth()` using formula = &#39;y ~ x&#39;</span></span>
+<span id="cb13-15"><a href="#cb13-15" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; `geom_smooth()` using formula = &#39;y ~ x&#39;</span></span>
+<span id="cb13-16"><a href="#cb13-16" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; `geom_smooth()` using formula = &#39;y ~ x&#39;</span></span>
 <span id="cb13-17"><a href="#cb13-17" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; The following object is masked _by_ .GlobalEnv:</span></span>
 <span id="cb13-18"><a href="#cb13-18" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; </span></span>
 <span id="cb13-19"><a href="#cb13-19" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;     mag_tab</span></span>
-<span id="cb13-20"><a href="#cb13-20" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; The following objects are masked from results (pos = 3):</span></span>
+<span id="cb13-20"><a href="#cb13-20" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; </span></span>
 <span id="cb13-21"><a href="#cb13-21" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; </span></span>
-<span id="cb13-22"><a href="#cb13-22" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;     mag_det, mag_tab, plots, scale_fac</span></span></code></pre></div>
+<span id="cb13-22"><a href="#cb13-22" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; The following objects are masked from results (pos = 3):</span></span>
+<span id="cb13-23"><a href="#cb13-23" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; </span></span>
+<span id="cb13-24"><a href="#cb13-24" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;     mag_det, mag_tab, plots, scale_fac</span></span></code></pre></div>
 <p>If a linear regression is chosen, the function is <code>scale_features_lm</code> which is performed by the function file <code>sequin_scaling_lm.R</code>.</p>
 <p>If the user chooses linear regression, they can choose to perform outlier filtering based on the traditional Cook’s distance threshold of 4/n (n being the sample size). Only the outliers in the sequin coverage data are flagged as outliers with the Cook’s distance threshold and are filtered out. Later, the remaining data is subjected to linear regression to obtain model parameters and to scale coverage values of feature of interest.</p>
 <div class="sourceCode" id="cb14"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a>mag_tab_scaled_lm <span class="ot">&lt;-</span> SIPmg<span class="sc">::</span><span class="fu">scale_features_lm</span>(f_tibble, sequins, seq_dil, log_scale, <span class="at">coe_of_variation =</span> coe_of_variation, <span class="at">cook_filtering =</span> <span class="cn">TRUE</span>)</span>
@@ -744,25 +750,25 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <span id="cb14-6"><a href="#cb14-6" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Warning in summary.lm(.): essentially perfect fit: summary may be unreliable</span></span>
 <span id="cb14-7"><a href="#cb14-7" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb14-8"><a href="#cb14-8" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Warning in summary.lm(.): essentially perfect fit: summary may be unreliable</span></span>
-<span id="cb14-9"><a href="#cb14-9" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; `geom_smooth()` using formula &#39;y ~ x&#39;</span></span>
+<span id="cb14-9"><a href="#cb14-9" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; `geom_smooth()` using formula = &#39;y ~ x&#39;</span></span>
 <span id="cb14-10"><a href="#cb14-10" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Warning in summary.lm(res.lm): essentially perfect fit: summary may be</span></span>
 <span id="cb14-11"><a href="#cb14-11" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; unreliable</span></span>
 <span id="cb14-12"><a href="#cb14-12" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Warning in summary.lm(res.lm): essentially perfect fit: summary may be</span></span>
 <span id="cb14-13"><a href="#cb14-13" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; unreliable</span></span>
-<span id="cb14-14"><a href="#cb14-14" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; `geom_smooth()` using formula &#39;y ~ x&#39;</span></span>
-<span id="cb14-15"><a href="#cb14-15" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; `geom_smooth()` using formula &#39;y ~ x&#39;</span></span>
-<span id="cb14-16"><a href="#cb14-16" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; `geom_smooth()` using formula &#39;y ~ x&#39;</span></span>
-<span id="cb14-17"><a href="#cb14-17" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; `geom_smooth()` using formula &#39;y ~ x&#39;</span></span>
-<span id="cb14-18"><a href="#cb14-18" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; `geom_smooth()` using formula &#39;y ~ x&#39;</span></span>
+<span id="cb14-14"><a href="#cb14-14" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; `geom_smooth()` using formula = &#39;y ~ x&#39;</span></span>
+<span id="cb14-15"><a href="#cb14-15" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; `geom_smooth()` using formula = &#39;y ~ x&#39;</span></span>
+<span id="cb14-16"><a href="#cb14-16" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; `geom_smooth()` using formula = &#39;y ~ x&#39;</span></span>
+<span id="cb14-17"><a href="#cb14-17" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; `geom_smooth()` using formula = &#39;y ~ x&#39;</span></span>
+<span id="cb14-18"><a href="#cb14-18" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; `geom_smooth()` using formula = &#39;y ~ x&#39;</span></span>
 <span id="cb14-19"><a href="#cb14-19" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Warning in summary.lm(res.lm): essentially perfect fit: summary may be</span></span>
 <span id="cb14-20"><a href="#cb14-20" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; unreliable</span></span>
 <span id="cb14-21"><a href="#cb14-21" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb14-22"><a href="#cb14-22" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Warning in summary.lm(res.lm): essentially perfect fit: summary may be</span></span>
 <span id="cb14-23"><a href="#cb14-23" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; unreliable</span></span>
-<span id="cb14-24"><a href="#cb14-24" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; `geom_smooth()` using formula &#39;y ~ x&#39;</span></span>
-<span id="cb14-25"><a href="#cb14-25" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; `geom_smooth()` using formula &#39;y ~ x&#39;</span></span>
-<span id="cb14-26"><a href="#cb14-26" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; `geom_smooth()` using formula &#39;y ~ x&#39;</span></span>
-<span id="cb14-27"><a href="#cb14-27" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; `geom_smooth()` using formula &#39;y ~ x&#39;</span></span>
+<span id="cb14-24"><a href="#cb14-24" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; `geom_smooth()` using formula = &#39;y ~ x&#39;</span></span>
+<span id="cb14-25"><a href="#cb14-25" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; `geom_smooth()` using formula = &#39;y ~ x&#39;</span></span>
+<span id="cb14-26"><a href="#cb14-26" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; `geom_smooth()` using formula = &#39;y ~ x&#39;</span></span>
+<span id="cb14-27"><a href="#cb14-27" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; `geom_smooth()` using formula = &#39;y ~ x&#39;</span></span>
 <span id="cb14-28"><a href="#cb14-28" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Warning in file.remove(plot_dir): cannot remove file &#39;sequin_scaling_plots_lm&#39;,</span></span>
 <span id="cb14-29"><a href="#cb14-29" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; reason &#39;Permission denied&#39;</span></span></code></pre></div>
 </div>
@@ -874,128 +880,128 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 #&gt; ℹ Use `spec()` to retrieve the full column specification for this data.
 #&gt; ℹ Specify the column types or set `show_col_types = FALSE` to quiet this message.</code></pre>
 <pre><code>#&gt; Warning in dir.create(plot_dir): &#39;sequin_scaling_plots_lm&#39; already exists
-#&gt; `geom_smooth()` using formula &#39;y ~ x&#39;
-#&gt; `geom_smooth()` using formula &#39;y ~ x&#39;
-#&gt; `geom_smooth()` using formula &#39;y ~ x&#39;
-#&gt; `geom_smooth()` using formula &#39;y ~ x&#39;
-#&gt; `geom_smooth()` using formula &#39;y ~ x&#39;
-#&gt; `geom_smooth()` using formula &#39;y ~ x&#39;
-#&gt; `geom_smooth()` using formula &#39;y ~ x&#39;
-#&gt; `geom_smooth()` using formula &#39;y ~ x&#39;
-#&gt; `geom_smooth()` using formula &#39;y ~ x&#39;
-#&gt; `geom_smooth()` using formula &#39;y ~ x&#39;
-#&gt; `geom_smooth()` using formula &#39;y ~ x&#39;
-#&gt; `geom_smooth()` using formula &#39;y ~ x&#39;
-#&gt; `geom_smooth()` using formula &#39;y ~ x&#39;
-#&gt; `geom_smooth()` using formula &#39;y ~ x&#39;
-#&gt; `geom_smooth()` using formula &#39;y ~ x&#39;
-#&gt; `geom_smooth()` using formula &#39;y ~ x&#39;
-#&gt; `geom_smooth()` using formula &#39;y ~ x&#39;
-#&gt; `geom_smooth()` using formula &#39;y ~ x&#39;
-#&gt; `geom_smooth()` using formula &#39;y ~ x&#39;
-#&gt; `geom_smooth()` using formula &#39;y ~ x&#39;
-#&gt; `geom_smooth()` using formula &#39;y ~ x&#39;
-#&gt; `geom_smooth()` using formula &#39;y ~ x&#39;
-#&gt; `geom_smooth()` using formula &#39;y ~ x&#39;
-#&gt; `geom_smooth()` using formula &#39;y ~ x&#39;
-#&gt; `geom_smooth()` using formula &#39;y ~ x&#39;
-#&gt; `geom_smooth()` using formula &#39;y ~ x&#39;
-#&gt; `geom_smooth()` using formula &#39;y ~ x&#39;
-#&gt; `geom_smooth()` using formula &#39;y ~ x&#39;
-#&gt; `geom_smooth()` using formula &#39;y ~ x&#39;
-#&gt; `geom_smooth()` using formula &#39;y ~ x&#39;
-#&gt; `geom_smooth()` using formula &#39;y ~ x&#39;
-#&gt; `geom_smooth()` using formula &#39;y ~ x&#39;
-#&gt; `geom_smooth()` using formula &#39;y ~ x&#39;
-#&gt; `geom_smooth()` using formula &#39;y ~ x&#39;
-#&gt; `geom_smooth()` using formula &#39;y ~ x&#39;
-#&gt; `geom_smooth()` using formula &#39;y ~ x&#39;
-#&gt; `geom_smooth()` using formula &#39;y ~ x&#39;
-#&gt; `geom_smooth()` using formula &#39;y ~ x&#39;
-#&gt; `geom_smooth()` using formula &#39;y ~ x&#39;
-#&gt; `geom_smooth()` using formula &#39;y ~ x&#39;
-#&gt; `geom_smooth()` using formula &#39;y ~ x&#39;
-#&gt; `geom_smooth()` using formula &#39;y ~ x&#39;
-#&gt; `geom_smooth()` using formula &#39;y ~ x&#39;
-#&gt; `geom_smooth()` using formula &#39;y ~ x&#39;
-#&gt; `geom_smooth()` using formula &#39;y ~ x&#39;
-#&gt; `geom_smooth()` using formula &#39;y ~ x&#39;
-#&gt; `geom_smooth()` using formula &#39;y ~ x&#39;
-#&gt; `geom_smooth()` using formula &#39;y ~ x&#39;
-#&gt; `geom_smooth()` using formula &#39;y ~ x&#39;
-#&gt; `geom_smooth()` using formula &#39;y ~ x&#39;
-#&gt; `geom_smooth()` using formula &#39;y ~ x&#39;
-#&gt; `geom_smooth()` using formula &#39;y ~ x&#39;
-#&gt; `geom_smooth()` using formula &#39;y ~ x&#39;
-#&gt; `geom_smooth()` using formula &#39;y ~ x&#39;
-#&gt; `geom_smooth()` using formula &#39;y ~ x&#39;
-#&gt; `geom_smooth()` using formula &#39;y ~ x&#39;
-#&gt; `geom_smooth()` using formula &#39;y ~ x&#39;
-#&gt; `geom_smooth()` using formula &#39;y ~ x&#39;
-#&gt; `geom_smooth()` using formula &#39;y ~ x&#39;
-#&gt; `geom_smooth()` using formula &#39;y ~ x&#39;
+#&gt; `geom_smooth()` using formula = &#39;y ~ x&#39;
+#&gt; `geom_smooth()` using formula = &#39;y ~ x&#39;
+#&gt; `geom_smooth()` using formula = &#39;y ~ x&#39;
+#&gt; `geom_smooth()` using formula = &#39;y ~ x&#39;
+#&gt; `geom_smooth()` using formula = &#39;y ~ x&#39;
+#&gt; `geom_smooth()` using formula = &#39;y ~ x&#39;
+#&gt; `geom_smooth()` using formula = &#39;y ~ x&#39;
+#&gt; `geom_smooth()` using formula = &#39;y ~ x&#39;
+#&gt; `geom_smooth()` using formula = &#39;y ~ x&#39;
+#&gt; `geom_smooth()` using formula = &#39;y ~ x&#39;
+#&gt; `geom_smooth()` using formula = &#39;y ~ x&#39;
+#&gt; `geom_smooth()` using formula = &#39;y ~ x&#39;
+#&gt; `geom_smooth()` using formula = &#39;y ~ x&#39;
+#&gt; `geom_smooth()` using formula = &#39;y ~ x&#39;
+#&gt; `geom_smooth()` using formula = &#39;y ~ x&#39;
+#&gt; `geom_smooth()` using formula = &#39;y ~ x&#39;
+#&gt; `geom_smooth()` using formula = &#39;y ~ x&#39;
+#&gt; `geom_smooth()` using formula = &#39;y ~ x&#39;
+#&gt; `geom_smooth()` using formula = &#39;y ~ x&#39;
+#&gt; `geom_smooth()` using formula = &#39;y ~ x&#39;
+#&gt; `geom_smooth()` using formula = &#39;y ~ x&#39;
+#&gt; `geom_smooth()` using formula = &#39;y ~ x&#39;
+#&gt; `geom_smooth()` using formula = &#39;y ~ x&#39;
+#&gt; `geom_smooth()` using formula = &#39;y ~ x&#39;
+#&gt; `geom_smooth()` using formula = &#39;y ~ x&#39;
+#&gt; `geom_smooth()` using formula = &#39;y ~ x&#39;
+#&gt; `geom_smooth()` using formula = &#39;y ~ x&#39;
+#&gt; `geom_smooth()` using formula = &#39;y ~ x&#39;
+#&gt; `geom_smooth()` using formula = &#39;y ~ x&#39;
+#&gt; `geom_smooth()` using formula = &#39;y ~ x&#39;
+#&gt; `geom_smooth()` using formula = &#39;y ~ x&#39;
+#&gt; `geom_smooth()` using formula = &#39;y ~ x&#39;
+#&gt; `geom_smooth()` using formula = &#39;y ~ x&#39;
+#&gt; `geom_smooth()` using formula = &#39;y ~ x&#39;
+#&gt; `geom_smooth()` using formula = &#39;y ~ x&#39;
+#&gt; `geom_smooth()` using formula = &#39;y ~ x&#39;
+#&gt; `geom_smooth()` using formula = &#39;y ~ x&#39;
+#&gt; `geom_smooth()` using formula = &#39;y ~ x&#39;
+#&gt; `geom_smooth()` using formula = &#39;y ~ x&#39;
+#&gt; `geom_smooth()` using formula = &#39;y ~ x&#39;
+#&gt; `geom_smooth()` using formula = &#39;y ~ x&#39;
+#&gt; `geom_smooth()` using formula = &#39;y ~ x&#39;
+#&gt; `geom_smooth()` using formula = &#39;y ~ x&#39;
+#&gt; `geom_smooth()` using formula = &#39;y ~ x&#39;
+#&gt; `geom_smooth()` using formula = &#39;y ~ x&#39;
+#&gt; `geom_smooth()` using formula = &#39;y ~ x&#39;
+#&gt; `geom_smooth()` using formula = &#39;y ~ x&#39;
+#&gt; `geom_smooth()` using formula = &#39;y ~ x&#39;
+#&gt; `geom_smooth()` using formula = &#39;y ~ x&#39;
+#&gt; `geom_smooth()` using formula = &#39;y ~ x&#39;
+#&gt; `geom_smooth()` using formula = &#39;y ~ x&#39;
+#&gt; `geom_smooth()` using formula = &#39;y ~ x&#39;
+#&gt; `geom_smooth()` using formula = &#39;y ~ x&#39;
+#&gt; `geom_smooth()` using formula = &#39;y ~ x&#39;
+#&gt; `geom_smooth()` using formula = &#39;y ~ x&#39;
+#&gt; `geom_smooth()` using formula = &#39;y ~ x&#39;
+#&gt; `geom_smooth()` using formula = &#39;y ~ x&#39;
+#&gt; `geom_smooth()` using formula = &#39;y ~ x&#39;
+#&gt; `geom_smooth()` using formula = &#39;y ~ x&#39;
+#&gt; `geom_smooth()` using formula = &#39;y ~ x&#39;
 #&gt; Warning in dir.create(paste(plot_dir, &quot;/cook_filtering&quot;, sep = &quot;&quot;)):
 #&gt; &#39;sequin_scaling_plots_lm\cook_filtering&#39; already exists
-#&gt; `geom_smooth()` using formula &#39;y ~ x&#39;
-#&gt; `geom_smooth()` using formula &#39;y ~ x&#39;
-#&gt; `geom_smooth()` using formula &#39;y ~ x&#39;
-#&gt; `geom_smooth()` using formula &#39;y ~ x&#39;
-#&gt; `geom_smooth()` using formula &#39;y ~ x&#39;
-#&gt; `geom_smooth()` using formula &#39;y ~ x&#39;
-#&gt; `geom_smooth()` using formula &#39;y ~ x&#39;
-#&gt; `geom_smooth()` using formula &#39;y ~ x&#39;
-#&gt; `geom_smooth()` using formula &#39;y ~ x&#39;
-#&gt; `geom_smooth()` using formula &#39;y ~ x&#39;
-#&gt; `geom_smooth()` using formula &#39;y ~ x&#39;
-#&gt; `geom_smooth()` using formula &#39;y ~ x&#39;
-#&gt; `geom_smooth()` using formula &#39;y ~ x&#39;
-#&gt; `geom_smooth()` using formula &#39;y ~ x&#39;
-#&gt; `geom_smooth()` using formula &#39;y ~ x&#39;
-#&gt; `geom_smooth()` using formula &#39;y ~ x&#39;
-#&gt; `geom_smooth()` using formula &#39;y ~ x&#39;
-#&gt; `geom_smooth()` using formula &#39;y ~ x&#39;
-#&gt; `geom_smooth()` using formula &#39;y ~ x&#39;
-#&gt; `geom_smooth()` using formula &#39;y ~ x&#39;
-#&gt; `geom_smooth()` using formula &#39;y ~ x&#39;
-#&gt; `geom_smooth()` using formula &#39;y ~ x&#39;
-#&gt; `geom_smooth()` using formula &#39;y ~ x&#39;
-#&gt; `geom_smooth()` using formula &#39;y ~ x&#39;
-#&gt; `geom_smooth()` using formula &#39;y ~ x&#39;
-#&gt; `geom_smooth()` using formula &#39;y ~ x&#39;
-#&gt; `geom_smooth()` using formula &#39;y ~ x&#39;
-#&gt; `geom_smooth()` using formula &#39;y ~ x&#39;
-#&gt; `geom_smooth()` using formula &#39;y ~ x&#39;
-#&gt; `geom_smooth()` using formula &#39;y ~ x&#39;
-#&gt; `geom_smooth()` using formula &#39;y ~ x&#39;
-#&gt; `geom_smooth()` using formula &#39;y ~ x&#39;
-#&gt; `geom_smooth()` using formula &#39;y ~ x&#39;
-#&gt; `geom_smooth()` using formula &#39;y ~ x&#39;
-#&gt; `geom_smooth()` using formula &#39;y ~ x&#39;
-#&gt; `geom_smooth()` using formula &#39;y ~ x&#39;
-#&gt; `geom_smooth()` using formula &#39;y ~ x&#39;
-#&gt; `geom_smooth()` using formula &#39;y ~ x&#39;
-#&gt; `geom_smooth()` using formula &#39;y ~ x&#39;
-#&gt; `geom_smooth()` using formula &#39;y ~ x&#39;
-#&gt; `geom_smooth()` using formula &#39;y ~ x&#39;
-#&gt; `geom_smooth()` using formula &#39;y ~ x&#39;
-#&gt; `geom_smooth()` using formula &#39;y ~ x&#39;
-#&gt; `geom_smooth()` using formula &#39;y ~ x&#39;
-#&gt; `geom_smooth()` using formula &#39;y ~ x&#39;
-#&gt; `geom_smooth()` using formula &#39;y ~ x&#39;
-#&gt; `geom_smooth()` using formula &#39;y ~ x&#39;
-#&gt; `geom_smooth()` using formula &#39;y ~ x&#39;
-#&gt; `geom_smooth()` using formula &#39;y ~ x&#39;
-#&gt; `geom_smooth()` using formula &#39;y ~ x&#39;
-#&gt; `geom_smooth()` using formula &#39;y ~ x&#39;
-#&gt; `geom_smooth()` using formula &#39;y ~ x&#39;
-#&gt; `geom_smooth()` using formula &#39;y ~ x&#39;
-#&gt; `geom_smooth()` using formula &#39;y ~ x&#39;
-#&gt; `geom_smooth()` using formula &#39;y ~ x&#39;
-#&gt; `geom_smooth()` using formula &#39;y ~ x&#39;
-#&gt; `geom_smooth()` using formula &#39;y ~ x&#39;
-#&gt; `geom_smooth()` using formula &#39;y ~ x&#39;
-#&gt; `geom_smooth()` using formula &#39;y ~ x&#39;
-#&gt; `geom_smooth()` using formula &#39;y ~ x&#39;
+#&gt; `geom_smooth()` using formula = &#39;y ~ x&#39;
+#&gt; `geom_smooth()` using formula = &#39;y ~ x&#39;
+#&gt; `geom_smooth()` using formula = &#39;y ~ x&#39;
+#&gt; `geom_smooth()` using formula = &#39;y ~ x&#39;
+#&gt; `geom_smooth()` using formula = &#39;y ~ x&#39;
+#&gt; `geom_smooth()` using formula = &#39;y ~ x&#39;
+#&gt; `geom_smooth()` using formula = &#39;y ~ x&#39;
+#&gt; `geom_smooth()` using formula = &#39;y ~ x&#39;
+#&gt; `geom_smooth()` using formula = &#39;y ~ x&#39;
+#&gt; `geom_smooth()` using formula = &#39;y ~ x&#39;
+#&gt; `geom_smooth()` using formula = &#39;y ~ x&#39;
+#&gt; `geom_smooth()` using formula = &#39;y ~ x&#39;
+#&gt; `geom_smooth()` using formula = &#39;y ~ x&#39;
+#&gt; `geom_smooth()` using formula = &#39;y ~ x&#39;
+#&gt; `geom_smooth()` using formula = &#39;y ~ x&#39;
+#&gt; `geom_smooth()` using formula = &#39;y ~ x&#39;
+#&gt; `geom_smooth()` using formula = &#39;y ~ x&#39;
+#&gt; `geom_smooth()` using formula = &#39;y ~ x&#39;
+#&gt; `geom_smooth()` using formula = &#39;y ~ x&#39;
+#&gt; `geom_smooth()` using formula = &#39;y ~ x&#39;
+#&gt; `geom_smooth()` using formula = &#39;y ~ x&#39;
+#&gt; `geom_smooth()` using formula = &#39;y ~ x&#39;
+#&gt; `geom_smooth()` using formula = &#39;y ~ x&#39;
+#&gt; `geom_smooth()` using formula = &#39;y ~ x&#39;
+#&gt; `geom_smooth()` using formula = &#39;y ~ x&#39;
+#&gt; `geom_smooth()` using formula = &#39;y ~ x&#39;
+#&gt; `geom_smooth()` using formula = &#39;y ~ x&#39;
+#&gt; `geom_smooth()` using formula = &#39;y ~ x&#39;
+#&gt; `geom_smooth()` using formula = &#39;y ~ x&#39;
+#&gt; `geom_smooth()` using formula = &#39;y ~ x&#39;
+#&gt; `geom_smooth()` using formula = &#39;y ~ x&#39;
+#&gt; `geom_smooth()` using formula = &#39;y ~ x&#39;
+#&gt; `geom_smooth()` using formula = &#39;y ~ x&#39;
+#&gt; `geom_smooth()` using formula = &#39;y ~ x&#39;
+#&gt; `geom_smooth()` using formula = &#39;y ~ x&#39;
+#&gt; `geom_smooth()` using formula = &#39;y ~ x&#39;
+#&gt; `geom_smooth()` using formula = &#39;y ~ x&#39;
+#&gt; `geom_smooth()` using formula = &#39;y ~ x&#39;
+#&gt; `geom_smooth()` using formula = &#39;y ~ x&#39;
+#&gt; `geom_smooth()` using formula = &#39;y ~ x&#39;
+#&gt; `geom_smooth()` using formula = &#39;y ~ x&#39;
+#&gt; `geom_smooth()` using formula = &#39;y ~ x&#39;
+#&gt; `geom_smooth()` using formula = &#39;y ~ x&#39;
+#&gt; `geom_smooth()` using formula = &#39;y ~ x&#39;
+#&gt; `geom_smooth()` using formula = &#39;y ~ x&#39;
+#&gt; `geom_smooth()` using formula = &#39;y ~ x&#39;
+#&gt; `geom_smooth()` using formula = &#39;y ~ x&#39;
+#&gt; `geom_smooth()` using formula = &#39;y ~ x&#39;
+#&gt; `geom_smooth()` using formula = &#39;y ~ x&#39;
+#&gt; `geom_smooth()` using formula = &#39;y ~ x&#39;
+#&gt; `geom_smooth()` using formula = &#39;y ~ x&#39;
+#&gt; `geom_smooth()` using formula = &#39;y ~ x&#39;
+#&gt; `geom_smooth()` using formula = &#39;y ~ x&#39;
+#&gt; `geom_smooth()` using formula = &#39;y ~ x&#39;
+#&gt; `geom_smooth()` using formula = &#39;y ~ x&#39;
+#&gt; `geom_smooth()` using formula = &#39;y ~ x&#39;
+#&gt; `geom_smooth()` using formula = &#39;y ~ x&#39;
+#&gt; `geom_smooth()` using formula = &#39;y ~ x&#39;
+#&gt; `geom_smooth()` using formula = &#39;y ~ x&#39;
+#&gt; `geom_smooth()` using formula = &#39;y ~ x&#39;
 #&gt; Warning in file.remove(plot_dir): cannot remove file &#39;sequin_scaling_plots_lm&#39;,
 #&gt; reason &#39;Permission denied&#39;</code></pre>
 <div class="sourceCode" id="cb21"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb21-1"><a href="#cb21-1" aria-hidden="true" tabindex="-1"></a>atomX <span class="ot">=</span> SIPmg<span class="sc">::</span><span class="fu">qSIP_atom_excess_MAGs</span>(phylo.qSIP,</span>
@@ -1023,8 +1029,8 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <span id="cb22-2"><a href="#cb22-2" aria-hidden="true" tabindex="-1"></a>                     <span class="at">density_max=</span><span class="fu">c</span>(<span class="fl">1.74</span>,<span class="fl">1.75</span>,<span class="fl">1.76</span>))</span>
 <span id="cb22-3"><a href="#cb22-3" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb22-4"><a href="#cb22-4" aria-hidden="true" tabindex="-1"></a>padj_cutoff <span class="ot">=</span> <span class="fl">0.05</span></span>
-<span id="cb22-5"><a href="#cb22-5" aria-hidden="true" tabindex="-1"></a>ncores <span class="ot">=</span> <span class="dv">6</span></span>
-<span id="cb22-6"><a href="#cb22-6" aria-hidden="true" tabindex="-1"></a>doParallel<span class="sc">::</span><span class="fu">registerDoParallel</span>(ncores)</span>
+<span id="cb22-5"><a href="#cb22-5" aria-hidden="true" tabindex="-1"></a><span class="co">#ncores = 6</span></span>
+<span id="cb22-6"><a href="#cb22-6" aria-hidden="true" tabindex="-1"></a><span class="co">#doParallel::registerDoParallel(ncores)</span></span>
 <span id="cb22-7"><a href="#cb22-7" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb22-8"><a href="#cb22-8" aria-hidden="true" tabindex="-1"></a>mw.hr.sip <span class="ot">=</span> qSIPmg<span class="sc">::</span><span class="fu">HRSIP</span>(<span class="at">physeq =</span> phylo.qSIP, <span class="at">design =</span> <span class="sc">~</span>Isotope,</span>
 <span id="cb22-9"><a href="#cb22-9" aria-hidden="true" tabindex="-1"></a>                                    <span class="at">density_windows =</span> windows,</span>
@@ -1179,7 +1185,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 </div>
 <p>It is evident here that the AFE estimates using qSIP model or the ΔBD method are not the same, however, both provide the same incorporator information. Although the incorporators may not be the same everytime, we found an overlap between qSIP and ΔBD methods in our metagenome datasets. We also found that qSIP model provided more accurate estimates of AFE compared to ΔBD method.  It also appears that MW-HR-SIP outputs lower number of incorporators. In our study and by <a href="https://www.frontiersin.org/articles/10.3389/fmicb.2018.00570/full">Youngblut et al.</a>, MW-HR-SIP was found to have better sensitivity compared to qSIP or ΔBD methods. It is interesting that the AFE based methods and differential abundance based methods do not provide the same incorporator identity, which is perhaps due to comparistive analysis in only the multiple overlapping windows in the MW-HR-SIP method, while the AFE methods examine the complete BD gradient. Due to the higher sensitivity of the MW-HR-SIP method, we attempted a sequential analysis with first MW-HR-SIP to eliminate likely false positives, and then perform qSIP to estimate AFE. Such a method reduces multiple comparisons and increases confidence in detecting true incorporators due to higher statistical power.  We are merely providing the different methods for the user to decide which method to apply for detecting incorporators in their study. The choice of the method is to the user’s discretion that fits best their study. ## Session information</p>
 <div class="sourceCode" id="cb24"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb24-1"><a href="#cb24-1" aria-hidden="true" tabindex="-1"></a><span class="fu">sessionInfo</span>()</span>
-<span id="cb24-2"><a href="#cb24-2" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; R version 4.2.1 (2022-06-23 ucrt)</span></span>
+<span id="cb24-2"><a href="#cb24-2" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; R version 4.2.2 (2022-10-31 ucrt)</span></span>
 <span id="cb24-3"><a href="#cb24-3" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Platform: x86_64-w64-mingw32/x64 (64-bit)</span></span>
 <span id="cb24-4"><a href="#cb24-4" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Running under: Windows 10 x64 (build 19044)</span></span>
 <span id="cb24-5"><a href="#cb24-5" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; </span></span>
@@ -1194,82 +1200,82 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <span id="cb24-14"><a href="#cb24-14" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [1] stats     graphics  grDevices utils     datasets  methods   base     </span></span>
 <span id="cb24-15"><a href="#cb24-15" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; </span></span>
 <span id="cb24-16"><a href="#cb24-16" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; other attached packages:</span></span>
-<span id="cb24-17"><a href="#cb24-17" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  [1] SIPmg_1.0.0     ggpubr_0.4.0    HTSSIP_1.4.1    phyloseq_1.40.0</span></span>
-<span id="cb24-18"><a href="#cb24-18" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  [5] forcats_0.5.2   stringr_1.4.1   dplyr_1.0.10    purrr_0.3.5    </span></span>
-<span id="cb24-19"><a href="#cb24-19" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  [9] readr_2.1.3     tidyr_1.2.1     tibble_3.1.8    ggplot2_3.3.6  </span></span>
+<span id="cb24-17"><a href="#cb24-17" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  [1] SIPmg_1.2       ggpubr_0.5.0    HTSSIP_1.4.1    phyloseq_1.42.0</span></span>
+<span id="cb24-18"><a href="#cb24-18" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  [5] forcats_0.5.2   stringr_1.5.0   dplyr_1.0.10    purrr_0.3.5    </span></span>
+<span id="cb24-19"><a href="#cb24-19" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  [9] readr_2.1.3     tidyr_1.2.1     tibble_3.1.8    ggplot2_3.4.0  </span></span>
 <span id="cb24-20"><a href="#cb24-20" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [13] tidyverse_1.3.2</span></span>
 <span id="cb24-21"><a href="#cb24-21" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; </span></span>
 <span id="cb24-22"><a href="#cb24-22" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; loaded via a namespace (and not attached):</span></span>
 <span id="cb24-23"><a href="#cb24-23" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;   [1] readxl_1.4.1                backports_1.4.1            </span></span>
-<span id="cb24-24"><a href="#cb24-24" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;   [3] systemfonts_1.0.4           plyr_1.8.7                 </span></span>
+<span id="cb24-24"><a href="#cb24-24" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;   [3] systemfonts_1.0.4           plyr_1.8.8                 </span></span>
 <span id="cb24-25"><a href="#cb24-25" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;   [5] igraph_1.3.5                lazyeval_0.2.2             </span></span>
-<span id="cb24-26"><a href="#cb24-26" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;   [7] splines_4.2.1               BiocParallel_1.30.4        </span></span>
-<span id="cb24-27"><a href="#cb24-27" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;   [9] GenomeInfoDb_1.32.4         digest_0.6.29              </span></span>
-<span id="cb24-28"><a href="#cb24-28" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  [11] foreach_1.5.2               htmltools_0.5.3            </span></span>
+<span id="cb24-26"><a href="#cb24-26" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;   [7] splines_4.2.2               BiocParallel_1.32.4        </span></span>
+<span id="cb24-27"><a href="#cb24-27" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;   [9] GenomeInfoDb_1.34.4         digest_0.6.30              </span></span>
+<span id="cb24-28"><a href="#cb24-28" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  [11] foreach_1.5.2               htmltools_0.5.4            </span></span>
 <span id="cb24-29"><a href="#cb24-29" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  [13] tiff_0.1-11                 fansi_1.0.3                </span></span>
 <span id="cb24-30"><a href="#cb24-30" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  [15] memoise_2.0.1               magrittr_2.0.3             </span></span>
-<span id="cb24-31"><a href="#cb24-31" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  [17] googlesheets4_1.0.1         cluster_2.1.3              </span></span>
-<span id="cb24-32"><a href="#cb24-32" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  [19] doParallel_1.0.17           tzdb_0.3.0                 </span></span>
-<span id="cb24-33"><a href="#cb24-33" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  [21] annotate_1.74.0             Biostrings_2.64.1          </span></span>
-<span id="cb24-34"><a href="#cb24-34" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  [23] modelr_0.1.9                matrixStats_0.62.0         </span></span>
-<span id="cb24-35"><a href="#cb24-35" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  [25] vroom_1.6.0                 jpeg_0.1-10                </span></span>
+<span id="cb24-31"><a href="#cb24-31" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  [17] googlesheets4_1.0.1         cluster_2.1.4              </span></span>
+<span id="cb24-32"><a href="#cb24-32" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  [19] tzdb_0.3.0                  annotate_1.76.0            </span></span>
+<span id="cb24-33"><a href="#cb24-33" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  [21] Biostrings_2.66.0           modelr_0.1.10              </span></span>
+<span id="cb24-34"><a href="#cb24-34" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  [23] matrixStats_0.63.0          vroom_1.6.0                </span></span>
+<span id="cb24-35"><a href="#cb24-35" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  [25] timechange_0.1.1            jpeg_0.1-10                </span></span>
 <span id="cb24-36"><a href="#cb24-36" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  [27] colorspace_2.0-3            blob_1.2.3                 </span></span>
 <span id="cb24-37"><a href="#cb24-37" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  [29] rvest_1.0.3                 textshaping_0.3.6          </span></span>
 <span id="cb24-38"><a href="#cb24-38" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  [31] haven_2.5.1                 xfun_0.35                  </span></span>
 <span id="cb24-39"><a href="#cb24-39" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  [33] crayon_1.5.2                RCurl_1.98-1.9             </span></span>
-<span id="cb24-40"><a href="#cb24-40" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  [35] jsonlite_1.8.2              genefilter_1.78.0          </span></span>
-<span id="cb24-41"><a href="#cb24-41" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  [37] qSIPmg_1.0.0                survival_3.3-1             </span></span>
-<span id="cb24-42"><a href="#cb24-42" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  [39] iterators_1.0.14            ape_5.6-2                  </span></span>
-<span id="cb24-43"><a href="#cb24-43" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  [41] glue_1.6.2                  gtable_0.3.1               </span></span>
-<span id="cb24-44"><a href="#cb24-44" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  [43] gargle_1.2.1                zlibbioc_1.42.0            </span></span>
-<span id="cb24-45"><a href="#cb24-45" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  [45] XVector_0.36.0              DelayedArray_0.22.0        </span></span>
-<span id="cb24-46"><a href="#cb24-46" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  [47] car_3.1-0                   Rhdf5lib_1.18.2            </span></span>
-<span id="cb24-47"><a href="#cb24-47" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  [49] BiocGenerics_0.42.0         abind_1.4-5                </span></span>
-<span id="cb24-48"><a href="#cb24-48" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  [51] scales_1.2.1                DBI_1.1.3                  </span></span>
-<span id="cb24-49"><a href="#cb24-49" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  [53] rstatix_0.7.0               Rcpp_1.0.9                 </span></span>
-<span id="cb24-50"><a href="#cb24-50" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  [55] xtable_1.8-4                bit_4.0.4                  </span></span>
-<span id="cb24-51"><a href="#cb24-51" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  [57] stats4_4.2.1                htmlwidgets_1.5.4          </span></span>
-<span id="cb24-52"><a href="#cb24-52" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  [59] httr_1.4.4                  RColorBrewer_1.1-3         </span></span>
-<span id="cb24-53"><a href="#cb24-53" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  [61] ellipsis_0.3.2              XML_3.99-0.11              </span></span>
-<span id="cb24-54"><a href="#cb24-54" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  [63] pkgconfig_2.0.3             farver_2.1.1               </span></span>
-<span id="cb24-55"><a href="#cb24-55" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  [65] sass_0.4.2                  dbplyr_2.2.1               </span></span>
-<span id="cb24-56"><a href="#cb24-56" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  [67] locfit_1.5-9.6              utf8_1.2.2                 </span></span>
-<span id="cb24-57"><a href="#cb24-57" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  [69] AnnotationDbi_1.58.0        tidyselect_1.2.0           </span></span>
-<span id="cb24-58"><a href="#cb24-58" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  [71] labeling_0.4.2              rlang_1.0.6                </span></span>
-<span id="cb24-59"><a href="#cb24-59" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  [73] reshape2_1.4.4              polynom_1.4-1              </span></span>
-<span id="cb24-60"><a href="#cb24-60" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  [75] munsell_0.5.0               cellranger_1.1.0           </span></span>
-<span id="cb24-61"><a href="#cb24-61" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  [77] tools_4.2.1                 cachem_1.0.6               </span></span>
-<span id="cb24-62"><a href="#cb24-62" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  [79] cli_3.4.1                   RSQLite_2.2.18             </span></span>
-<span id="cb24-63"><a href="#cb24-63" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  [81] generics_0.1.3              ade4_1.7-19                </span></span>
-<span id="cb24-64"><a href="#cb24-64" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  [83] broom_1.0.1                 fdrtool_1.2.17             </span></span>
-<span id="cb24-65"><a href="#cb24-65" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  [85] evaluate_0.17               biomformat_1.24.0          </span></span>
-<span id="cb24-66"><a href="#cb24-66" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  [87] fastmap_1.1.0               fftwtools_0.9-11           </span></span>
-<span id="cb24-67"><a href="#cb24-67" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  [89] yaml_2.3.5                  ragg_1.2.4                 </span></span>
-<span id="cb24-68"><a href="#cb24-68" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  [91] knitr_1.41                  bit64_4.0.5                </span></span>
-<span id="cb24-69"><a href="#cb24-69" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  [93] fs_1.5.2                    KEGGREST_1.36.3            </span></span>
-<span id="cb24-70"><a href="#cb24-70" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  [95] nlme_3.1-157                xml2_1.3.3                 </span></span>
-<span id="cb24-71"><a href="#cb24-71" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  [97] compiler_4.2.1              rstudioapi_0.14            </span></span>
-<span id="cb24-72"><a href="#cb24-72" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  [99] png_0.1-7                   ggsignif_0.6.3             </span></span>
-<span id="cb24-73"><a href="#cb24-73" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [101] reprex_2.0.2                geneplotter_1.74.0         </span></span>
-<span id="cb24-74"><a href="#cb24-74" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [103] bslib_0.4.0                 stringi_1.7.8              </span></span>
-<span id="cb24-75"><a href="#cb24-75" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [105] highr_0.9                   lattice_0.20-45            </span></span>
-<span id="cb24-76"><a href="#cb24-76" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [107] Matrix_1.5-1                vegan_2.6-4                </span></span>
-<span id="cb24-77"><a href="#cb24-77" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [109] permute_0.9-7               multtest_2.52.0            </span></span>
-<span id="cb24-78"><a href="#cb24-78" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [111] vctrs_0.4.2                 pillar_1.8.1               </span></span>
-<span id="cb24-79"><a href="#cb24-79" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [113] lifecycle_1.0.3             rhdf5filters_1.8.0         </span></span>
-<span id="cb24-80"><a href="#cb24-80" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [115] jquerylib_0.1.4             data.table_1.14.2          </span></span>
-<span id="cb24-81"><a href="#cb24-81" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [117] bitops_1.0-7                GenomicRanges_1.48.0       </span></span>
-<span id="cb24-82"><a href="#cb24-82" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [119] R6_2.5.1                    IRanges_2.30.1             </span></span>
-<span id="cb24-83"><a href="#cb24-83" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [121] codetools_0.2-18            MASS_7.3-57                </span></span>
-<span id="cb24-84"><a href="#cb24-84" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [123] assertthat_0.2.1            rhdf5_2.40.0               </span></span>
-<span id="cb24-85"><a href="#cb24-85" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [125] SummarizedExperiment_1.26.1 DESeq2_1.36.0              </span></span>
-<span id="cb24-86"><a href="#cb24-86" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [127] withr_2.5.0                 S4Vectors_0.34.0           </span></span>
-<span id="cb24-87"><a href="#cb24-87" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [129] GenomeInfoDbData_1.2.8      mgcv_1.8-40                </span></span>
-<span id="cb24-88"><a href="#cb24-88" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [131] parallel_4.2.1              hms_1.1.2                  </span></span>
-<span id="cb24-89"><a href="#cb24-89" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [133] EBImage_4.38.0              grid_4.2.1                 </span></span>
-<span id="cb24-90"><a href="#cb24-90" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [135] rmarkdown_2.17              MatrixGenerics_1.8.1       </span></span>
-<span id="cb24-91"><a href="#cb24-91" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [137] carData_3.0-5               googledrive_2.0.0          </span></span>
-<span id="cb24-92"><a href="#cb24-92" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [139] Biobase_2.56.0              lubridate_1.8.0</span></span></code></pre></div>
+<span id="cb24-40"><a href="#cb24-40" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  [35] jsonlite_1.8.4              qSIPmg_1.0.0               </span></span>
+<span id="cb24-41"><a href="#cb24-41" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  [37] survival_3.4-0              iterators_1.0.14           </span></span>
+<span id="cb24-42"><a href="#cb24-42" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  [39] ape_5.6-2                   glue_1.6.2                 </span></span>
+<span id="cb24-43"><a href="#cb24-43" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  [41] gtable_0.3.1                gargle_1.2.1               </span></span>
+<span id="cb24-44"><a href="#cb24-44" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  [43] zlibbioc_1.44.0             XVector_0.38.0             </span></span>
+<span id="cb24-45"><a href="#cb24-45" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  [45] DelayedArray_0.24.0         car_3.1-1                  </span></span>
+<span id="cb24-46"><a href="#cb24-46" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  [47] Rhdf5lib_1.20.0             BiocGenerics_0.44.0        </span></span>
+<span id="cb24-47"><a href="#cb24-47" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  [49] abind_1.4-5                 scales_1.2.1               </span></span>
+<span id="cb24-48"><a href="#cb24-48" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  [51] DBI_1.1.3                   rstatix_0.7.1              </span></span>
+<span id="cb24-49"><a href="#cb24-49" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  [53] Rcpp_1.0.9                  xtable_1.8-4               </span></span>
+<span id="cb24-50"><a href="#cb24-50" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  [55] bit_4.0.5                   stats4_4.2.2               </span></span>
+<span id="cb24-51"><a href="#cb24-51" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  [57] htmlwidgets_1.5.4           httr_1.4.4                 </span></span>
+<span id="cb24-52"><a href="#cb24-52" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  [59] RColorBrewer_1.1-3          ellipsis_0.3.2             </span></span>
+<span id="cb24-53"><a href="#cb24-53" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  [61] XML_3.99-0.13               pkgconfig_2.0.3            </span></span>
+<span id="cb24-54"><a href="#cb24-54" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  [63] farver_2.1.1                sass_0.4.4                 </span></span>
+<span id="cb24-55"><a href="#cb24-55" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  [65] dbplyr_2.2.1                locfit_1.5-9.6             </span></span>
+<span id="cb24-56"><a href="#cb24-56" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  [67] utf8_1.2.2                  AnnotationDbi_1.60.0       </span></span>
+<span id="cb24-57"><a href="#cb24-57" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  [69] tidyselect_1.2.0            labeling_0.4.2             </span></span>
+<span id="cb24-58"><a href="#cb24-58" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  [71] rlang_1.0.6                 reshape2_1.4.4             </span></span>
+<span id="cb24-59"><a href="#cb24-59" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  [73] polynom_1.4-1               munsell_0.5.0              </span></span>
+<span id="cb24-60"><a href="#cb24-60" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  [75] cellranger_1.1.0            tools_4.2.2                </span></span>
+<span id="cb24-61"><a href="#cb24-61" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  [77] cachem_1.0.6                cli_3.4.1                  </span></span>
+<span id="cb24-62"><a href="#cb24-62" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  [79] RSQLite_2.2.19              generics_0.1.3             </span></span>
+<span id="cb24-63"><a href="#cb24-63" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  [81] ade4_1.7-20                 broom_1.0.1                </span></span>
+<span id="cb24-64"><a href="#cb24-64" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  [83] fdrtool_1.2.17              evaluate_0.18              </span></span>
+<span id="cb24-65"><a href="#cb24-65" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  [85] biomformat_1.26.0           fastmap_1.1.0              </span></span>
+<span id="cb24-66"><a href="#cb24-66" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  [87] fftwtools_0.9-11            yaml_2.3.6                 </span></span>
+<span id="cb24-67"><a href="#cb24-67" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  [89] ragg_1.2.4                  knitr_1.41                 </span></span>
+<span id="cb24-68"><a href="#cb24-68" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  [91] bit64_4.0.5                 fs_1.5.2                   </span></span>
+<span id="cb24-69"><a href="#cb24-69" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  [93] KEGGREST_1.38.0             nlme_3.1-160               </span></span>
+<span id="cb24-70"><a href="#cb24-70" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  [95] xml2_1.3.3                  compiler_4.2.2             </span></span>
+<span id="cb24-71"><a href="#cb24-71" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  [97] rstudioapi_0.14             png_0.1-8                  </span></span>
+<span id="cb24-72"><a href="#cb24-72" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  [99] ggsignif_0.6.4              reprex_2.0.2               </span></span>
+<span id="cb24-73"><a href="#cb24-73" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [101] geneplotter_1.76.0          bslib_0.4.1                </span></span>
+<span id="cb24-74"><a href="#cb24-74" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [103] stringi_1.7.8               highr_0.9                  </span></span>
+<span id="cb24-75"><a href="#cb24-75" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [105] lattice_0.20-45             Matrix_1.5-3               </span></span>
+<span id="cb24-76"><a href="#cb24-76" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [107] vegan_2.6-4                 permute_0.9-7              </span></span>
+<span id="cb24-77"><a href="#cb24-77" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [109] multtest_2.54.0             vctrs_0.5.1                </span></span>
+<span id="cb24-78"><a href="#cb24-78" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [111] pillar_1.8.1                lifecycle_1.0.3            </span></span>
+<span id="cb24-79"><a href="#cb24-79" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [113] rhdf5filters_1.10.0         jquerylib_0.1.4            </span></span>
+<span id="cb24-80"><a href="#cb24-80" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [115] data.table_1.14.6           bitops_1.0-7               </span></span>
+<span id="cb24-81"><a href="#cb24-81" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [117] GenomicRanges_1.50.1        R6_2.5.1                   </span></span>
+<span id="cb24-82"><a href="#cb24-82" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [119] IRanges_2.32.0              codetools_0.2-18           </span></span>
+<span id="cb24-83"><a href="#cb24-83" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [121] MASS_7.3-58.1               assertthat_0.2.1           </span></span>
+<span id="cb24-84"><a href="#cb24-84" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [123] rhdf5_2.42.0                SummarizedExperiment_1.28.0</span></span>
+<span id="cb24-85"><a href="#cb24-85" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [125] DESeq2_1.38.1               withr_2.5.0                </span></span>
+<span id="cb24-86"><a href="#cb24-86" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [127] S4Vectors_0.36.1            GenomeInfoDbData_1.2.9     </span></span>
+<span id="cb24-87"><a href="#cb24-87" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [129] mgcv_1.8-41                 parallel_4.2.2             </span></span>
+<span id="cb24-88"><a href="#cb24-88" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [131] hms_1.1.2                   EBImage_4.40.0             </span></span>
+<span id="cb24-89"><a href="#cb24-89" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [133] grid_4.2.2                  rmarkdown_2.18             </span></span>
+<span id="cb24-90"><a href="#cb24-90" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [135] MatrixGenerics_1.10.0       carData_3.0-5              </span></span>
+<span id="cb24-91"><a href="#cb24-91" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [137] googledrive_2.0.0           Biobase_2.58.0             </span></span>
+<span id="cb24-92"><a href="#cb24-92" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [139] lubridate_1.9.0</span></span></code></pre></div>
 </div>
 </div>
 </div>

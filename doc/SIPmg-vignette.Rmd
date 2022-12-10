@@ -621,8 +621,8 @@ windows = data.frame(density_min=c(1.71,1.72, 1.73),
                      density_max=c(1.74,1.75,1.76))
 
 padj_cutoff = 0.05
-ncores = 6
-doParallel::registerDoParallel(ncores)
+#ncores = 6
+#doParallel::registerDoParallel(ncores)
 
 mw.hr.sip = qSIPmg::HRSIP(physeq = phylo.qSIP, design = ~Isotope,
                                     density_windows = windows,

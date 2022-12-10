@@ -2,6 +2,7 @@
 
 export(DESeq2_l2fc)
 export(HRSIP)
+export(coverage_normalization)
 export(fdr_multiple_hypothesis_testing)
 export(filter_na)
 export(incorporators_taxonomy)

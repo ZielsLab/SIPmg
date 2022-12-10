@@ -1,6 +1,6 @@
 Package: SIPmg
 Title: Statistical analysis to identify isotope incorporating MAGs
-Version: 1.0.0
+Version: 1.2
 Authors@R: 
     c(person(given = "Pranav",
            family = "Sampara",
