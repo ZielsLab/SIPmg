@@ -156,7 +156,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <p>The SIPmg R package was designed to enable the exploration and statistical analysis of qSIP metagenomics data. Particularly, this package allows the identification of isotope incorporators and quantifies isotopic enrichment.</p>
 <p>Please check out this introductory vignette to qSIP metagenomics, before checking out vignettes on:</p>
 <p><a href="#scaling-coverage-data">Coverage normalization and scaling based on linear regression model</a></p>
-<p><a href="#qsip-metagenomics-and-identification-of-isotope-incorporators">Identification of incorporators based on atom fraction excess method or by multiple hypothesis testing on centroid buoyant densities</a></p>
+<p><a href="#sip-metagenomics-and-identification-of-isotope-incorporators">Identification of incorporators based on qSIP, delta BD, or DeSEQ methods</a></p>
 </div>
 <div id="background" class="section level1">
 <h1>Background</h1>
@@ -199,10 +199,10 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 </div>
 <div id="using-sipmg-r-package" class="section level1">
 <h1>Using SIPmg R package</h1>
-<p>This R package was designed to facilitate statistical analyses using qSIP metagenomic data. Particularly, coverage and taxonomic classification of metagenome-assembled genomes and metadata of fractionated DNA is used to identify incorporators and quantify isotopic enrichment.</p>
+<p>This R package was designed to facilitate statistical analyses using SIP metagenomic data. Particularly, coverage and taxonomic classification of metagenome-assembled genomes and metadata of fractionated DNA is used to identify incorporators and quantify isotopic enrichment.</p>
 <p>Overall, the package can perform the following:</p>
 <ol style="list-style-type: decimal">
-<li><p>Coverage normalization and scaling based on post-fractionation reference standards, called sequins, to calculate genome (or feature of interest) absolute concentration.</p></li>
+<li><p>Coverage normalization to absolute concentrations or relative coverage. Scaling of coverages to absolute abundances based on post-fractionation reference standards, called sequins.</p></li>
 <li><p>Statistical analysis based on either of</p></li>
 </ol>
 <ul>
@@ -215,7 +215,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 </ol>
 <div id="example-workflow" class="section level2">
 <h2>Example workflow</h2>
-<p>qSIP analysis using sequins, MAG coverage, and MAG taxonomy is performed using this R markdown. Briefly, coverages are normalized, MAG coverages are then scaled based on linear regression models from sequin coverage and concentrations, a phyloseq object is created from MAG absolute concentrations and taxonomy (GTDB taxonomy output format is required) data.  Note: Sequins that were spiked in the DNA-SIP fractions will be used in scaling and creating linear regression models for evaluating absolute MAG concentrations. Please see <code>sequin_scaling.R</code>  For normalizing coverage values please see <code>pooling_funs.R</code> </p>
+<p>qSIP analysis is typically performed using sequins, MAG coverage, and MAG taxonomy is performed using this R markdown. Briefly, coverages are normalized, MAG coverages are then scaled based on linear regression models from sequin coverage and concentrations, a phyloseq object is created from MAG absolute concentrations and taxonomy (GTDB taxonomy output format is required) data.  Note: Sequins that were spiked in the DNA-SIP fractions will be used in scaling and creating linear regression models for evaluating absolute MAG concentrations. Please see <code>sequin_scaling.R</code>  For normalizing coverage values please see <code>pooling_funs.R</code> </p>
 <p>This R markdown primarily uses <code>Tidyverse</code>, <code>phyloseq</code>, and <code>HTSSIP</code> packages  This markdown uses functions from <code>functions_qSIP_MAGs.R</code> </p>
 <p>For this data, MetaSIPSim (developed by <a href="https://bmcbioinformatics.biomedcentral.com/articles/10.1186/s12859-020-3372-6">Barnett et al, 2020</a>) was used to simulate a data set from a hypothetical SIP workflow performed on the MBARC-26 mock community (as defined in <a href="https://www.nature.com/articles/sdata201681">Singer et al, 2016</a>). The data set was further augmented with simulated post-fractionation sequin spike-ins and the data set was simulated to have all 26 organisms as incorporators. Some of the 26 organisms also had plasmids, which were assembled as distinct genomic units, adding the total genomic features in the simulated study to be 38</p>
 <div class="sourceCode" id="cb1"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="co">#Load required libraries</span></span>
@@ -414,11 +414,11 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <span id="cb3-7"><a href="#cb3-7" aria-hidden="true" tabindex="-1"></a>mag_tab_scaled <span class="ot">&lt;-</span> SIPmg<span class="sc">::</span><span class="fu">scale_features_rlm</span>(f_tibble, sequins, seq_dil, log_scale, <span class="at">coe_of_variation =</span> coe_of_variation)</span>
 <span id="cb3-8"><a href="#cb3-8" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Warning in rlm.default(x, y, weights, method = method, wt.method = wt.method, :</span></span>
 <span id="cb3-9"><a href="#cb3-9" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; &#39;rlm&#39; failed to converge in 20 steps</span></span>
-<span id="cb3-10"><a href="#cb3-10" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Warning: The dot-dot notation (`..rr.label..`) was deprecated in ggplot2 3.4.0.</span></span>
-<span id="cb3-11"><a href="#cb3-11" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; ℹ Please use `after_stat(rr.label)` instead.</span></span>
-<span id="cb3-12"><a href="#cb3-12" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; ℹ The deprecated feature was likely used in the SIPmg package.</span></span>
-<span id="cb3-13"><a href="#cb3-13" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;   Please report the issue to the authors.</span></span>
-<span id="cb3-14"><a href="#cb3-14" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; `geom_smooth()` using formula = &#39;y ~ x&#39;</span></span>
+<span id="cb3-10"><a href="#cb3-10" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Warning in dir.create(plot_dir): &#39;sequin_scaling_plots_rlm&#39; already exists</span></span>
+<span id="cb3-11"><a href="#cb3-11" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Warning: The dot-dot notation (`..rr.label..`) was deprecated in ggplot2 3.4.0.</span></span>
+<span id="cb3-12"><a href="#cb3-12" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; ℹ Please use `after_stat(rr.label)` instead.</span></span>
+<span id="cb3-13"><a href="#cb3-13" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; ℹ The deprecated feature was likely used in the SIPmg package.</span></span>
+<span id="cb3-14"><a href="#cb3-14" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;   Please report the issue to the authors.</span></span>
 <span id="cb3-15"><a href="#cb3-15" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; `geom_smooth()` using formula = &#39;y ~ x&#39;</span></span>
 <span id="cb3-16"><a href="#cb3-16" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; `geom_smooth()` using formula = &#39;y ~ x&#39;</span></span>
 <span id="cb3-17"><a href="#cb3-17" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; `geom_smooth()` using formula = &#39;y ~ x&#39;</span></span>
@@ -447,9 +447,9 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <span id="cb3-40"><a href="#cb3-40" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; `geom_smooth()` using formula = &#39;y ~ x&#39;</span></span>
 <span id="cb3-41"><a href="#cb3-41" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; `geom_smooth()` using formula = &#39;y ~ x&#39;</span></span>
 <span id="cb3-42"><a href="#cb3-42" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; `geom_smooth()` using formula = &#39;y ~ x&#39;</span></span>
-<span id="cb3-43"><a href="#cb3-43" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Warning in rlm.default(x, y, weights, method = method, wt.method = wt.method, :</span></span>
-<span id="cb3-44"><a href="#cb3-44" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; &#39;rlm&#39; failed to converge in 20 steps</span></span>
-<span id="cb3-45"><a href="#cb3-45" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; `geom_smooth()` using formula = &#39;y ~ x&#39;</span></span>
+<span id="cb3-43"><a href="#cb3-43" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; `geom_smooth()` using formula = &#39;y ~ x&#39;</span></span>
+<span id="cb3-44"><a href="#cb3-44" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Warning in rlm.default(x, y, weights, method = method, wt.method = wt.method, :</span></span>
+<span id="cb3-45"><a href="#cb3-45" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; &#39;rlm&#39; failed to converge in 20 steps</span></span>
 <span id="cb3-46"><a href="#cb3-46" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; `geom_smooth()` using formula = &#39;y ~ x&#39;</span></span>
 <span id="cb3-47"><a href="#cb3-47" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; `geom_smooth()` using formula = &#39;y ~ x&#39;</span></span>
 <span id="cb3-48"><a href="#cb3-48" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; `geom_smooth()` using formula = &#39;y ~ x&#39;</span></span>
@@ -480,7 +480,8 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <span id="cb3-73"><a href="#cb3-73" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; `geom_smooth()` using formula = &#39;y ~ x&#39;</span></span>
 <span id="cb3-74"><a href="#cb3-74" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; `geom_smooth()` using formula = &#39;y ~ x&#39;</span></span>
 <span id="cb3-75"><a href="#cb3-75" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; `geom_smooth()` using formula = &#39;y ~ x&#39;</span></span>
-<span id="cb3-76"><a href="#cb3-76" aria-hidden="true" tabindex="-1"></a>mag_tab <span class="ot">=</span> <span class="fu">as.matrix</span>(mag_tab_scaled<span class="sc">$</span>mag_tab) <span class="co">#Extract absolute abundances as a matrix</span></span></code></pre></div>
+<span id="cb3-76"><a href="#cb3-76" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; `geom_smooth()` using formula = &#39;y ~ x&#39;</span></span>
+<span id="cb3-77"><a href="#cb3-77" aria-hidden="true" tabindex="-1"></a>mag_tab <span class="ot">=</span> <span class="fu">as.matrix</span>(mag_tab_scaled<span class="sc">$</span>mag_tab) <span class="co">#Extract absolute abundances as a matrix</span></span></code></pre></div>
 <div id="example-of-a-scaling-plot" class="section level4">
 <h4>Example of a scaling plot</h4>
 <p>An example of a scaling plot is as below</p>
@@ -604,7 +605,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <span id="cb9-40"><a href="#cb9-40" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 26 NC_019975.1 Natronococcusoccultus          </span></span>
 <span id="cb9-41"><a href="#cb9-41" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 27 NC_019976.1 Natronococcusoccultus          </span></span>
 <span id="cb9-42"><a href="#cb9-42" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 28 NC_021184.1 Natronococcusoccultus</span></span></code></pre></div>
-<p>It appears that not all incorporators were identified with the bootstrapping method. This could be due to the model unable to detect the incorporators. Another way to detect incorporators, as mentioned above, is to do multiple testing with the null hypothesis that there is no shift in the centroid buoyant densities of unlabeled and labeled features of interest. For a more detailed discussion, please refer this <a href="#qsip-metagenomics-and-identification-of-isotope-incorporators">vignette</a></p>
+<p>It appears that not all incorporators were identified with the bootstrapping method. This could be due to the model unable to detect the incorporators. Another way to detect incorporators, as mentioned above, is to do multiple testing with the null hypothesis that there is no shift in the centroid buoyant densities of unlabeled and labeled features of interest. For a more detailed discussion, please refer this [vignette][qSIP metagenomics and identification of isotope incorporators]</p>
 </div>
 <div id="workflow-to-view-abundance-vs-bd-plots-of-incorporators" class="section level2">
 <h2>Workflow to view abundance vs BD plots of incorporators</h2>
@@ -669,13 +670,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 </div>
 <div id="choice-of-regression-model" class="section level2">
 <h2>Choice of regression model</h2>
-<p>The recommended regression model is the robust linear regression model. To learn more about robust linear regression please refer to these materials and more</p>
-<ol style="list-style-type: decimal">
-<li><p><a href="https://www-jstor-org.ezproxy.library.ubc.ca/stable/1267603?seq=1#metadata_info_tab_contents">Andrews, D. F. A Robust Method for Multiple Linear Regression. Technometrics 16, 523–531 (1974).</a></p></li>
-<li><p><a href="https://wires.onlinelibrary.wiley.com/doi/full/10.1002/wics.1524">Filzmoser, P. &amp; Nordhausen, K. Robust linear regression for high-dimensional data: An overview. WIREs Computational Statistics 13, e1524 (2021)</a></p></li>
-<li><p><a href="https://stats.idre.ucla.edu/r/dae/robust-regression/" class="uri">https://stats.idre.ucla.edu/r/dae/robust-regression/</a></p></li>
-</ol>
-<p>Briefly, ordinary least squares regression can be very sensitive to outliers, resulting a poor model performance when the data is contaminated with outliers. Although there are methods to filter outliers, it may not be the best idea to remove these data points.</p>
+<p>Ordinary least squares regression can be very sensitive to outliers, resulting a poor model performance when the data is contaminated with outliers. Although there are methods, like Cook’s distance based filtering to address outliers, it may not always be the best idea to remove these data points.</p>
 <p>See <a href="https://statisticsbyjim.com/basics/remove-outliers/">these</a> <a href="https://stats.stackexchange.com/questions/175/how-should-outliers-be-dealt-with-in-linear-regression-analysis">discussions</a> and more for better insights into handling outliers.</p>
 <p>Robust linear regression is an alternative to this situation. Robust linear regression assigns appropriate weights to the data points, minimizing the influence of outliers on the model performance, without deleting data. In this pipeline, a Huber loss function from the <a href="https://cran.r-project.org/web/packages/MASS/MASS.pdf"><code>MASS</code> R package</a> was used for robust linear regression.</p>
 <p>The user is free to choose between the two methods for regression.</p>
@@ -750,27 +745,30 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <span id="cb14-6"><a href="#cb14-6" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Warning in summary.lm(.): essentially perfect fit: summary may be unreliable</span></span>
 <span id="cb14-7"><a href="#cb14-7" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb14-8"><a href="#cb14-8" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Warning in summary.lm(.): essentially perfect fit: summary may be unreliable</span></span>
-<span id="cb14-9"><a href="#cb14-9" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; `geom_smooth()` using formula = &#39;y ~ x&#39;</span></span>
-<span id="cb14-10"><a href="#cb14-10" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Warning in summary.lm(res.lm): essentially perfect fit: summary may be</span></span>
-<span id="cb14-11"><a href="#cb14-11" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; unreliable</span></span>
-<span id="cb14-12"><a href="#cb14-12" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Warning in summary.lm(res.lm): essentially perfect fit: summary may be</span></span>
-<span id="cb14-13"><a href="#cb14-13" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; unreliable</span></span>
-<span id="cb14-14"><a href="#cb14-14" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; `geom_smooth()` using formula = &#39;y ~ x&#39;</span></span>
+<span id="cb14-9"><a href="#cb14-9" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Warning in dir.create(plot_dir): &#39;sequin_scaling_plots_lm&#39; already exists</span></span>
+<span id="cb14-10"><a href="#cb14-10" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; `geom_smooth()` using formula = &#39;y ~ x&#39;</span></span>
+<span id="cb14-11"><a href="#cb14-11" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Warning in summary.lm(res.lm): essentially perfect fit: summary may be</span></span>
+<span id="cb14-12"><a href="#cb14-12" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; unreliable</span></span>
+<span id="cb14-13"><a href="#cb14-13" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Warning in summary.lm(res.lm): essentially perfect fit: summary may be</span></span>
+<span id="cb14-14"><a href="#cb14-14" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; unreliable</span></span>
 <span id="cb14-15"><a href="#cb14-15" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; `geom_smooth()` using formula = &#39;y ~ x&#39;</span></span>
 <span id="cb14-16"><a href="#cb14-16" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; `geom_smooth()` using formula = &#39;y ~ x&#39;</span></span>
 <span id="cb14-17"><a href="#cb14-17" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; `geom_smooth()` using formula = &#39;y ~ x&#39;</span></span>
 <span id="cb14-18"><a href="#cb14-18" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; `geom_smooth()` using formula = &#39;y ~ x&#39;</span></span>
-<span id="cb14-19"><a href="#cb14-19" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Warning in summary.lm(res.lm): essentially perfect fit: summary may be</span></span>
-<span id="cb14-20"><a href="#cb14-20" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; unreliable</span></span>
-<span id="cb14-21"><a href="#cb14-21" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb14-19"><a href="#cb14-19" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Warning in dir.create(paste(plot_dir, &quot;/cook_filtering&quot;, sep = &quot;&quot;)):</span></span>
+<span id="cb14-20"><a href="#cb14-20" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; &#39;sequin_scaling_plots_lm\cook_filtering&#39; already exists</span></span>
+<span id="cb14-21"><a href="#cb14-21" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; `geom_smooth()` using formula = &#39;y ~ x&#39;</span></span>
 <span id="cb14-22"><a href="#cb14-22" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Warning in summary.lm(res.lm): essentially perfect fit: summary may be</span></span>
 <span id="cb14-23"><a href="#cb14-23" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; unreliable</span></span>
-<span id="cb14-24"><a href="#cb14-24" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; `geom_smooth()` using formula = &#39;y ~ x&#39;</span></span>
-<span id="cb14-25"><a href="#cb14-25" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; `geom_smooth()` using formula = &#39;y ~ x&#39;</span></span>
-<span id="cb14-26"><a href="#cb14-26" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; `geom_smooth()` using formula = &#39;y ~ x&#39;</span></span>
+<span id="cb14-24"><a href="#cb14-24" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb14-25"><a href="#cb14-25" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Warning in summary.lm(res.lm): essentially perfect fit: summary may be</span></span>
+<span id="cb14-26"><a href="#cb14-26" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; unreliable</span></span>
 <span id="cb14-27"><a href="#cb14-27" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; `geom_smooth()` using formula = &#39;y ~ x&#39;</span></span>
-<span id="cb14-28"><a href="#cb14-28" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Warning in file.remove(plot_dir): cannot remove file &#39;sequin_scaling_plots_lm&#39;,</span></span>
-<span id="cb14-29"><a href="#cb14-29" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; reason &#39;Permission denied&#39;</span></span></code></pre></div>
+<span id="cb14-28"><a href="#cb14-28" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; `geom_smooth()` using formula = &#39;y ~ x&#39;</span></span>
+<span id="cb14-29"><a href="#cb14-29" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; `geom_smooth()` using formula = &#39;y ~ x&#39;</span></span>
+<span id="cb14-30"><a href="#cb14-30" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; `geom_smooth()` using formula = &#39;y ~ x&#39;</span></span>
+<span id="cb14-31"><a href="#cb14-31" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Warning in file.remove(plot_dir): cannot remove file &#39;sequin_scaling_plots_lm&#39;,</span></span>
+<span id="cb14-32"><a href="#cb14-32" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; reason &#39;Permission denied&#39;</span></span></code></pre></div>
 </div>
 <div id="comparison-of-the-fits" class="section level2">
 <h2>Comparison of the fits</h2>
@@ -801,19 +799,33 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <span id="cb18-2"><a href="#cb18-2" aria-hidden="true" tabindex="-1"></a>EBImage<span class="sc">::</span><span class="fu">display</span>(filtered_lm_example)</span></code></pre></div>
 <p><img src="data:image/png;base64,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" /><!-- --></p>
 </div>
+<div id="what-if-there-were-no-sequins-added-in-the-study" class="section level2">
+<h2>What if there were no sequins added in the study</h2>
+<p>In our study, we realized that the sequin-scaled data provided the best correlation (Spearman correlation coefficient = 0.85), compared to methods without the use of sequins. However, not all studies would have access to sequins or could choose not to add sequins. We tested qSIP methods with absolute concentration of MAGs obtained as a product of fraction DNA concentration and either with MAG relative abundance (as performed by <a href="https://journals.asm.org/doi/10.1128/mSystems.00151-20">Greenlon et al.</a>) or relative coverage (as performed by <a href="https://journals.asm.org/doi/10.1128/mSphere.00085-21">Starr et al.</a>), or simply with relative coverage, i.e., without converting the MAG coverages to absolute concentration. We found that without sequins, simply using relative coverage provided better specificity (0.99) and good correlation (Spearman correlation coefficient = 0.76), compared to the other two methods. The user could choose any of the three approaches to obtain normalized coverages using the equation <code>coverage_normalization()</code> where the parameter approach would be chosen accordingly (either “greenlon”, “starr”, or “relative_coverage”). In this example, simple relative coverage will be estimated without converting to absolute concentration based on fraction DNA concentrations. The relative coverage table can then be converted to a phyloseq object to run incorporator identification and/or AFE estimation. For more details, please refer to the <a href="SIP%20metagenomics%20and%20identification%20of%20isotope%20incorporators">incorporator identification section</a></p>
+<div class="sourceCode" id="cb19"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb19-1"><a href="#cb19-1" aria-hidden="true" tabindex="-1"></a>f_tibble <span class="ot">&lt;-</span> readr<span class="sc">::</span><span class="fu">read_csv</span>(<span class="st">&quot;mock_input_data/coverage_metadata.csv&quot;</span>)</span>
+<span id="cb19-2"><a href="#cb19-2" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Rows: 124 Columns: 61</span></span>
+<span id="cb19-3"><a href="#cb19-3" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; ── Column specification ────────────────────────────────────────────────────────</span></span>
+<span id="cb19-4"><a href="#cb19-4" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Delimiter: &quot;,&quot;</span></span>
+<span id="cb19-5"><a href="#cb19-5" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; chr  (1): Feature</span></span>
+<span id="cb19-6"><a href="#cb19-6" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; dbl (60): 12C_rep_1_fraction_10, 12C_rep_1_fraction_1, 12C_rep_1_fraction_2,...</span></span>
+<span id="cb19-7"><a href="#cb19-7" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; </span></span>
+<span id="cb19-8"><a href="#cb19-8" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; ℹ Use `spec()` to retrieve the full column specification for this data.</span></span>
+<span id="cb19-9"><a href="#cb19-9" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; ℹ Specify the column types or set `show_col_types = FALSE` to quiet this message.</span></span>
+<span id="cb19-10"><a href="#cb19-10" aria-hidden="true" tabindex="-1"></a>rel.cov <span class="ot">=</span> SIPmg<span class="sc">::</span><span class="fu">coverage_normalization</span>(<span class="at">f_tibble =</span> f_tibble, <span class="at">approach =</span> <span class="st">&quot;relative_coverage&quot;</span>)</span>
+<span id="cb19-11"><a href="#cb19-11" aria-hidden="true" tabindex="-1"></a>mag.table <span class="ot">=</span> phyloseq<span class="sc">::</span><span class="fu">otu_table</span>(<span class="fu">as.matrix</span>(rel.cov <span class="sc">%&gt;%</span> <span class="fu">column_to_rownames</span>(<span class="at">var =</span> <span class="st">&quot;Feature&quot;</span>)), <span class="at">taxa_are_rows =</span> <span class="cn">TRUE</span>) <span class="co">#Phyloseq OTU table</span></span></code></pre></div>
+</div>
 <div id="decision-on-the-method-to-scale-coverages" class="section level2">
 <h2>Decision on the method to scale coverages</h2>
-<p>Although we recommend the robust linear regression method, we leave it to the user to choose the method for scaling that is best fit for their objectives.</p>
 <p>It can be seen from the above plots that the regression parameters differ based on the method of regression and whether or not data filtering is used. These regression parameters directly influence the estimation of concentrations of features of interest in the microbiome. Thus, the method for regression must be a careful choice.</p>
 </div>
 </div>
-<div id="qsip-metagenomics-and-identification-of-isotope-incorporators" class="section level1">
-<h1>qSIP metagenomics and identification of isotope incorporators</h1>
+<div id="sip-metagenomics-and-identification-of-isotope-incorporators" class="section level1">
+<h1>SIP metagenomics and identification of isotope incorporators</h1>
 <p>The isotope incorporators could be identified using the below methods:</p>
 <ul>
 <li>AFE mathematical model by <a href="https://journals.asm.org/doi/10.1128/AEM.02280-15">Hungate et al. (2015)</a> or
 <ul>
-<li>Delta buoyant density <span class="math inline">\(AFE_{ΔBD}\)</span> = <span class="math inline">\(\frac{W_{Lab}- W_{Light}}{I_{max}}\)</span>. Where Imax is the maximum linear shift in DNA BD (upon 100% labeling), as discussed by <a href="https://www.ncbi.nlm.nih.gov/pmc/articles/PMC2595786/">Birnie and Rickwood (1978)</a></li>
+<li>Delta buoyant density <span class="math inline">\(AFE_{ΔBD}\)</span> = <span class="math inline">\(\frac{W_{Lab}- W_{Light}}{I_{max}}\)</span>. Where <span class="math inline">\(I_{max}\)</span> is the maximum linear shift in DNA BD (upon 100% labeling), as discussed by <a href="https://www.ncbi.nlm.nih.gov/pmc/articles/PMC2595786/">Birnie and Rickwood (1978)</a></li>
 <li>MW-HR-SIP <a href="https://www.frontiersin.org/articles/10.3389/fmicb.2018.00570/full">Youngblut et al. </a></li>
 </ul></li>
 </ul>
@@ -1004,278 +1016,278 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 #&gt; `geom_smooth()` using formula = &#39;y ~ x&#39;
 #&gt; Warning in file.remove(plot_dir): cannot remove file &#39;sequin_scaling_plots_lm&#39;,
 #&gt; reason &#39;Permission denied&#39;</code></pre>
-<div class="sourceCode" id="cb21"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb21-1"><a href="#cb21-1" aria-hidden="true" tabindex="-1"></a>atomX <span class="ot">=</span> SIPmg<span class="sc">::</span><span class="fu">qSIP_atom_excess_MAGs</span>(phylo.qSIP,</span>
-<span id="cb21-2"><a href="#cb21-2" aria-hidden="true" tabindex="-1"></a>                               <span class="at">control_expr=</span><span class="st">&#39;Isotope==&quot;12C&quot;&#39;</span>,</span>
-<span id="cb21-3"><a href="#cb21-3" aria-hidden="true" tabindex="-1"></a>                               <span class="at">treatment_rep=</span><span class="st">&#39;Replicate&#39;</span>,</span>
-<span id="cb21-4"><a href="#cb21-4" aria-hidden="true" tabindex="-1"></a>                               <span class="at">Gi =</span> GC_content)</span>
-<span id="cb21-5"><a href="#cb21-5" aria-hidden="true" tabindex="-1"></a><span class="co">#Bootstrap confidence intervals</span></span>
-<span id="cb21-6"><a href="#cb21-6" aria-hidden="true" tabindex="-1"></a>df_atomX_boot <span class="ot">=</span> SIPmg<span class="sc">::</span><span class="fu">qSIP_bootstrap_fcr</span>(atomX, <span class="at">n_boot=</span><span class="dv">10</span>)</span>
-<span id="cb21-7"><a href="#cb21-7" aria-hidden="true" tabindex="-1"></a>CI_threshold <span class="ot">=</span> <span class="dv">0</span></span>
-<span id="cb21-8"><a href="#cb21-8" aria-hidden="true" tabindex="-1"></a>df_atomX_boot <span class="ot">=</span> df_atomX_boot <span class="sc">%&gt;%</span></span>
-<span id="cb21-9"><a href="#cb21-9" aria-hidden="true" tabindex="-1"></a>  dplyr<span class="sc">::</span><span class="fu">mutate</span>(<span class="at">Incorporator_qSIP =</span> A_CI_fcr_low <span class="sc">&gt;</span> CI_threshold,</span>
-<span id="cb21-10"><a href="#cb21-10" aria-hidden="true" tabindex="-1"></a>                <span class="at">Incorporator_delbd =</span> A_delbd <span class="sc">-</span> A_delbd_sd <span class="sc">&gt;</span> <span class="dv">0</span>,</span>
-<span id="cb21-11"><a href="#cb21-11" aria-hidden="true" tabindex="-1"></a>         <span class="at">OTU =</span> <span class="fu">reorder</span>(OTU, <span class="sc">-</span>A))</span>
-<span id="cb21-12"><a href="#cb21-12" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb21-13"><a href="#cb21-13" aria-hidden="true" tabindex="-1"></a>df_atomX_boot <span class="ot">=</span> df_atomX_boot <span class="sc">%&gt;%</span></span>
-<span id="cb21-14"><a href="#cb21-14" aria-hidden="true" tabindex="-1"></a>  <span class="fu">inner_join</span>(taxonomy_tibble <span class="sc">%&gt;%</span> </span>
-<span id="cb21-15"><a href="#cb21-15" aria-hidden="true" tabindex="-1"></a>               <span class="fu">select</span>(user_genome, classification) <span class="sc">%&gt;%</span></span>
-<span id="cb21-16"><a href="#cb21-16" aria-hidden="true" tabindex="-1"></a>               <span class="fu">rename</span>(<span class="at">OTU =</span> user_genome)) </span>
-<span id="cb21-17"><a href="#cb21-17" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Joining, by = &quot;OTU&quot;</span></span></code></pre></div>
+<div class="sourceCode" id="cb22"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb22-1"><a href="#cb22-1" aria-hidden="true" tabindex="-1"></a>atomX <span class="ot">=</span> SIPmg<span class="sc">::</span><span class="fu">qSIP_atom_excess_MAGs</span>(phylo.qSIP,</span>
+<span id="cb22-2"><a href="#cb22-2" aria-hidden="true" tabindex="-1"></a>                               <span class="at">control_expr=</span><span class="st">&#39;Isotope==&quot;12C&quot;&#39;</span>,</span>
+<span id="cb22-3"><a href="#cb22-3" aria-hidden="true" tabindex="-1"></a>                               <span class="at">treatment_rep=</span><span class="st">&#39;Replicate&#39;</span>,</span>
+<span id="cb22-4"><a href="#cb22-4" aria-hidden="true" tabindex="-1"></a>                               <span class="at">Gi =</span> GC_content)</span>
+<span id="cb22-5"><a href="#cb22-5" aria-hidden="true" tabindex="-1"></a><span class="co">#Bootstrap confidence intervals</span></span>
+<span id="cb22-6"><a href="#cb22-6" aria-hidden="true" tabindex="-1"></a>df_atomX_boot <span class="ot">=</span> SIPmg<span class="sc">::</span><span class="fu">qSIP_bootstrap_fcr</span>(atomX, <span class="at">n_boot=</span><span class="dv">10</span>)</span>
+<span id="cb22-7"><a href="#cb22-7" aria-hidden="true" tabindex="-1"></a>CI_threshold <span class="ot">=</span> <span class="dv">0</span></span>
+<span id="cb22-8"><a href="#cb22-8" aria-hidden="true" tabindex="-1"></a>df_atomX_boot <span class="ot">=</span> df_atomX_boot <span class="sc">%&gt;%</span></span>
+<span id="cb22-9"><a href="#cb22-9" aria-hidden="true" tabindex="-1"></a>  dplyr<span class="sc">::</span><span class="fu">mutate</span>(<span class="at">Incorporator_qSIP =</span> A_CI_fcr_low <span class="sc">&gt;</span> CI_threshold,</span>
+<span id="cb22-10"><a href="#cb22-10" aria-hidden="true" tabindex="-1"></a>                <span class="at">Incorporator_delbd =</span> A_delbd <span class="sc">-</span> A_delbd_sd <span class="sc">&gt;</span> <span class="dv">0</span>,</span>
+<span id="cb22-11"><a href="#cb22-11" aria-hidden="true" tabindex="-1"></a>         <span class="at">OTU =</span> <span class="fu">reorder</span>(OTU, <span class="sc">-</span>A))</span>
+<span id="cb22-12"><a href="#cb22-12" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb22-13"><a href="#cb22-13" aria-hidden="true" tabindex="-1"></a>df_atomX_boot <span class="ot">=</span> df_atomX_boot <span class="sc">%&gt;%</span></span>
+<span id="cb22-14"><a href="#cb22-14" aria-hidden="true" tabindex="-1"></a>  <span class="fu">inner_join</span>(taxonomy_tibble <span class="sc">%&gt;%</span> </span>
+<span id="cb22-15"><a href="#cb22-15" aria-hidden="true" tabindex="-1"></a>               <span class="fu">select</span>(user_genome, classification) <span class="sc">%&gt;%</span></span>
+<span id="cb22-16"><a href="#cb22-16" aria-hidden="true" tabindex="-1"></a>               <span class="fu">rename</span>(<span class="at">OTU =</span> user_genome)) </span>
+<span id="cb22-17"><a href="#cb22-17" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Joining, by = &quot;OTU&quot;</span></span></code></pre></div>
 </div>
 <div id="mw-hr-sip" class="section level3">
 <h3>MW-HR-SIP</h3>
 <p>Check incorporators in the overlapping windows of 1.71 - 1.74; 1.72 - 1.75; 1.73 - 1.76. The windows must be chosen in a more judicious manner that fits the hypothesis of the study.</p>
-<div class="sourceCode" id="cb22"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb22-1"><a href="#cb22-1" aria-hidden="true" tabindex="-1"></a>windows <span class="ot">=</span> <span class="fu">data.frame</span>(<span class="at">density_min=</span><span class="fu">c</span>(<span class="fl">1.71</span>,<span class="fl">1.72</span>, <span class="fl">1.73</span>), </span>
-<span id="cb22-2"><a href="#cb22-2" aria-hidden="true" tabindex="-1"></a>                     <span class="at">density_max=</span><span class="fu">c</span>(<span class="fl">1.74</span>,<span class="fl">1.75</span>,<span class="fl">1.76</span>))</span>
-<span id="cb22-3"><a href="#cb22-3" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb22-4"><a href="#cb22-4" aria-hidden="true" tabindex="-1"></a>padj_cutoff <span class="ot">=</span> <span class="fl">0.05</span></span>
-<span id="cb22-5"><a href="#cb22-5" aria-hidden="true" tabindex="-1"></a><span class="co">#ncores = 6</span></span>
-<span id="cb22-6"><a href="#cb22-6" aria-hidden="true" tabindex="-1"></a><span class="co">#doParallel::registerDoParallel(ncores)</span></span>
-<span id="cb22-7"><a href="#cb22-7" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb22-8"><a href="#cb22-8" aria-hidden="true" tabindex="-1"></a>mw.hr.sip <span class="ot">=</span> qSIPmg<span class="sc">::</span><span class="fu">HRSIP</span>(<span class="at">physeq =</span> phylo.qSIP, <span class="at">design =</span> <span class="sc">~</span>Isotope,</span>
-<span id="cb22-9"><a href="#cb22-9" aria-hidden="true" tabindex="-1"></a>                                    <span class="at">density_windows =</span> windows,</span>
-<span id="cb22-10"><a href="#cb22-10" aria-hidden="true" tabindex="-1"></a>                                    <span class="at">sparsity_threshold =</span> <span class="fu">seq</span>(<span class="dv">0</span>, <span class="fl">0.3</span>, <span class="fl">0.05</span>), </span>
-<span id="cb22-11"><a href="#cb22-11" aria-hidden="true" tabindex="-1"></a>                                    <span class="at">padj_cutoff =</span> padj_cutoff)</span>
-<span id="cb22-12"><a href="#cb22-12" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Sparsity threshold: 0 </span></span>
-<span id="cb22-13"><a href="#cb22-13" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Density window: 1.71-1.74</span></span>
-<span id="cb22-14"><a href="#cb22-14" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Loading required namespace: DESeq2</span></span>
-<span id="cb22-15"><a href="#cb22-15" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; converting counts to integer mode</span></span>
-<span id="cb22-16"><a href="#cb22-16" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Warning in DESeqDataSet(se, design = design, ignoreRank): some variables in</span></span>
-<span id="cb22-17"><a href="#cb22-17" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; design formula are characters, converting to factors</span></span>
-<span id="cb22-18"><a href="#cb22-18" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Sparsity threshold: 0.05 </span></span>
-<span id="cb22-19"><a href="#cb22-19" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Density window: 1.71-1.74</span></span>
-<span id="cb22-20"><a href="#cb22-20" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; converting counts to integer mode</span></span>
-<span id="cb22-21"><a href="#cb22-21" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Warning in DESeqDataSet(se, design = design, ignoreRank): some variables in</span></span>
-<span id="cb22-22"><a href="#cb22-22" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; design formula are characters, converting to factors</span></span>
-<span id="cb22-23"><a href="#cb22-23" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Sparsity threshold: 0.1 </span></span>
-<span id="cb22-24"><a href="#cb22-24" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Density window: 1.71-1.74</span></span>
-<span id="cb22-25"><a href="#cb22-25" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; converting counts to integer mode</span></span>
-<span id="cb22-26"><a href="#cb22-26" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Warning in DESeqDataSet(se, design = design, ignoreRank): some variables in</span></span>
-<span id="cb22-27"><a href="#cb22-27" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; design formula are characters, converting to factors</span></span>
-<span id="cb22-28"><a href="#cb22-28" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Sparsity threshold: 0.15 </span></span>
-<span id="cb22-29"><a href="#cb22-29" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Density window: 1.71-1.74</span></span>
-<span id="cb22-30"><a href="#cb22-30" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; converting counts to integer mode</span></span>
-<span id="cb22-31"><a href="#cb22-31" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Warning in DESeqDataSet(se, design = design, ignoreRank): some variables in</span></span>
-<span id="cb22-32"><a href="#cb22-32" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; design formula are characters, converting to factors</span></span>
-<span id="cb22-33"><a href="#cb22-33" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Sparsity threshold: 0.2 </span></span>
-<span id="cb22-34"><a href="#cb22-34" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Density window: 1.71-1.74</span></span>
-<span id="cb22-35"><a href="#cb22-35" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; converting counts to integer mode</span></span>
-<span id="cb22-36"><a href="#cb22-36" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Warning in DESeqDataSet(se, design = design, ignoreRank): some variables in</span></span>
-<span id="cb22-37"><a href="#cb22-37" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; design formula are characters, converting to factors</span></span>
-<span id="cb22-38"><a href="#cb22-38" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Sparsity threshold: 0.25 </span></span>
-<span id="cb22-39"><a href="#cb22-39" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Density window: 1.71-1.74</span></span>
-<span id="cb22-40"><a href="#cb22-40" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; converting counts to integer mode</span></span>
-<span id="cb22-41"><a href="#cb22-41" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Warning in DESeqDataSet(se, design = design, ignoreRank): some variables in</span></span>
-<span id="cb22-42"><a href="#cb22-42" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; design formula are characters, converting to factors</span></span>
-<span id="cb22-43"><a href="#cb22-43" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Sparsity threshold: 0.3 </span></span>
-<span id="cb22-44"><a href="#cb22-44" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Density window: 1.71-1.74</span></span>
-<span id="cb22-45"><a href="#cb22-45" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; converting counts to integer mode</span></span>
-<span id="cb22-46"><a href="#cb22-46" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Warning in DESeqDataSet(se, design = design, ignoreRank): some variables in</span></span>
-<span id="cb22-47"><a href="#cb22-47" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; design formula are characters, converting to factors</span></span>
-<span id="cb22-48"><a href="#cb22-48" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Sparsity threshold: 0 </span></span>
-<span id="cb22-49"><a href="#cb22-49" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Density window: 1.72-1.75</span></span>
-<span id="cb22-50"><a href="#cb22-50" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; converting counts to integer mode</span></span>
-<span id="cb22-51"><a href="#cb22-51" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Warning in DESeqDataSet(se, design = design, ignoreRank): some variables in</span></span>
-<span id="cb22-52"><a href="#cb22-52" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; design formula are characters, converting to factors</span></span>
-<span id="cb22-53"><a href="#cb22-53" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Sparsity threshold: 0.05 </span></span>
-<span id="cb22-54"><a href="#cb22-54" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Density window: 1.72-1.75</span></span>
-<span id="cb22-55"><a href="#cb22-55" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; converting counts to integer mode</span></span>
-<span id="cb22-56"><a href="#cb22-56" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Warning in DESeqDataSet(se, design = design, ignoreRank): some variables in</span></span>
-<span id="cb22-57"><a href="#cb22-57" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; design formula are characters, converting to factors</span></span>
-<span id="cb22-58"><a href="#cb22-58" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Sparsity threshold: 0.1 </span></span>
-<span id="cb22-59"><a href="#cb22-59" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Density window: 1.72-1.75</span></span>
-<span id="cb22-60"><a href="#cb22-60" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; converting counts to integer mode</span></span>
-<span id="cb22-61"><a href="#cb22-61" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Warning in DESeqDataSet(se, design = design, ignoreRank): some variables in</span></span>
-<span id="cb22-62"><a href="#cb22-62" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; design formula are characters, converting to factors</span></span>
-<span id="cb22-63"><a href="#cb22-63" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Sparsity threshold: 0.15 </span></span>
-<span id="cb22-64"><a href="#cb22-64" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Density window: 1.72-1.75</span></span>
-<span id="cb22-65"><a href="#cb22-65" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; converting counts to integer mode</span></span>
-<span id="cb22-66"><a href="#cb22-66" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Warning in DESeqDataSet(se, design = design, ignoreRank): some variables in</span></span>
-<span id="cb22-67"><a href="#cb22-67" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; design formula are characters, converting to factors</span></span>
-<span id="cb22-68"><a href="#cb22-68" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Sparsity threshold: 0.2 </span></span>
-<span id="cb22-69"><a href="#cb22-69" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Density window: 1.72-1.75</span></span>
-<span id="cb22-70"><a href="#cb22-70" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; converting counts to integer mode</span></span>
-<span id="cb22-71"><a href="#cb22-71" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Warning in DESeqDataSet(se, design = design, ignoreRank): some variables in</span></span>
-<span id="cb22-72"><a href="#cb22-72" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; design formula are characters, converting to factors</span></span>
-<span id="cb22-73"><a href="#cb22-73" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Sparsity threshold: 0.25 </span></span>
-<span id="cb22-74"><a href="#cb22-74" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Density window: 1.72-1.75</span></span>
-<span id="cb22-75"><a href="#cb22-75" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; converting counts to integer mode</span></span>
-<span id="cb22-76"><a href="#cb22-76" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Warning in DESeqDataSet(se, design = design, ignoreRank): some variables in</span></span>
-<span id="cb22-77"><a href="#cb22-77" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; design formula are characters, converting to factors</span></span>
-<span id="cb22-78"><a href="#cb22-78" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Sparsity threshold: 0.3 </span></span>
-<span id="cb22-79"><a href="#cb22-79" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Density window: 1.72-1.75</span></span>
-<span id="cb22-80"><a href="#cb22-80" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; converting counts to integer mode</span></span>
-<span id="cb22-81"><a href="#cb22-81" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Warning in DESeqDataSet(se, design = design, ignoreRank): some variables in</span></span>
-<span id="cb22-82"><a href="#cb22-82" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; design formula are characters, converting to factors</span></span>
-<span id="cb22-83"><a href="#cb22-83" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Sparsity threshold: 0 </span></span>
-<span id="cb22-84"><a href="#cb22-84" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Density window: 1.73-1.76</span></span>
-<span id="cb22-85"><a href="#cb22-85" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; converting counts to integer mode</span></span>
-<span id="cb22-86"><a href="#cb22-86" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Warning in DESeqDataSet(se, design = design, ignoreRank): some variables in</span></span>
-<span id="cb22-87"><a href="#cb22-87" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; design formula are characters, converting to factors</span></span>
-<span id="cb22-88"><a href="#cb22-88" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Sparsity threshold: 0.05 </span></span>
-<span id="cb22-89"><a href="#cb22-89" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Density window: 1.73-1.76</span></span>
-<span id="cb22-90"><a href="#cb22-90" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; converting counts to integer mode</span></span>
-<span id="cb22-91"><a href="#cb22-91" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Warning in DESeqDataSet(se, design = design, ignoreRank): some variables in</span></span>
-<span id="cb22-92"><a href="#cb22-92" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; design formula are characters, converting to factors</span></span>
-<span id="cb22-93"><a href="#cb22-93" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Sparsity threshold: 0.1 </span></span>
-<span id="cb22-94"><a href="#cb22-94" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Density window: 1.73-1.76</span></span>
-<span id="cb22-95"><a href="#cb22-95" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; converting counts to integer mode</span></span>
-<span id="cb22-96"><a href="#cb22-96" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Warning in DESeqDataSet(se, design = design, ignoreRank): some variables in</span></span>
-<span id="cb22-97"><a href="#cb22-97" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; design formula are characters, converting to factors</span></span>
-<span id="cb22-98"><a href="#cb22-98" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Sparsity threshold: 0.15 </span></span>
-<span id="cb22-99"><a href="#cb22-99" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Density window: 1.73-1.76</span></span>
-<span id="cb22-100"><a href="#cb22-100" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; converting counts to integer mode</span></span>
-<span id="cb22-101"><a href="#cb22-101" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Warning in DESeqDataSet(se, design = design, ignoreRank): some variables in</span></span>
-<span id="cb22-102"><a href="#cb22-102" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; design formula are characters, converting to factors</span></span>
-<span id="cb22-103"><a href="#cb22-103" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Sparsity threshold: 0.2 </span></span>
-<span id="cb22-104"><a href="#cb22-104" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Density window: 1.73-1.76</span></span>
-<span id="cb22-105"><a href="#cb22-105" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; converting counts to integer mode</span></span>
-<span id="cb22-106"><a href="#cb22-106" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Warning in DESeqDataSet(se, design = design, ignoreRank): some variables in</span></span>
-<span id="cb22-107"><a href="#cb22-107" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; design formula are characters, converting to factors</span></span>
-<span id="cb22-108"><a href="#cb22-108" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Sparsity threshold: 0.25 </span></span>
-<span id="cb22-109"><a href="#cb22-109" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Density window: 1.73-1.76</span></span>
-<span id="cb22-110"><a href="#cb22-110" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; converting counts to integer mode</span></span>
-<span id="cb22-111"><a href="#cb22-111" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Warning in DESeqDataSet(se, design = design, ignoreRank): some variables in</span></span>
-<span id="cb22-112"><a href="#cb22-112" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; design formula are characters, converting to factors</span></span>
-<span id="cb22-113"><a href="#cb22-113" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Sparsity threshold: 0.3 </span></span>
-<span id="cb22-114"><a href="#cb22-114" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Density window: 1.73-1.76</span></span>
-<span id="cb22-115"><a href="#cb22-115" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; converting counts to integer mode</span></span>
-<span id="cb22-116"><a href="#cb22-116" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Warning in DESeqDataSet(se, design = design, ignoreRank): some variables in</span></span>
-<span id="cb22-117"><a href="#cb22-117" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; design formula are characters, converting to factors</span></span>
-<span id="cb22-118"><a href="#cb22-118" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Sparsity threshold with the most rejected hypotheses: 0</span></span>
-<span id="cb22-119"><a href="#cb22-119" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb22-120"><a href="#cb22-120" aria-hidden="true" tabindex="-1"></a>mw.hr.sip <span class="ot">=</span> mw.hr.sip <span class="sc">%&gt;%</span></span>
-<span id="cb22-121"><a href="#cb22-121" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">incorp =</span> padj <span class="sc">&lt;</span> padj_cutoff)</span></code></pre></div>
-<p>Compare number of incorporators</p>
-<div class="sourceCode" id="cb23"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb23-1"><a href="#cb23-1" aria-hidden="true" tabindex="-1"></a><span class="co">#Get incorporator info</span></span>
-<span id="cb23-2"><a href="#cb23-2" aria-hidden="true" tabindex="-1"></a>qSIP_incorp <span class="ot">=</span> df_atomX_boot <span class="sc">%&gt;%</span></span>
-<span id="cb23-3"><a href="#cb23-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(OTU, classification, A, A_sd, Incorporator_qSIP) <span class="sc">%&gt;%</span></span>
-<span id="cb23-4"><a href="#cb23-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(Incorporator_qSIP <span class="sc">==</span> <span class="cn">TRUE</span>) <span class="sc">%&gt;%</span></span>
-<span id="cb23-5"><a href="#cb23-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(<span class="sc">-</span>classification)</span>
-<span id="cb23-6"><a href="#cb23-6" aria-hidden="true" tabindex="-1"></a>n_qSIP_incorp <span class="ot">=</span> <span class="fu">nrow</span>(qSIP_incorp)</span>
+<div class="sourceCode" id="cb23"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb23-1"><a href="#cb23-1" aria-hidden="true" tabindex="-1"></a>windows <span class="ot">=</span> <span class="fu">data.frame</span>(<span class="at">density_min=</span><span class="fu">c</span>(<span class="fl">1.71</span>,<span class="fl">1.72</span>, <span class="fl">1.73</span>), </span>
+<span id="cb23-2"><a href="#cb23-2" aria-hidden="true" tabindex="-1"></a>                     <span class="at">density_max=</span><span class="fu">c</span>(<span class="fl">1.74</span>,<span class="fl">1.75</span>,<span class="fl">1.76</span>))</span>
+<span id="cb23-3"><a href="#cb23-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb23-4"><a href="#cb23-4" aria-hidden="true" tabindex="-1"></a>padj_cutoff <span class="ot">=</span> <span class="fl">0.05</span></span>
+<span id="cb23-5"><a href="#cb23-5" aria-hidden="true" tabindex="-1"></a><span class="co">#ncores = 6</span></span>
+<span id="cb23-6"><a href="#cb23-6" aria-hidden="true" tabindex="-1"></a><span class="co">#doParallel::registerDoParallel(ncores)</span></span>
 <span id="cb23-7"><a href="#cb23-7" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb23-8"><a href="#cb23-8" aria-hidden="true" tabindex="-1"></a>delbd_incorp <span class="ot">=</span> df_atomX_boot <span class="sc">%&gt;%</span></span>
-<span id="cb23-9"><a href="#cb23-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(OTU, classification, A_delbd, A_delbd_sd, Incorporator_delbd) <span class="sc">%&gt;%</span></span>
-<span id="cb23-10"><a href="#cb23-10" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(Incorporator_delbd <span class="sc">==</span> <span class="cn">TRUE</span>) <span class="sc">%&gt;%</span></span>
-<span id="cb23-11"><a href="#cb23-11" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(<span class="sc">-</span>classification)</span>
-<span id="cb23-12"><a href="#cb23-12" aria-hidden="true" tabindex="-1"></a>n_delbd_incorp <span class="ot">=</span> <span class="fu">nrow</span>(delbd_incorp)</span>
-<span id="cb23-13"><a href="#cb23-13" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb23-14"><a href="#cb23-14" aria-hidden="true" tabindex="-1"></a>mw.hr.sip_incorp <span class="ot">=</span> mw.hr.sip <span class="sc">%&gt;%</span></span>
-<span id="cb23-15"><a href="#cb23-15" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(OTU, taxa, incorp) <span class="sc">%&gt;%</span></span>
-<span id="cb23-16"><a href="#cb23-16" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(incorp <span class="sc">==</span> <span class="cn">TRUE</span>) <span class="sc">%&gt;%</span></span>
-<span id="cb23-17"><a href="#cb23-17" aria-hidden="true" tabindex="-1"></a>  <span class="fu">rename</span>(<span class="st">&quot;Incorporator_mw_hr.sip&quot;</span> <span class="ot">=</span> <span class="st">&quot;incorp&quot;</span>) <span class="sc">%&gt;%</span></span>
-<span id="cb23-18"><a href="#cb23-18" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(<span class="sc">-</span>taxa)</span>
-<span id="cb23-19"><a href="#cb23-19" aria-hidden="true" tabindex="-1"></a>n_mw.hr.sip_incorp <span class="ot">=</span> <span class="fu">nrow</span>(mw.hr.sip_incorp)</span>
-<span id="cb23-20"><a href="#cb23-20" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb23-21"><a href="#cb23-21" aria-hidden="true" tabindex="-1"></a>all_incorp_tibble <span class="ot">=</span> <span class="fu">full_join</span>(qSIP_incorp, <span class="fu">full_join</span>(delbd_incorp, mw.hr.sip_incorp, <span class="at">by =</span> <span class="st">&quot;OTU&quot;</span>), <span class="at">by =</span> <span class="st">&quot;OTU&quot;</span>)</span>
-<span id="cb23-22"><a href="#cb23-22" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb23-23"><a href="#cb23-23" aria-hidden="true" tabindex="-1"></a><span class="co">#Print incorporator information</span></span>
-<span id="cb23-24"><a href="#cb23-24" aria-hidden="true" tabindex="-1"></a><span class="fu">cat</span>(<span class="st">&#39;Number of incorporators detected by qSIP:&#39;</span>, n_qSIP_incorp, <span class="st">&#39;</span><span class="sc">\n</span><span class="st">&#39;</span>)</span>
-<span id="cb23-25"><a href="#cb23-25" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Number of incorporators detected by qSIP: 25</span></span>
-<span id="cb23-26"><a href="#cb23-26" aria-hidden="true" tabindex="-1"></a><span class="fu">cat</span>(<span class="st">&#39;Number of incorporators detected by ΔBD:&#39;</span>, n_delbd_incorp, <span class="st">&#39;</span><span class="sc">\n</span><span class="st">&#39;</span>)</span>
-<span id="cb23-27"><a href="#cb23-27" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Number of incorporators detected by ΔBD: 25</span></span>
-<span id="cb23-28"><a href="#cb23-28" aria-hidden="true" tabindex="-1"></a><span class="fu">cat</span>(<span class="st">&#39;Number of incorporators detected by MW-HR-SIP:&#39;</span>, n_mw.hr.sip_incorp, <span class="st">&#39;</span><span class="sc">\n</span><span class="st">&#39;</span>)</span>
-<span id="cb23-29"><a href="#cb23-29" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Number of incorporators detected by MW-HR-SIP: 6</span></span>
-<span id="cb23-30"><a href="#cb23-30" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb23-31"><a href="#cb23-31" aria-hidden="true" tabindex="-1"></a>rmarkdown<span class="sc">::</span><span class="fu">paged_table</span>(all_incorp_tibble)</span></code></pre></div>
+<span id="cb23-8"><a href="#cb23-8" aria-hidden="true" tabindex="-1"></a>mw.hr.sip <span class="ot">=</span> qSIPmg<span class="sc">::</span><span class="fu">HRSIP</span>(<span class="at">physeq =</span> phylo.qSIP, <span class="at">design =</span> <span class="sc">~</span>Isotope,</span>
+<span id="cb23-9"><a href="#cb23-9" aria-hidden="true" tabindex="-1"></a>                                    <span class="at">density_windows =</span> windows,</span>
+<span id="cb23-10"><a href="#cb23-10" aria-hidden="true" tabindex="-1"></a>                                    <span class="at">sparsity_threshold =</span> <span class="fu">seq</span>(<span class="dv">0</span>, <span class="fl">0.3</span>, <span class="fl">0.05</span>), </span>
+<span id="cb23-11"><a href="#cb23-11" aria-hidden="true" tabindex="-1"></a>                                    <span class="at">padj_cutoff =</span> padj_cutoff)</span>
+<span id="cb23-12"><a href="#cb23-12" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Sparsity threshold: 0 </span></span>
+<span id="cb23-13"><a href="#cb23-13" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Density window: 1.71-1.74</span></span>
+<span id="cb23-14"><a href="#cb23-14" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Loading required namespace: DESeq2</span></span>
+<span id="cb23-15"><a href="#cb23-15" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; converting counts to integer mode</span></span>
+<span id="cb23-16"><a href="#cb23-16" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Warning in DESeqDataSet(se, design = design, ignoreRank): some variables in</span></span>
+<span id="cb23-17"><a href="#cb23-17" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; design formula are characters, converting to factors</span></span>
+<span id="cb23-18"><a href="#cb23-18" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Sparsity threshold: 0.05 </span></span>
+<span id="cb23-19"><a href="#cb23-19" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Density window: 1.71-1.74</span></span>
+<span id="cb23-20"><a href="#cb23-20" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; converting counts to integer mode</span></span>
+<span id="cb23-21"><a href="#cb23-21" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Warning in DESeqDataSet(se, design = design, ignoreRank): some variables in</span></span>
+<span id="cb23-22"><a href="#cb23-22" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; design formula are characters, converting to factors</span></span>
+<span id="cb23-23"><a href="#cb23-23" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Sparsity threshold: 0.1 </span></span>
+<span id="cb23-24"><a href="#cb23-24" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Density window: 1.71-1.74</span></span>
+<span id="cb23-25"><a href="#cb23-25" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; converting counts to integer mode</span></span>
+<span id="cb23-26"><a href="#cb23-26" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Warning in DESeqDataSet(se, design = design, ignoreRank): some variables in</span></span>
+<span id="cb23-27"><a href="#cb23-27" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; design formula are characters, converting to factors</span></span>
+<span id="cb23-28"><a href="#cb23-28" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Sparsity threshold: 0.15 </span></span>
+<span id="cb23-29"><a href="#cb23-29" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Density window: 1.71-1.74</span></span>
+<span id="cb23-30"><a href="#cb23-30" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; converting counts to integer mode</span></span>
+<span id="cb23-31"><a href="#cb23-31" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Warning in DESeqDataSet(se, design = design, ignoreRank): some variables in</span></span>
+<span id="cb23-32"><a href="#cb23-32" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; design formula are characters, converting to factors</span></span>
+<span id="cb23-33"><a href="#cb23-33" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Sparsity threshold: 0.2 </span></span>
+<span id="cb23-34"><a href="#cb23-34" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Density window: 1.71-1.74</span></span>
+<span id="cb23-35"><a href="#cb23-35" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; converting counts to integer mode</span></span>
+<span id="cb23-36"><a href="#cb23-36" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Warning in DESeqDataSet(se, design = design, ignoreRank): some variables in</span></span>
+<span id="cb23-37"><a href="#cb23-37" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; design formula are characters, converting to factors</span></span>
+<span id="cb23-38"><a href="#cb23-38" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Sparsity threshold: 0.25 </span></span>
+<span id="cb23-39"><a href="#cb23-39" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Density window: 1.71-1.74</span></span>
+<span id="cb23-40"><a href="#cb23-40" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; converting counts to integer mode</span></span>
+<span id="cb23-41"><a href="#cb23-41" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Warning in DESeqDataSet(se, design = design, ignoreRank): some variables in</span></span>
+<span id="cb23-42"><a href="#cb23-42" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; design formula are characters, converting to factors</span></span>
+<span id="cb23-43"><a href="#cb23-43" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Sparsity threshold: 0.3 </span></span>
+<span id="cb23-44"><a href="#cb23-44" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Density window: 1.71-1.74</span></span>
+<span id="cb23-45"><a href="#cb23-45" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; converting counts to integer mode</span></span>
+<span id="cb23-46"><a href="#cb23-46" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Warning in DESeqDataSet(se, design = design, ignoreRank): some variables in</span></span>
+<span id="cb23-47"><a href="#cb23-47" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; design formula are characters, converting to factors</span></span>
+<span id="cb23-48"><a href="#cb23-48" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Sparsity threshold: 0 </span></span>
+<span id="cb23-49"><a href="#cb23-49" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Density window: 1.72-1.75</span></span>
+<span id="cb23-50"><a href="#cb23-50" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; converting counts to integer mode</span></span>
+<span id="cb23-51"><a href="#cb23-51" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Warning in DESeqDataSet(se, design = design, ignoreRank): some variables in</span></span>
+<span id="cb23-52"><a href="#cb23-52" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; design formula are characters, converting to factors</span></span>
+<span id="cb23-53"><a href="#cb23-53" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Sparsity threshold: 0.05 </span></span>
+<span id="cb23-54"><a href="#cb23-54" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Density window: 1.72-1.75</span></span>
+<span id="cb23-55"><a href="#cb23-55" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; converting counts to integer mode</span></span>
+<span id="cb23-56"><a href="#cb23-56" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Warning in DESeqDataSet(se, design = design, ignoreRank): some variables in</span></span>
+<span id="cb23-57"><a href="#cb23-57" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; design formula are characters, converting to factors</span></span>
+<span id="cb23-58"><a href="#cb23-58" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Sparsity threshold: 0.1 </span></span>
+<span id="cb23-59"><a href="#cb23-59" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Density window: 1.72-1.75</span></span>
+<span id="cb23-60"><a href="#cb23-60" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; converting counts to integer mode</span></span>
+<span id="cb23-61"><a href="#cb23-61" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Warning in DESeqDataSet(se, design = design, ignoreRank): some variables in</span></span>
+<span id="cb23-62"><a href="#cb23-62" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; design formula are characters, converting to factors</span></span>
+<span id="cb23-63"><a href="#cb23-63" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Sparsity threshold: 0.15 </span></span>
+<span id="cb23-64"><a href="#cb23-64" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Density window: 1.72-1.75</span></span>
+<span id="cb23-65"><a href="#cb23-65" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; converting counts to integer mode</span></span>
+<span id="cb23-66"><a href="#cb23-66" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Warning in DESeqDataSet(se, design = design, ignoreRank): some variables in</span></span>
+<span id="cb23-67"><a href="#cb23-67" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; design formula are characters, converting to factors</span></span>
+<span id="cb23-68"><a href="#cb23-68" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Sparsity threshold: 0.2 </span></span>
+<span id="cb23-69"><a href="#cb23-69" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Density window: 1.72-1.75</span></span>
+<span id="cb23-70"><a href="#cb23-70" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; converting counts to integer mode</span></span>
+<span id="cb23-71"><a href="#cb23-71" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Warning in DESeqDataSet(se, design = design, ignoreRank): some variables in</span></span>
+<span id="cb23-72"><a href="#cb23-72" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; design formula are characters, converting to factors</span></span>
+<span id="cb23-73"><a href="#cb23-73" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Sparsity threshold: 0.25 </span></span>
+<span id="cb23-74"><a href="#cb23-74" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Density window: 1.72-1.75</span></span>
+<span id="cb23-75"><a href="#cb23-75" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; converting counts to integer mode</span></span>
+<span id="cb23-76"><a href="#cb23-76" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Warning in DESeqDataSet(se, design = design, ignoreRank): some variables in</span></span>
+<span id="cb23-77"><a href="#cb23-77" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; design formula are characters, converting to factors</span></span>
+<span id="cb23-78"><a href="#cb23-78" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Sparsity threshold: 0.3 </span></span>
+<span id="cb23-79"><a href="#cb23-79" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Density window: 1.72-1.75</span></span>
+<span id="cb23-80"><a href="#cb23-80" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; converting counts to integer mode</span></span>
+<span id="cb23-81"><a href="#cb23-81" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Warning in DESeqDataSet(se, design = design, ignoreRank): some variables in</span></span>
+<span id="cb23-82"><a href="#cb23-82" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; design formula are characters, converting to factors</span></span>
+<span id="cb23-83"><a href="#cb23-83" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Sparsity threshold: 0 </span></span>
+<span id="cb23-84"><a href="#cb23-84" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Density window: 1.73-1.76</span></span>
+<span id="cb23-85"><a href="#cb23-85" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; converting counts to integer mode</span></span>
+<span id="cb23-86"><a href="#cb23-86" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Warning in DESeqDataSet(se, design = design, ignoreRank): some variables in</span></span>
+<span id="cb23-87"><a href="#cb23-87" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; design formula are characters, converting to factors</span></span>
+<span id="cb23-88"><a href="#cb23-88" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Sparsity threshold: 0.05 </span></span>
+<span id="cb23-89"><a href="#cb23-89" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Density window: 1.73-1.76</span></span>
+<span id="cb23-90"><a href="#cb23-90" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; converting counts to integer mode</span></span>
+<span id="cb23-91"><a href="#cb23-91" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Warning in DESeqDataSet(se, design = design, ignoreRank): some variables in</span></span>
+<span id="cb23-92"><a href="#cb23-92" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; design formula are characters, converting to factors</span></span>
+<span id="cb23-93"><a href="#cb23-93" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Sparsity threshold: 0.1 </span></span>
+<span id="cb23-94"><a href="#cb23-94" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Density window: 1.73-1.76</span></span>
+<span id="cb23-95"><a href="#cb23-95" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; converting counts to integer mode</span></span>
+<span id="cb23-96"><a href="#cb23-96" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Warning in DESeqDataSet(se, design = design, ignoreRank): some variables in</span></span>
+<span id="cb23-97"><a href="#cb23-97" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; design formula are characters, converting to factors</span></span>
+<span id="cb23-98"><a href="#cb23-98" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Sparsity threshold: 0.15 </span></span>
+<span id="cb23-99"><a href="#cb23-99" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Density window: 1.73-1.76</span></span>
+<span id="cb23-100"><a href="#cb23-100" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; converting counts to integer mode</span></span>
+<span id="cb23-101"><a href="#cb23-101" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Warning in DESeqDataSet(se, design = design, ignoreRank): some variables in</span></span>
+<span id="cb23-102"><a href="#cb23-102" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; design formula are characters, converting to factors</span></span>
+<span id="cb23-103"><a href="#cb23-103" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Sparsity threshold: 0.2 </span></span>
+<span id="cb23-104"><a href="#cb23-104" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Density window: 1.73-1.76</span></span>
+<span id="cb23-105"><a href="#cb23-105" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; converting counts to integer mode</span></span>
+<span id="cb23-106"><a href="#cb23-106" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Warning in DESeqDataSet(se, design = design, ignoreRank): some variables in</span></span>
+<span id="cb23-107"><a href="#cb23-107" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; design formula are characters, converting to factors</span></span>
+<span id="cb23-108"><a href="#cb23-108" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Sparsity threshold: 0.25 </span></span>
+<span id="cb23-109"><a href="#cb23-109" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Density window: 1.73-1.76</span></span>
+<span id="cb23-110"><a href="#cb23-110" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; converting counts to integer mode</span></span>
+<span id="cb23-111"><a href="#cb23-111" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Warning in DESeqDataSet(se, design = design, ignoreRank): some variables in</span></span>
+<span id="cb23-112"><a href="#cb23-112" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; design formula are characters, converting to factors</span></span>
+<span id="cb23-113"><a href="#cb23-113" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Sparsity threshold: 0.3 </span></span>
+<span id="cb23-114"><a href="#cb23-114" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Density window: 1.73-1.76</span></span>
+<span id="cb23-115"><a href="#cb23-115" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; converting counts to integer mode</span></span>
+<span id="cb23-116"><a href="#cb23-116" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Warning in DESeqDataSet(se, design = design, ignoreRank): some variables in</span></span>
+<span id="cb23-117"><a href="#cb23-117" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; design formula are characters, converting to factors</span></span>
+<span id="cb23-118"><a href="#cb23-118" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Sparsity threshold with the most rejected hypotheses: 0</span></span>
+<span id="cb23-119"><a href="#cb23-119" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb23-120"><a href="#cb23-120" aria-hidden="true" tabindex="-1"></a>mw.hr.sip <span class="ot">=</span> mw.hr.sip <span class="sc">%&gt;%</span></span>
+<span id="cb23-121"><a href="#cb23-121" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">incorp =</span> padj <span class="sc">&lt;</span> padj_cutoff)</span></code></pre></div>
+<p>Compare number of incorporators</p>
+<div class="sourceCode" id="cb24"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb24-1"><a href="#cb24-1" aria-hidden="true" tabindex="-1"></a><span class="co">#Get incorporator info</span></span>
+<span id="cb24-2"><a href="#cb24-2" aria-hidden="true" tabindex="-1"></a>qSIP_incorp <span class="ot">=</span> df_atomX_boot <span class="sc">%&gt;%</span></span>
+<span id="cb24-3"><a href="#cb24-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(OTU, classification, A, A_sd, Incorporator_qSIP) <span class="sc">%&gt;%</span></span>
+<span id="cb24-4"><a href="#cb24-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(Incorporator_qSIP <span class="sc">==</span> <span class="cn">TRUE</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb24-5"><a href="#cb24-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(<span class="sc">-</span>classification)</span>
+<span id="cb24-6"><a href="#cb24-6" aria-hidden="true" tabindex="-1"></a>n_qSIP_incorp <span class="ot">=</span> <span class="fu">nrow</span>(qSIP_incorp)</span>
+<span id="cb24-7"><a href="#cb24-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb24-8"><a href="#cb24-8" aria-hidden="true" tabindex="-1"></a>delbd_incorp <span class="ot">=</span> df_atomX_boot <span class="sc">%&gt;%</span></span>
+<span id="cb24-9"><a href="#cb24-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(OTU, classification, A_delbd, A_delbd_sd, Incorporator_delbd) <span class="sc">%&gt;%</span></span>
+<span id="cb24-10"><a href="#cb24-10" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(Incorporator_delbd <span class="sc">==</span> <span class="cn">TRUE</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb24-11"><a href="#cb24-11" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(<span class="sc">-</span>classification)</span>
+<span id="cb24-12"><a href="#cb24-12" aria-hidden="true" tabindex="-1"></a>n_delbd_incorp <span class="ot">=</span> <span class="fu">nrow</span>(delbd_incorp)</span>
+<span id="cb24-13"><a href="#cb24-13" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb24-14"><a href="#cb24-14" aria-hidden="true" tabindex="-1"></a>mw.hr.sip_incorp <span class="ot">=</span> mw.hr.sip <span class="sc">%&gt;%</span></span>
+<span id="cb24-15"><a href="#cb24-15" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(OTU, taxa, incorp) <span class="sc">%&gt;%</span></span>
+<span id="cb24-16"><a href="#cb24-16" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(incorp <span class="sc">==</span> <span class="cn">TRUE</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb24-17"><a href="#cb24-17" aria-hidden="true" tabindex="-1"></a>  <span class="fu">rename</span>(<span class="st">&quot;Incorporator_mw_hr.sip&quot;</span> <span class="ot">=</span> <span class="st">&quot;incorp&quot;</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb24-18"><a href="#cb24-18" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(<span class="sc">-</span>taxa)</span>
+<span id="cb24-19"><a href="#cb24-19" aria-hidden="true" tabindex="-1"></a>n_mw.hr.sip_incorp <span class="ot">=</span> <span class="fu">nrow</span>(mw.hr.sip_incorp)</span>
+<span id="cb24-20"><a href="#cb24-20" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb24-21"><a href="#cb24-21" aria-hidden="true" tabindex="-1"></a>all_incorp_tibble <span class="ot">=</span> <span class="fu">full_join</span>(qSIP_incorp, <span class="fu">full_join</span>(delbd_incorp, mw.hr.sip_incorp, <span class="at">by =</span> <span class="st">&quot;OTU&quot;</span>), <span class="at">by =</span> <span class="st">&quot;OTU&quot;</span>)</span>
+<span id="cb24-22"><a href="#cb24-22" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb24-23"><a href="#cb24-23" aria-hidden="true" tabindex="-1"></a><span class="co">#Print incorporator information</span></span>
+<span id="cb24-24"><a href="#cb24-24" aria-hidden="true" tabindex="-1"></a><span class="fu">cat</span>(<span class="st">&#39;Number of incorporators detected by qSIP:&#39;</span>, n_qSIP_incorp, <span class="st">&#39;</span><span class="sc">\n</span><span class="st">&#39;</span>)</span>
+<span id="cb24-25"><a href="#cb24-25" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Number of incorporators detected by qSIP: 25</span></span>
+<span id="cb24-26"><a href="#cb24-26" aria-hidden="true" tabindex="-1"></a><span class="fu">cat</span>(<span class="st">&#39;Number of incorporators detected by ΔBD:&#39;</span>, n_delbd_incorp, <span class="st">&#39;</span><span class="sc">\n</span><span class="st">&#39;</span>)</span>
+<span id="cb24-27"><a href="#cb24-27" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Number of incorporators detected by ΔBD: 25</span></span>
+<span id="cb24-28"><a href="#cb24-28" aria-hidden="true" tabindex="-1"></a><span class="fu">cat</span>(<span class="st">&#39;Number of incorporators detected by MW-HR-SIP:&#39;</span>, n_mw.hr.sip_incorp, <span class="st">&#39;</span><span class="sc">\n</span><span class="st">&#39;</span>)</span>
+<span id="cb24-29"><a href="#cb24-29" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Number of incorporators detected by MW-HR-SIP: 6</span></span>
+<span id="cb24-30"><a href="#cb24-30" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb24-31"><a href="#cb24-31" aria-hidden="true" tabindex="-1"></a>rmarkdown<span class="sc">::</span><span class="fu">paged_table</span>(all_incorp_tibble)</span></code></pre></div>
 <div data-pagedtable="false">
 <script data-pagedtable-source type="application/json">
 {"columns":[{"label":["OTU"],"name":[1],"type":["chr"],"align":["left"]},{"label":["A"],"name":[2],"type":["dbl"],"align":["right"]},{"label":["A_sd"],"name":[3],"type":["dbl"],"align":["right"]},{"label":["Incorporator_qSIP"],"name":[4],"type":["lgl"],"align":["right"]},{"label":["A_delbd"],"name":[5],"type":["dbl"],"align":["right"]},{"label":["A_delbd_sd"],"name":[6],"type":["dbl"],"align":["right"]},{"label":["Incorporator_delbd"],"name":[7],"type":["lgl"],"align":["right"]},{"label":["Incorporator_mw_hr.sip"],"name":[8],"type":["lgl"],"align":["right"]}],"data":[{"1":"NC_000913.3","2":"0.01559359","3":"0.002091374","4":"TRUE","5":"0.02406311","6":"0.003225629","7":"TRUE","8":"NA"},{"1":"NC_003450.3","2":"0.04847647","3":"0.003708503","4":"TRUE","5":"0.07472437","6":"0.005715178","7":"TRUE","8":"NA"},{"1":"NC_008261.1","2":"0.40987487","3":"0.005120050","4":"TRUE","5":"0.62217710","6":"0.007671753","7":"TRUE","8":"TRUE"},{"1":"NC_010067.1","2":"0.02115236","3":"0.002669788","4":"TRUE","5":"0.03263313","6":"0.004116374","7":"TRUE","8":"NA"},{"1":"NC_014008.1","2":"0.05571908","3":"0.001253195","4":"TRUE","5":"0.08588456","6":"0.001929710","7":"TRUE","8":"NA"},{"1":"NC_014168.1","2":"0.19241466","3":"0.002746633","4":"TRUE","5":"0.29510881","6":"0.004188570","7":"TRUE","8":"NA"},{"1":"NC_014210.1","2":"0.26572526","3":"0.001003649","4":"TRUE","5":"0.40677094","6":"0.001531631","7":"TRUE","8":"NA"},{"1":"NC_014211.1","2":"0.25457996","3":"0.004842409","4":"TRUE","5":"0.38969078","6":"0.007368179","7":"TRUE","8":"NA"},{"1":"NC_014212.1","2":"0.17145305","3":"0.013829994","4":"TRUE","5":"0.26328878","6":"0.021166596","7":"TRUE","8":"NA"},{"1":"NC_014213.1","2":"0.18323983","3":"0.009626021","4":"TRUE","5":"0.28122785","6":"0.014749334","7":"TRUE","8":"NA"},{"1":"NC_014214.1","2":"0.17572222","3":"0.005484273","4":"TRUE","5":"0.26974532","6":"0.008401266","7":"TRUE","8":"NA"},{"1":"NC_014363.1","2":"0.18240538","3":"0.003724266","4":"TRUE","5":"0.27994855","6":"0.005718211","7":"TRUE","8":"NA"},{"1":"NC_015761.1","2":"0.02075433","3":"0.001495422","4":"TRUE","5":"0.03202098","6":"0.002306621","7":"TRUE","8":"NA"},{"1":"NC_017033.1","2":"0.17788410","3":"0.004758109","4":"TRUE","5":"0.27309952","6":"0.007294859","7":"TRUE","8":"NA"},{"1":"NC_018014.1","2":"0.11933315","3":"0.002381048","4":"TRUE","5":"0.18348339","6":"0.003649853","7":"TRUE","8":"NA"},{"1":"NC_019792.1","2":"0.15582689","3":"0.001729569","4":"TRUE","5":"0.23937276","6":"0.002645053","7":"TRUE","8":"NA"},{"1":"NC_019897.1","2":"0.12756736","3":"0.002739246","4":"TRUE","5":"0.19611237","6":"0.004202457","7":"TRUE","8":"NA"},{"1":"NC_019936.1","2":"0.15923443","3":"0.003366670","4":"TRUE","5":"0.24457921","6":"0.005160172","7":"TRUE","8":"NA"},{"1":"NC_019937.1","2":"0.05922982","3":"0.003018288","4":"TRUE","5":"0.09129203","6":"0.004646234","7":"TRUE","8":"NA"},{"1":"NC_019938.1","2":"0.10114853","3":"0.004781642","4":"TRUE","5":"0.15558613","6":"0.007352333","7":"TRUE","8":"NA"},{"1":"NC_019939.1","2":"0.16398224","3":"0.011721812","4":"TRUE","5":"0.25182466","6":"0.017927258","7":"TRUE","8":"NA"},{"1":"NC_019964.1","2":"0.18205895","3":"0.003576154","4":"TRUE","5":"0.27942488","6":"0.005476378","7":"TRUE","8":"NA"},{"1":"NC_019974.1","2":"0.17720421","3":"0.002021406","4":"TRUE","5":"0.27195722","6":"0.003094519","7":"TRUE","8":"NA"},{"1":"NC_019975.1","2":"0.06581470","3":"0.012121626","4":"TRUE","5":"0.10139967","6":"0.018645191","7":"TRUE","8":"NA"},{"1":"NC_019976.1","2":"0.12916152","3":"0.001744027","4":"TRUE","5":"0.19853018","6":"0.002670578","7":"TRUE","8":"NA"},{"1":"NC_002737.2","2":"NA","3":"NA","4":"NA","5":"NA","6":"NA","7":"NA","8":"TRUE"},{"1":"NC_009012.1","2":"NA","3":"NA","4":"NA","5":"NA","6":"NA","7":"NA","8":"TRUE"},{"1":"NC_017095.1","2":"NA","3":"NA","4":"NA","5":"NA","6":"NA","7":"NA","8":"TRUE"},{"1":"NC_018066.1","2":"NA","3":"NA","4":"NA","5":"NA","6":"NA","7":"NA","8":"TRUE"},{"1":"NC_018515.1","2":"NA","3":"NA","4":"NA","5":"NA","6":"NA","7":"NA","8":"TRUE"}],"options":{"columns":{"min":{},"max":[10]},"rows":{"min":[10],"max":[10]},"pages":{}}}
   </script>
 </div>
 <p>It is evident here that the AFE estimates using qSIP model or the ΔBD method are not the same, however, both provide the same incorporator information. Although the incorporators may not be the same everytime, we found an overlap between qSIP and ΔBD methods in our metagenome datasets. We also found that qSIP model provided more accurate estimates of AFE compared to ΔBD method.  It also appears that MW-HR-SIP outputs lower number of incorporators. In our study and by <a href="https://www.frontiersin.org/articles/10.3389/fmicb.2018.00570/full">Youngblut et al.</a>, MW-HR-SIP was found to have better sensitivity compared to qSIP or ΔBD methods. It is interesting that the AFE based methods and differential abundance based methods do not provide the same incorporator identity, which is perhaps due to comparistive analysis in only the multiple overlapping windows in the MW-HR-SIP method, while the AFE methods examine the complete BD gradient. Due to the higher sensitivity of the MW-HR-SIP method, we attempted a sequential analysis with first MW-HR-SIP to eliminate likely false positives, and then perform qSIP to estimate AFE. Such a method reduces multiple comparisons and increases confidence in detecting true incorporators due to higher statistical power.  We are merely providing the different methods for the user to decide which method to apply for detecting incorporators in their study. The choice of the method is to the user’s discretion that fits best their study. ## Session information</p>
-<div class="sourceCode" id="cb24"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb24-1"><a href="#cb24-1" aria-hidden="true" tabindex="-1"></a><span class="fu">sessionInfo</span>()</span>
-<span id="cb24-2"><a href="#cb24-2" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; R version 4.2.2 (2022-10-31 ucrt)</span></span>
-<span id="cb24-3"><a href="#cb24-3" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Platform: x86_64-w64-mingw32/x64 (64-bit)</span></span>
-<span id="cb24-4"><a href="#cb24-4" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Running under: Windows 10 x64 (build 19044)</span></span>
-<span id="cb24-5"><a href="#cb24-5" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; </span></span>
-<span id="cb24-6"><a href="#cb24-6" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Matrix products: default</span></span>
-<span id="cb24-7"><a href="#cb24-7" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; </span></span>
-<span id="cb24-8"><a href="#cb24-8" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; locale:</span></span>
-<span id="cb24-9"><a href="#cb24-9" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [1] LC_COLLATE=English_Canada.utf8  LC_CTYPE=English_Canada.utf8   </span></span>
-<span id="cb24-10"><a href="#cb24-10" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [3] LC_MONETARY=English_Canada.utf8 LC_NUMERIC=C                   </span></span>
-<span id="cb24-11"><a href="#cb24-11" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [5] LC_TIME=English_Canada.utf8    </span></span>
-<span id="cb24-12"><a href="#cb24-12" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; </span></span>
-<span id="cb24-13"><a href="#cb24-13" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; attached base packages:</span></span>
-<span id="cb24-14"><a href="#cb24-14" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [1] stats     graphics  grDevices utils     datasets  methods   base     </span></span>
-<span id="cb24-15"><a href="#cb24-15" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; </span></span>
-<span id="cb24-16"><a href="#cb24-16" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; other attached packages:</span></span>
-<span id="cb24-17"><a href="#cb24-17" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  [1] SIPmg_1.2       ggpubr_0.5.0    HTSSIP_1.4.1    phyloseq_1.42.0</span></span>
-<span id="cb24-18"><a href="#cb24-18" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  [5] forcats_0.5.2   stringr_1.5.0   dplyr_1.0.10    purrr_0.3.5    </span></span>
-<span id="cb24-19"><a href="#cb24-19" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  [9] readr_2.1.3     tidyr_1.2.1     tibble_3.1.8    ggplot2_3.4.0  </span></span>
-<span id="cb24-20"><a href="#cb24-20" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [13] tidyverse_1.3.2</span></span>
-<span id="cb24-21"><a href="#cb24-21" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; </span></span>
-<span id="cb24-22"><a href="#cb24-22" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; loaded via a namespace (and not attached):</span></span>
-<span id="cb24-23"><a href="#cb24-23" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;   [1] readxl_1.4.1                backports_1.4.1            </span></span>
-<span id="cb24-24"><a href="#cb24-24" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;   [3] systemfonts_1.0.4           plyr_1.8.8                 </span></span>
-<span id="cb24-25"><a href="#cb24-25" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;   [5] igraph_1.3.5                lazyeval_0.2.2             </span></span>
-<span id="cb24-26"><a href="#cb24-26" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;   [7] splines_4.2.2               BiocParallel_1.32.4        </span></span>
-<span id="cb24-27"><a href="#cb24-27" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;   [9] GenomeInfoDb_1.34.4         digest_0.6.30              </span></span>
-<span id="cb24-28"><a href="#cb24-28" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  [11] foreach_1.5.2               htmltools_0.5.4            </span></span>
-<span id="cb24-29"><a href="#cb24-29" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  [13] tiff_0.1-11                 fansi_1.0.3                </span></span>
-<span id="cb24-30"><a href="#cb24-30" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  [15] memoise_2.0.1               magrittr_2.0.3             </span></span>
-<span id="cb24-31"><a href="#cb24-31" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  [17] googlesheets4_1.0.1         cluster_2.1.4              </span></span>
-<span id="cb24-32"><a href="#cb24-32" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  [19] tzdb_0.3.0                  annotate_1.76.0            </span></span>
-<span id="cb24-33"><a href="#cb24-33" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  [21] Biostrings_2.66.0           modelr_0.1.10              </span></span>
-<span id="cb24-34"><a href="#cb24-34" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  [23] matrixStats_0.63.0          vroom_1.6.0                </span></span>
-<span id="cb24-35"><a href="#cb24-35" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  [25] timechange_0.1.1            jpeg_0.1-10                </span></span>
-<span id="cb24-36"><a href="#cb24-36" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  [27] colorspace_2.0-3            blob_1.2.3                 </span></span>
-<span id="cb24-37"><a href="#cb24-37" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  [29] rvest_1.0.3                 textshaping_0.3.6          </span></span>
-<span id="cb24-38"><a href="#cb24-38" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  [31] haven_2.5.1                 xfun_0.35                  </span></span>
-<span id="cb24-39"><a href="#cb24-39" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  [33] crayon_1.5.2                RCurl_1.98-1.9             </span></span>
-<span id="cb24-40"><a href="#cb24-40" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  [35] jsonlite_1.8.4              qSIPmg_1.0.0               </span></span>
-<span id="cb24-41"><a href="#cb24-41" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  [37] survival_3.4-0              iterators_1.0.14           </span></span>
-<span id="cb24-42"><a href="#cb24-42" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  [39] ape_5.6-2                   glue_1.6.2                 </span></span>
-<span id="cb24-43"><a href="#cb24-43" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  [41] gtable_0.3.1                gargle_1.2.1               </span></span>
-<span id="cb24-44"><a href="#cb24-44" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  [43] zlibbioc_1.44.0             XVector_0.38.0             </span></span>
-<span id="cb24-45"><a href="#cb24-45" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  [45] DelayedArray_0.24.0         car_3.1-1                  </span></span>
-<span id="cb24-46"><a href="#cb24-46" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  [47] Rhdf5lib_1.20.0             BiocGenerics_0.44.0        </span></span>
-<span id="cb24-47"><a href="#cb24-47" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  [49] abind_1.4-5                 scales_1.2.1               </span></span>
-<span id="cb24-48"><a href="#cb24-48" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  [51] DBI_1.1.3                   rstatix_0.7.1              </span></span>
-<span id="cb24-49"><a href="#cb24-49" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  [53] Rcpp_1.0.9                  xtable_1.8-4               </span></span>
-<span id="cb24-50"><a href="#cb24-50" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  [55] bit_4.0.5                   stats4_4.2.2               </span></span>
-<span id="cb24-51"><a href="#cb24-51" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  [57] htmlwidgets_1.5.4           httr_1.4.4                 </span></span>
-<span id="cb24-52"><a href="#cb24-52" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  [59] RColorBrewer_1.1-3          ellipsis_0.3.2             </span></span>
-<span id="cb24-53"><a href="#cb24-53" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  [61] XML_3.99-0.13               pkgconfig_2.0.3            </span></span>
-<span id="cb24-54"><a href="#cb24-54" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  [63] farver_2.1.1                sass_0.4.4                 </span></span>
-<span id="cb24-55"><a href="#cb24-55" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  [65] dbplyr_2.2.1                locfit_1.5-9.6             </span></span>
-<span id="cb24-56"><a href="#cb24-56" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  [67] utf8_1.2.2                  AnnotationDbi_1.60.0       </span></span>
-<span id="cb24-57"><a href="#cb24-57" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  [69] tidyselect_1.2.0            labeling_0.4.2             </span></span>
-<span id="cb24-58"><a href="#cb24-58" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  [71] rlang_1.0.6                 reshape2_1.4.4             </span></span>
-<span id="cb24-59"><a href="#cb24-59" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  [73] polynom_1.4-1               munsell_0.5.0              </span></span>
-<span id="cb24-60"><a href="#cb24-60" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  [75] cellranger_1.1.0            tools_4.2.2                </span></span>
-<span id="cb24-61"><a href="#cb24-61" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  [77] cachem_1.0.6                cli_3.4.1                  </span></span>
-<span id="cb24-62"><a href="#cb24-62" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  [79] RSQLite_2.2.19              generics_0.1.3             </span></span>
-<span id="cb24-63"><a href="#cb24-63" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  [81] ade4_1.7-20                 broom_1.0.1                </span></span>
-<span id="cb24-64"><a href="#cb24-64" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  [83] fdrtool_1.2.17              evaluate_0.18              </span></span>
-<span id="cb24-65"><a href="#cb24-65" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  [85] biomformat_1.26.0           fastmap_1.1.0              </span></span>
-<span id="cb24-66"><a href="#cb24-66" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  [87] fftwtools_0.9-11            yaml_2.3.6                 </span></span>
-<span id="cb24-67"><a href="#cb24-67" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  [89] ragg_1.2.4                  knitr_1.41                 </span></span>
-<span id="cb24-68"><a href="#cb24-68" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  [91] bit64_4.0.5                 fs_1.5.2                   </span></span>
-<span id="cb24-69"><a href="#cb24-69" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  [93] KEGGREST_1.38.0             nlme_3.1-160               </span></span>
-<span id="cb24-70"><a href="#cb24-70" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  [95] xml2_1.3.3                  compiler_4.2.2             </span></span>
-<span id="cb24-71"><a href="#cb24-71" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  [97] rstudioapi_0.14             png_0.1-8                  </span></span>
-<span id="cb24-72"><a href="#cb24-72" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  [99] ggsignif_0.6.4              reprex_2.0.2               </span></span>
-<span id="cb24-73"><a href="#cb24-73" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [101] geneplotter_1.76.0          bslib_0.4.1                </span></span>
-<span id="cb24-74"><a href="#cb24-74" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [103] stringi_1.7.8               highr_0.9                  </span></span>
-<span id="cb24-75"><a href="#cb24-75" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [105] lattice_0.20-45             Matrix_1.5-3               </span></span>
-<span id="cb24-76"><a href="#cb24-76" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [107] vegan_2.6-4                 permute_0.9-7              </span></span>
-<span id="cb24-77"><a href="#cb24-77" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [109] multtest_2.54.0             vctrs_0.5.1                </span></span>
-<span id="cb24-78"><a href="#cb24-78" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [111] pillar_1.8.1                lifecycle_1.0.3            </span></span>
-<span id="cb24-79"><a href="#cb24-79" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [113] rhdf5filters_1.10.0         jquerylib_0.1.4            </span></span>
-<span id="cb24-80"><a href="#cb24-80" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [115] data.table_1.14.6           bitops_1.0-7               </span></span>
-<span id="cb24-81"><a href="#cb24-81" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [117] GenomicRanges_1.50.1        R6_2.5.1                   </span></span>
-<span id="cb24-82"><a href="#cb24-82" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [119] IRanges_2.32.0              codetools_0.2-18           </span></span>
-<span id="cb24-83"><a href="#cb24-83" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [121] MASS_7.3-58.1               assertthat_0.2.1           </span></span>
-<span id="cb24-84"><a href="#cb24-84" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [123] rhdf5_2.42.0                SummarizedExperiment_1.28.0</span></span>
-<span id="cb24-85"><a href="#cb24-85" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [125] DESeq2_1.38.1               withr_2.5.0                </span></span>
-<span id="cb24-86"><a href="#cb24-86" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [127] S4Vectors_0.36.1            GenomeInfoDbData_1.2.9     </span></span>
-<span id="cb24-87"><a href="#cb24-87" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [129] mgcv_1.8-41                 parallel_4.2.2             </span></span>
-<span id="cb24-88"><a href="#cb24-88" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [131] hms_1.1.2                   EBImage_4.40.0             </span></span>
-<span id="cb24-89"><a href="#cb24-89" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [133] grid_4.2.2                  rmarkdown_2.18             </span></span>
-<span id="cb24-90"><a href="#cb24-90" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [135] MatrixGenerics_1.10.0       carData_3.0-5              </span></span>
-<span id="cb24-91"><a href="#cb24-91" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [137] googledrive_2.0.0           Biobase_2.58.0             </span></span>
-<span id="cb24-92"><a href="#cb24-92" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [139] lubridate_1.9.0</span></span></code></pre></div>
+<div class="sourceCode" id="cb25"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb25-1"><a href="#cb25-1" aria-hidden="true" tabindex="-1"></a><span class="fu">sessionInfo</span>()</span>
+<span id="cb25-2"><a href="#cb25-2" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; R version 4.2.2 (2022-10-31 ucrt)</span></span>
+<span id="cb25-3"><a href="#cb25-3" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Platform: x86_64-w64-mingw32/x64 (64-bit)</span></span>
+<span id="cb25-4"><a href="#cb25-4" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Running under: Windows 10 x64 (build 19044)</span></span>
+<span id="cb25-5"><a href="#cb25-5" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; </span></span>
+<span id="cb25-6"><a href="#cb25-6" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Matrix products: default</span></span>
+<span id="cb25-7"><a href="#cb25-7" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; </span></span>
+<span id="cb25-8"><a href="#cb25-8" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; locale:</span></span>
+<span id="cb25-9"><a href="#cb25-9" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [1] LC_COLLATE=English_Canada.utf8  LC_CTYPE=English_Canada.utf8   </span></span>
+<span id="cb25-10"><a href="#cb25-10" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [3] LC_MONETARY=English_Canada.utf8 LC_NUMERIC=C                   </span></span>
+<span id="cb25-11"><a href="#cb25-11" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [5] LC_TIME=English_Canada.utf8    </span></span>
+<span id="cb25-12"><a href="#cb25-12" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; </span></span>
+<span id="cb25-13"><a href="#cb25-13" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; attached base packages:</span></span>
+<span id="cb25-14"><a href="#cb25-14" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [1] stats     graphics  grDevices utils     datasets  methods   base     </span></span>
+<span id="cb25-15"><a href="#cb25-15" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; </span></span>
+<span id="cb25-16"><a href="#cb25-16" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; other attached packages:</span></span>
+<span id="cb25-17"><a href="#cb25-17" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  [1] SIPmg_1.2       ggpubr_0.5.0    HTSSIP_1.4.1    phyloseq_1.42.0</span></span>
+<span id="cb25-18"><a href="#cb25-18" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  [5] forcats_0.5.2   stringr_1.5.0   dplyr_1.0.10    purrr_0.3.5    </span></span>
+<span id="cb25-19"><a href="#cb25-19" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  [9] readr_2.1.3     tidyr_1.2.1     tibble_3.1.8    ggplot2_3.4.0  </span></span>
+<span id="cb25-20"><a href="#cb25-20" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [13] tidyverse_1.3.2</span></span>
+<span id="cb25-21"><a href="#cb25-21" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; </span></span>
+<span id="cb25-22"><a href="#cb25-22" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; loaded via a namespace (and not attached):</span></span>
+<span id="cb25-23"><a href="#cb25-23" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;   [1] readxl_1.4.1                backports_1.4.1            </span></span>
+<span id="cb25-24"><a href="#cb25-24" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;   [3] systemfonts_1.0.4           plyr_1.8.8                 </span></span>
+<span id="cb25-25"><a href="#cb25-25" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;   [5] igraph_1.3.5                lazyeval_0.2.2             </span></span>
+<span id="cb25-26"><a href="#cb25-26" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;   [7] splines_4.2.2               BiocParallel_1.32.4        </span></span>
+<span id="cb25-27"><a href="#cb25-27" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;   [9] GenomeInfoDb_1.34.4         digest_0.6.30              </span></span>
+<span id="cb25-28"><a href="#cb25-28" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  [11] foreach_1.5.2               htmltools_0.5.4            </span></span>
+<span id="cb25-29"><a href="#cb25-29" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  [13] tiff_0.1-11                 fansi_1.0.3                </span></span>
+<span id="cb25-30"><a href="#cb25-30" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  [15] memoise_2.0.1               magrittr_2.0.3             </span></span>
+<span id="cb25-31"><a href="#cb25-31" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  [17] googlesheets4_1.0.1         cluster_2.1.4              </span></span>
+<span id="cb25-32"><a href="#cb25-32" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  [19] tzdb_0.3.0                  annotate_1.76.0            </span></span>
+<span id="cb25-33"><a href="#cb25-33" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  [21] Biostrings_2.66.0           modelr_0.1.10              </span></span>
+<span id="cb25-34"><a href="#cb25-34" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  [23] matrixStats_0.63.0          vroom_1.6.0                </span></span>
+<span id="cb25-35"><a href="#cb25-35" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  [25] timechange_0.1.1            jpeg_0.1-10                </span></span>
+<span id="cb25-36"><a href="#cb25-36" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  [27] colorspace_2.0-3            blob_1.2.3                 </span></span>
+<span id="cb25-37"><a href="#cb25-37" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  [29] rvest_1.0.3                 textshaping_0.3.6          </span></span>
+<span id="cb25-38"><a href="#cb25-38" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  [31] haven_2.5.1                 xfun_0.35                  </span></span>
+<span id="cb25-39"><a href="#cb25-39" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  [33] crayon_1.5.2                RCurl_1.98-1.9             </span></span>
+<span id="cb25-40"><a href="#cb25-40" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  [35] jsonlite_1.8.4              qSIPmg_1.0.0               </span></span>
+<span id="cb25-41"><a href="#cb25-41" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  [37] survival_3.4-0              iterators_1.0.14           </span></span>
+<span id="cb25-42"><a href="#cb25-42" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  [39] ape_5.6-2                   glue_1.6.2                 </span></span>
+<span id="cb25-43"><a href="#cb25-43" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  [41] gtable_0.3.1                gargle_1.2.1               </span></span>
+<span id="cb25-44"><a href="#cb25-44" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  [43] zlibbioc_1.44.0             XVector_0.38.0             </span></span>
+<span id="cb25-45"><a href="#cb25-45" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  [45] DelayedArray_0.24.0         car_3.1-1                  </span></span>
+<span id="cb25-46"><a href="#cb25-46" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  [47] Rhdf5lib_1.20.0             BiocGenerics_0.44.0        </span></span>
+<span id="cb25-47"><a href="#cb25-47" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  [49] abind_1.4-5                 scales_1.2.1               </span></span>
+<span id="cb25-48"><a href="#cb25-48" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  [51] DBI_1.1.3                   rstatix_0.7.1              </span></span>
+<span id="cb25-49"><a href="#cb25-49" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  [53] Rcpp_1.0.9                  xtable_1.8-4               </span></span>
+<span id="cb25-50"><a href="#cb25-50" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  [55] bit_4.0.5                   stats4_4.2.2               </span></span>
+<span id="cb25-51"><a href="#cb25-51" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  [57] htmlwidgets_1.5.4           httr_1.4.4                 </span></span>
+<span id="cb25-52"><a href="#cb25-52" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  [59] RColorBrewer_1.1-3          ellipsis_0.3.2             </span></span>
+<span id="cb25-53"><a href="#cb25-53" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  [61] XML_3.99-0.13               pkgconfig_2.0.3            </span></span>
+<span id="cb25-54"><a href="#cb25-54" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  [63] farver_2.1.1                sass_0.4.4                 </span></span>
+<span id="cb25-55"><a href="#cb25-55" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  [65] dbplyr_2.2.1                locfit_1.5-9.6             </span></span>
+<span id="cb25-56"><a href="#cb25-56" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  [67] utf8_1.2.2                  AnnotationDbi_1.60.0       </span></span>
+<span id="cb25-57"><a href="#cb25-57" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  [69] tidyselect_1.2.0            labeling_0.4.2             </span></span>
+<span id="cb25-58"><a href="#cb25-58" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  [71] rlang_1.0.6                 reshape2_1.4.4             </span></span>
+<span id="cb25-59"><a href="#cb25-59" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  [73] polynom_1.4-1               munsell_0.5.0              </span></span>
+<span id="cb25-60"><a href="#cb25-60" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  [75] cellranger_1.1.0            tools_4.2.2                </span></span>
+<span id="cb25-61"><a href="#cb25-61" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  [77] cachem_1.0.6                cli_3.4.1                  </span></span>
+<span id="cb25-62"><a href="#cb25-62" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  [79] RSQLite_2.2.19              generics_0.1.3             </span></span>
+<span id="cb25-63"><a href="#cb25-63" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  [81] ade4_1.7-20                 broom_1.0.1                </span></span>
+<span id="cb25-64"><a href="#cb25-64" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  [83] fdrtool_1.2.17              evaluate_0.18              </span></span>
+<span id="cb25-65"><a href="#cb25-65" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  [85] biomformat_1.26.0           fastmap_1.1.0              </span></span>
+<span id="cb25-66"><a href="#cb25-66" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  [87] fftwtools_0.9-11            yaml_2.3.6                 </span></span>
+<span id="cb25-67"><a href="#cb25-67" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  [89] ragg_1.2.4                  knitr_1.41                 </span></span>
+<span id="cb25-68"><a href="#cb25-68" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  [91] bit64_4.0.5                 fs_1.5.2                   </span></span>
+<span id="cb25-69"><a href="#cb25-69" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  [93] KEGGREST_1.38.0             nlme_3.1-160               </span></span>
+<span id="cb25-70"><a href="#cb25-70" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  [95] xml2_1.3.3                  compiler_4.2.2             </span></span>
+<span id="cb25-71"><a href="#cb25-71" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  [97] rstudioapi_0.14             png_0.1-8                  </span></span>
+<span id="cb25-72"><a href="#cb25-72" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  [99] ggsignif_0.6.4              reprex_2.0.2               </span></span>
+<span id="cb25-73"><a href="#cb25-73" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [101] geneplotter_1.76.0          bslib_0.4.1                </span></span>
+<span id="cb25-74"><a href="#cb25-74" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [103] stringi_1.7.8               highr_0.9                  </span></span>
+<span id="cb25-75"><a href="#cb25-75" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [105] lattice_0.20-45             Matrix_1.5-3               </span></span>
+<span id="cb25-76"><a href="#cb25-76" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [107] vegan_2.6-4                 permute_0.9-7              </span></span>
+<span id="cb25-77"><a href="#cb25-77" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [109] multtest_2.54.0             vctrs_0.5.1                </span></span>
+<span id="cb25-78"><a href="#cb25-78" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [111] pillar_1.8.1                lifecycle_1.0.3            </span></span>
+<span id="cb25-79"><a href="#cb25-79" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [113] rhdf5filters_1.10.0         jquerylib_0.1.4            </span></span>
+<span id="cb25-80"><a href="#cb25-80" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [115] data.table_1.14.6           bitops_1.0-7               </span></span>
+<span id="cb25-81"><a href="#cb25-81" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [117] GenomicRanges_1.50.1        R6_2.5.1                   </span></span>
+<span id="cb25-82"><a href="#cb25-82" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [119] IRanges_2.32.0              codetools_0.2-18           </span></span>
+<span id="cb25-83"><a href="#cb25-83" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [121] MASS_7.3-58.1               assertthat_0.2.1           </span></span>
+<span id="cb25-84"><a href="#cb25-84" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [123] rhdf5_2.42.0                SummarizedExperiment_1.28.0</span></span>
+<span id="cb25-85"><a href="#cb25-85" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [125] DESeq2_1.38.1               withr_2.5.0                </span></span>
+<span id="cb25-86"><a href="#cb25-86" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [127] S4Vectors_0.36.1            GenomeInfoDbData_1.2.9     </span></span>
+<span id="cb25-87"><a href="#cb25-87" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [129] mgcv_1.8-41                 parallel_4.2.2             </span></span>
+<span id="cb25-88"><a href="#cb25-88" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [131] hms_1.1.2                   EBImage_4.40.0             </span></span>
+<span id="cb25-89"><a href="#cb25-89" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [133] grid_4.2.2                  rmarkdown_2.18             </span></span>
+<span id="cb25-90"><a href="#cb25-90" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [135] MatrixGenerics_1.10.0       carData_3.0-5              </span></span>
+<span id="cb25-91"><a href="#cb25-91" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [137] googledrive_2.0.0           Biobase_2.58.0             </span></span>
+<span id="cb25-92"><a href="#cb25-92" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [139] lubridate_1.9.0</span></span></code></pre></div>
 </div>
 </div>
 </div>

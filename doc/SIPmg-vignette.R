@@ -189,6 +189,12 @@ EBImage::display(cooksd_example)
 #Linear regression plot with filtered outliers in sequin data
 EBImage::display(filtered_lm_example)
 
+## ---- estimating relative coverage--------------------------------------------
+f_tibble <- readr::read_csv("mock_input_data/coverage_metadata.csv")
+rel.cov = SIPmg::coverage_normalization(f_tibble = f_tibble, approach = "relative_coverage")
+mag.table = phyloseq::otu_table(as.matrix(rel.cov %>% column_to_rownames(var = "Feature")), taxa_are_rows = TRUE) #Phyloseq OTU table
+
+
 ## ----Load data 3, echo = F----------------------------------------------------
 ## Load data
 #Coverage metadata

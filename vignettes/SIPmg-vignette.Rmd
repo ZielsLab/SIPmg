@@ -23,7 +23,7 @@ Please check out this introductory vignette to qSIP metagenomics, before checkin
 
 [Coverage normalization and scaling based on linear regression model][Scaling coverage data]
 
-[Identification of incorporators based on atom fraction excess method or by multiple hypothesis testing on centroid buoyant densities][qSIP metagenomics and identification of isotope incorporators]
+[Identification of incorporators based on qSIP, delta BD, or DeSEQ methods][SIP metagenomics and identification of isotope incorporators]
 
 # Background
 
@@ -68,12 +68,12 @@ In quantitative SIP (qSIP), quantitative estimates of isotope incorporation, exp
 
 # Using SIPmg R package
 
-This R package was designed to facilitate statistical analyses using qSIP metagenomic data. Particularly, coverage and taxonomic classification of metagenome-assembled genomes and metadata of fractionated DNA is used to identify incorporators and quantify isotopic enrichment. 
+This R package was designed to facilitate statistical analyses using SIP metagenomic data. Particularly, coverage and taxonomic classification of metagenome-assembled genomes and metadata of fractionated DNA is used to identify incorporators and quantify isotopic enrichment. 
 
 
 Overall, the package can perform the following:
 
-1. Coverage normalization and scaling based on post-fractionation reference standards, called sequins, to calculate genome (or feature of interest) absolute concentration.
+1. Coverage normalization to absolute concentrations or relative coverage. Scaling of coverages to absolute abundances based on post-fractionation reference standards, called sequins.
 
 2. Statistical analysis based on either of 
   + AFE mathematical model by [Hungate et al. (2015)](https://journals.asm.org/doi/10.1128/AEM.02280-15) or
@@ -84,7 +84,7 @@ Overall, the package can perform the following:
 
 ## Example workflow
 
-qSIP analysis using sequins, MAG coverage, and MAG taxonomy is performed using this R markdown. Briefly, coverages are normalized, MAG coverages are then scaled based on linear regression models from sequin coverage and concentrations, a phyloseq object is created from MAG absolute concentrations and taxonomy (GTDB taxonomy output format is required) data. \n
+qSIP analysis is typically performed using sequins, MAG coverage, and MAG taxonomy is performed using this R markdown. Briefly, coverages are normalized, MAG coverages are then scaled based on linear regression models from sequin coverage and concentrations, a phyloseq object is created from MAG absolute concentrations and taxonomy (GTDB taxonomy output format is required) data. \n
 Note: Sequins that were spiked in the DNA-SIP fractions will be used in scaling and creating linear regression models for evaluating absolute MAG concentrations. Please see `sequin_scaling.R` \n
 For normalizing coverage values please see `pooling_funs.R` \n
 
@@ -400,15 +400,7 @@ The approach used for scaling is detailed in the following steps:
 
 ## Choice of regression model
 
-The recommended regression model is the robust linear regression model. To learn more about robust linear regression please refer to these materials and more
-
-1.	[Andrews, D. F. A Robust Method for Multiple Linear Regression. Technometrics 16, 523–531 (1974).]( https://www-jstor-org.ezproxy.library.ubc.ca/stable/1267603?seq=1#metadata_info_tab_contents)
-
-2.	[Filzmoser, P. & Nordhausen, K. Robust linear regression for high-dimensional data: An overview. WIREs Computational Statistics 13, e1524 (2021)]( https://wires.onlinelibrary.wiley.com/doi/full/10.1002/wics.1524)
-
-3.	https://stats.idre.ucla.edu/r/dae/robust-regression/
-
-Briefly, ordinary least squares regression can be very sensitive to outliers, resulting a poor model performance when the data is contaminated with outliers. Although there are methods to filter outliers, it may not be the best idea to remove these data points.
+Ordinary least squares regression can be very sensitive to outliers, resulting a poor model performance when the data is contaminated with outliers. Although there are methods, like Cook's distance based filtering to address outliers, it may not always be the best idea to remove these data points.
 
 See [these]( https://statisticsbyjim.com/basics/remove-outliers/) [discussions]( https://stats.stackexchange.com/questions/175/how-should-outliers-be-dealt-with-in-linear-regression-analysis) and more for better insights into handling outliers. 
 
@@ -517,19 +509,28 @@ Upon filtering the data to remove the outlier, the fit becomes much better for t
 EBImage::display(filtered_lm_example)
 ```
 
+## What if there were no sequins added in the study
+In our study, we realized that the sequin-scaled data provided the best correlation (Spearman correlation coefficient = 0.85), compared to methods without the use of sequins. However, not all studies would have access to sequins or could choose not to add sequins. We tested qSIP methods with absolute concentration of MAGs obtained as a product of fraction DNA concentration and either with MAG relative abundance (as performed by [Greenlon et al.](https://journals.asm.org/doi/10.1128/mSystems.00151-20)) or relative coverage (as performed by [Starr et al.](https://journals.asm.org/doi/10.1128/mSphere.00085-21)), or simply with relative coverage, i.e., without converting the MAG coverages to absolute concentration. We found that without sequins, simply using relative coverage provided better specificity (0.99) and good correlation (Spearman correlation coefficient = 0.76), compared to the other two methods. The user could choose any of the three approaches to obtain normalized coverages using the equation `coverage_normalization()` where the parameter approach would be chosen accordingly (either "greenlon", "starr", or "relative_coverage"). In this example, simple relative coverage will be estimated without converting to absolute concentration based on fraction DNA concentrations. The relative coverage table can then be converted to a phyloseq object to run incorporator identification and/or AFE estimation. For more details, please refer to the [incorporator identification section](SIP metagenomics and identification of isotope incorporators)
+
+```{r, estimating relative coverage}
+f_tibble <- readr::read_csv("mock_input_data/coverage_metadata.csv")
+rel.cov = SIPmg::coverage_normalization(f_tibble = f_tibble, approach = "relative_coverage")
+mag.table = phyloseq::otu_table(as.matrix(rel.cov %>% column_to_rownames(var = "Feature")), taxa_are_rows = TRUE) #Phyloseq OTU table
+
+```
+
+
 
 ## Decision on the method to scale coverages
 
-Although we recommend the robust linear regression method, we leave it to the user to choose the method for scaling that is best fit for their objectives. 
-
 It can be seen from the above plots that the regression parameters differ based on the method of regression and whether or not data filtering is used. These regression parameters directly influence the estimation of concentrations of features of interest in the microbiome. Thus, the method for regression must be a careful choice. 
 
-# qSIP metagenomics and identification of isotope incorporators
+# SIP metagenomics and identification of isotope incorporators
 
 The isotope incorporators could be identified using the below methods:
 
 + AFE mathematical model by [Hungate et al. (2015)](https://journals.asm.org/doi/10.1128/AEM.02280-15) or
-  + Delta buoyant density $AFE_{ΔBD}$ = $\frac{W_{Lab}- W_{Light}}{I_{max}}$.        Where Imax is the maximum linear shift in DNA BD (upon 100% labeling), as        discussed by [Birnie and Rickwood (1978)](https://www.ncbi.nlm.nih.gov/pmc/articles/PMC2595786/)
+  + Delta buoyant density $AFE_{ΔBD}$ = $\frac{W_{Lab}- W_{Light}}{I_{max}}$.        Where $I_{max}$ is the maximum linear shift in DNA BD (upon 100% labeling), as        discussed by [Birnie and Rickwood (1978)](https://www.ncbi.nlm.nih.gov/pmc/articles/PMC2595786/)
   + MW-HR-SIP [Youngblut et al. ](https://www.frontiersin.org/articles/10.3389/fmicb.2018.00570/full)
 
 While the first two methods gives a quantitative estimate of isotopic enrichment in a taxon to determine if it is an incorporator, the third method relies on differential abundance analysis over multiple overlapping windows. Please refer to Youngblut et al. and [HTS-SIP R package](https://cran.r-project.org/web/packages/HTSSIP/index.html) for more details.
