@@ -3,8 +3,8 @@
 #' Calculates global scaling factors for features (contigs or bins),based on linear regression of sequin coverage. Options include log-transformations of coverage, as well as filtering features based on limit of detection. This function must be called first, before the feature abundance table, feature detection table, and plots are retrieved.
 #'
 #'@param f_tibble Can be either of
-#' (1) a tibble with first column "Feature" that contains bin IDs, and the rest of the columns represent samples with bins' pooled values. Every sequin is also listed s a feature.
-#' (2) a tibble as outputted by the program "checkm coverage" from the tool CheckM (https://github.com/Ecogenomics/CheckM). If this is the input format, the optional function, pooling_functions.R must be run. `pooling_functions.R` parses the checkM coverage output to provide a tibble as described in option 1. Please check `pooling_functions.R` for further details. Please check CheckM documentation (https://github.com/Ecogenomics/CheckM) on the usage for "checkm coverage" program
+#' (1) a tibble with first column "Feature" that contains bin IDs, and the rest of the columns represent samples with bins' coverage values.
+#' (2) a tibble as outputted by the program "checkm coverage" from the tool CheckM. Please check CheckM documentation - https://github.com/Ecogenomics/CheckM on the usage for "checkm coverage" program
 #'@param sequin_meta tibble containing sequin names ("Feature column") and concentrations in attamoles/uL ("Concentration") column.
 #'@param seq_dilution tibble with first column "Sample" with **same sample names as in f_tibble**, and a second column "Dilution" showing ratio of sequins added to final sample volume (e.g. a value of 0.01 for a dilution of 1 volume sequin to 99 volumes sample)
 #'@param coe_of_variation Acceptable coefficient of variation for coverage and detection (eg. 20 - for 20 % threshold of coefficient of variation). Coverages above the threshold value will be flagged in the plots.
@@ -15,6 +15,7 @@
 #'@param plot_dir Directory where plots are to be saved. Will create a directory "sequin_scaling_plots_lm" if it does not exist.
 #'@import magrittr MASS
 #'@importFrom rlang .data
+#'@importFrom dplyr mutate
 #'@return a list of tibbles containing
 #'  - mag_tab: a tibble with first column "Feature" that contains bin (or contig IDs), and the rest of the columns represent samples with features' scaled abundances (attamoles/uL)
 #'  - mag_det: a tibble with first column "Feature" that contains bin (or contig IDs),
@@ -26,6 +27,10 @@ scale_features_lm <- function(f_tibble, sequin_meta, seq_dilution,
                                   log_trans = TRUE, coe_of_variation=250,
                                   lod_limit = 0, save_plots = T, plot_dir="sequin_scaling_plots_lm",
                                   cook_filtering = T){
+  Sample <- cov_tab <- seq_cov <- Dilution <- seq_group  <- influential_data <- seq_cov_filt_temp <- NULL
+  seq_det <- grouped_seq_cov <- seq_cov_filt <- lod <- fit <- mag_cov <- slope <- mag_ab <- intercept <- cooksd <- log_scale <- NULL
+  seq_cov_filt_temp_grouped <- seq_cov_filt_round2 <- zero_row_check <- fit_filtered_lm <- slope_filtered <- intercept_filtered <- cooksd_filtered <- NULL
+  mag_ab_filtered <- mag_det_filtered <- cooksd_plot <- cooksd_plot_filtered <- plots_filtered_lm <- NULL
   # Retrieve sample names from feature tibble
   # Retrieve sample names from feature tibble
   scale_fac <- dplyr::tibble(Sample = names(f_tibble) %>%
@@ -181,7 +186,7 @@ scale_features_lm <- function(f_tibble, sequin_meta, seq_dilution,
     scale_fac = scale_fac %>%
       dplyr::mutate(cooksd = purrr::map(fit, ~ stats::cooks.distance(.)), #calculate Cooks distance
                     influential_data = purrr::map(cooksd, ~as.numeric(names(.)[(. > (4/length(.)))])), #Identify row IDs which have data points higher than Cooks threshold
-                    cooksd_plot = purrr::map(cooksd, ~ ggplot2::ggplot(as_tibble(.), ggplot2::aes(y = value, x = seq(1, length(.)))) +
+                    cooksd_plot = purrr::map(cooksd, ~ ggplot2::ggplot(tibble::as_tibble(.), ggplot2::aes(y = value, x = seq(1, length(.)))) +
                                                geom_point() + geom_hline(yintercept = 4/length(.)) +
                                                ggtitle("Cooks distance - \n horizontal line is 4/n (n is the # of data)") +
                                                xlab("#") + ylab("cooks distance")), #Plot Cooks distance
@@ -220,7 +225,7 @@ scale_features_lm <- function(f_tibble, sequin_meta, seq_dilution,
       dplyr::filter(slope_filtered > 0) %>%
       dplyr::mutate(
         cooksd_filtered = purrr::map(fit_filtered_lm, ~ stats::cooks.distance(.)), #Recalculate Cooks distance to validate if the pipeline to filter out outliers worked
-        cooksd_plot_filtered = purrr::map(cooksd_filtered, ~ ggplot2::ggplot(as_tibble(.), ggplot2::aes(y = value, x = seq(1, length(.)))) +
+        cooksd_plot_filtered = purrr::map(cooksd_filtered, ~ ggplot2::ggplot(tibble::as_tibble(.), ggplot2::aes(y = value, x = seq(1, length(.)))) +
                                             geom_point() + geom_hline(yintercept = 4/length(.)) +
                                             ggtitle("Cooks distance - \n horizontal line is 4/n (n is the # of data)") + xlab("#") + ylab("cooks distance"))
       ) %>%

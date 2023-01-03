@@ -2,3 +2,9 @@
 ^\.Rproj\.user$
 ^doc$
 ^Meta$
+^Readme.md
+^CODEOWNERS
+^mock_input_data
+^style.css
+^cran-comments.md
+

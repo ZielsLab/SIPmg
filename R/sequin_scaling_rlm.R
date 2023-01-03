@@ -3,8 +3,8 @@
 #' Calculates global scaling factors for features (contigs or bins),based on linear regression of sequin coverage. Options include log-transformations of coverage, as well as filtering features based on limit of detection. This function must be called first, before the feature abundance table, feature detection table, and plots are retrieved.
 #'
 #'@param f_tibble Can be either of
-#' (1) a tibble with first column "Feature" that contains bin IDs, and the rest of the columns represent samples with bins' pooled values. Every sequin is also listed s a feature.
-#' (2) a tibble as outputted by the program "checkm coverage" from the tool CheckM (https://github.com/Ecogenomics/CheckM). If this is the input format, the optional function, pooling_functions.R must be run. `pooling_functions.R` parses the checkM coverage output to provide a tibble as described in option 1. Please check `pooling_functions.R` for further details. Please check CheckM documentation (https://github.com/Ecogenomics/CheckM) on the usage for "checkm coverage" program
+#' (1) a tibble with first column "Feature" that contains bin IDs, and the rest of the columns represent samples with bins' coverage values.
+#' (2) a tibble as outputted by the program "checkm coverage" from the tool CheckM. Please check CheckM documentation - https://github.com/Ecogenomics/CheckM on the usage for "checkm coverage" program
 #'@param sequin_meta tibble containing sequin names ("Feature column") and concentrations in attamoles/uL ("Concentration") column.
 #'@param seq_dilution tibble with first column "Sample" with **same sample names as in f_tibble**, and a second column "Dilution" showing ratio of sequins added to final sample volume (e.g. a value of 0.01 for a dilution of 1 volume sequin to 99 volumes sample)
 #'@param coe_of_variation Acceptable coefficient of variation for coverage and detection (eg. 20 - for 20 % threshold of coefficient of variation). Coverages above the threshold value will be flagged in the plots. Default = 250
@@ -24,6 +24,8 @@
 scale_features_rlm <- function(f_tibble, sequin_meta, seq_dilution,
                                    log_trans = TRUE, coe_of_variation=250,
                                    lod_limit = 0, save_plots = T, plot_dir="sequin_scaling_plots_rlm"){
+  Sample <- cov_tab <- seq_cov <- Dilution <- seq_group <- slope <- intercept <- mag_ab <- NULL
+  seq_det <- grouped_seq_cov <- seq_cov_filt <- lod <- fit <- log_scale <- mag_cov <- NULL
   # Retrieve sample names from feature tibble
   scale_fac <- dplyr::tibble(Sample = names(f_tibble) %>%
                                stringr::str_subset(pattern = "Feature", negate = TRUE))
@@ -206,7 +208,6 @@ scale_features_rlm <- function(f_tibble, sequin_meta, seq_dilution,
                   "scale_fac" = scale_fac)
 
   # return results
-  attach(results)
   return(results)
 
   file.remove(plot_dir) #If plots are not saved, this directory will be empty and here it will be removed, if the dir is not empty and a name is not provided the script raises a warning

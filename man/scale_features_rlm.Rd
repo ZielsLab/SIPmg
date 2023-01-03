@@ -17,8 +17,8 @@ scale_features_rlm(
 }
 \arguments{
 \item{f_tibble}{Can be either of
-(1) a tibble with first column "Feature" that contains bin IDs, and the rest of the columns represent samples with bins' pooled values. Every sequin is also listed s a feature.
-(2) a tibble as outputted by the program "checkm coverage" from the tool CheckM (https://github.com/Ecogenomics/CheckM). If this is the input format, the optional function, pooling_functions.R must be run. \code{pooling_functions.R} parses the checkM coverage output to provide a tibble as described in option 1. Please check \code{pooling_functions.R} for further details. Please check CheckM documentation (https://github.com/Ecogenomics/CheckM) on the usage for "checkm coverage" program}
+(1) a tibble with first column "Feature" that contains bin IDs, and the rest of the columns represent samples with bins' coverage values.
+(2) a tibble as outputted by the program "checkm coverage" from the tool CheckM. Please check CheckM documentation - https://github.com/Ecogenomics/CheckM on the usage for "checkm coverage" program}
 
 \item{sequin_meta}{tibble containing sequin names ("Feature column") and concentrations in attamoles/uL ("Concentration") column.}
 

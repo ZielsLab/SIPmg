@@ -14,15 +14,14 @@ coverage_normalization(
 }
 \arguments{
 \item{f_tibble}{Can be either of
-(1) a tibble with first column "Feature" that contains bin IDs, and the rest of the columns represent samples with bins' pooled values. Every sequin is also listed s a feature.
-(2) a tibble as outputted by the program "checkm coverage" from the tool CheckM (https://github.com/Ecogenomics/CheckM). If this is the input format, the optional function, pooling_functions.R must be run. \code{pooling_functions.R} parses the checkM coverage output to provide a tibble as described in option 1. Please check \code{pooling_functions.R} for further details. Please check CheckM documentation (https://github.com/Ecogenomics/CheckM) on the usage for "checkm coverage" program}
+(1) a tibble with first column "Feature" that contains bin IDs, and the rest of the columns represent samples with bins' coverage values.
+(2) a tibble as outputted by the program "checkm coverage" from the tool CheckM. Please check CheckM documentation - https://github.com/Ecogenomics/CheckM on the usage for "checkm coverage" program}
 
 \item{contig_coverage}{tibble with contig ID names ("Feature" column), sample columns with \strong{same sample names as in f_tibble} containing coverage values of each contig, contig length in bp ("contig_length" column), and the MAG the contig is associated ("MAG" column) \strong{with same MAGs as in Feature column of f_tibble dataset}.}
 
 \item{sequencing_yield}{tibble containing sample ID ("sample" column) with \strong{same sample names as in f_tibble} and number of reads in bp recovered in that sample ("yield" column).}
 
-\item{approach}{Please choose the method for coverage normalization as "relative_coverage", "greenlon", "starr" to estimate only relative coverage without multiplying DNA concentration of fraction, or as per methods in \href{https://journals.asm.org/doi/full/10.1128/msystems.00417-22}{Greenlon et al.} or \href{https://journals.asm.org/doi/10.1128/mSphere.00085-21}{Starr et al.}
-#'@param fractions_df fractions data frame
+\item{fractions_df}{fractions data frame
 A fractions file with the following columns
 \itemize{
 \item Replicate: Depends on how many replicates the study has
@@ -33,6 +32,8 @@ A fractions file with the following columns
 \item Sample: In the format "'isotope'\emph{rep}#\emph{fraction}#".
 For instance, "12C_rep_1_fraction_1"
 }}
+
+\item{approach}{Please choose the method for coverage normalization as "relative_coverage", "greenlon", "starr" to estimate only relative coverage without multiplying DNA concentration of fraction, or as per methods in Greenlon et al. - https://journals.asm.org/doi/full/10.1128/msystems.00417-22 or Starr et al. - https://journals.asm.org/doi/10.1128/mSphere.00085-21}
 }
 \value{
 tibble containing normalized coverage in required format with MAG name as first column and the normalized coverage values in each sample as the rest of the columns.
