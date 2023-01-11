@@ -17,3 +17,13 @@ phyloseq-style taxonomy table, but for MAGs
 A MAG table, similar to OTU table in phyloseq, will be generated from a
 concantenated GTDB taxa table for bacteria and archaea
 }
+\examples{
+data(taxonomy_tibble)
+
+\donttest{
+
+### Making phyloseq table from taxonomy metadata
+taxonomy.object = tax.table(taxonomy_tibble)
+}
+
+}

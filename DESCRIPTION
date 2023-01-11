@@ -14,11 +14,13 @@ Authors@R:
            family = "Ziels",
            role = c("aut"),
            email = "ziels@civil.ubc.ca"))
-Description: Statistical analysis as part of a stable isotope probing (SIP) metagenomics study to identify isotope incorporating taxa recovered as metagenome-assembled genomes (MAGs). 
+Description: Statistical analysis as part of a stable isotope probing (SIP) metagenomics study to identify isotope incorporating taxa recovered as metagenome-assembled genomes (MAGs) - Helpful reading and a vignette in bookdown format is provided on the package site.
+URL: https://zielslab.github.io/SIPmg.github.io/
+BugReports: https://github.com/ZielsLab/SIPmg
 License: GPL-2
 Encoding: UTF-8
 Roxygen: list(markdown = TRUE)
-RoxygenNote: 7.2.2
+RoxygenNote: 7.2.3
 Imports: HTSSIP, dplyr, lazyeval, phyloseq, plyr, stringr, tibble,
         tidyr, magrittr, ggplot2, ggpubr, purrr, rlang, MASS, 
         DESeq2, data.table, utils
@@ -28,4 +30,9 @@ Packaged: 2021-11-02 00:22:19 UTC; psampara
 Depends: R (>= 3.5.0)
 Suggests: 
     rmarkdown,
-    knitr
+    knitr,
+    EBImage,
+    readr,
+    BiocManager,
+    tidyverse
+LazyData: true

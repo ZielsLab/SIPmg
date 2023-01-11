@@ -5,10 +5,6 @@ gm_mean = function(x, na.rm=TRUE){
 
 #' Calculating log2 fold change for HTS-SIP data.
 #'
-#' The phyloseq object will be filtered to 1) just OTUs
-#' that pass the sparsity cutoff 2) just samples in the user-defined
-#' 'heavy' fractions. The log2 fold change (l2fc) is calculated
-#' between labeled treatment and control gradients.
 #'
 #' The 'use_geo_mean' parameter uses geometric means on all non-zero abundances
 #' for estimateSizeFactors instead of using the default log-tranformed geometric means.
@@ -35,10 +31,10 @@ gm_mean = function(x, na.rm=TRUE){
 #' @export
 #'
 #' @examples
-#' data(physeq_S2D2)
-#' \dontrun{
-#' df_l2fc = DESeq2_l2fc(physeq_S2D2, density_min=1.71, density_max=1.75, design=~Substrate)
-#' head(df_l2fc)
+#' data(phylo.qSIP)
+#' \donttest{
+#'
+#' df_l2fc = DESeq2_l2fc(phylo.qSIP, density_min=1.71, density_max=1.75, design=~Isotope)
 #' }
 #'
 DESeq2_l2fc = function(physeq, density_min, density_max, design,
@@ -53,8 +49,8 @@ DESeq2_l2fc = function(physeq, density_min, density_max, design,
   stopifnot(!is.null(physeq.md$Buoyant_density))
 
   # status
-  cat('Sparsity threshold:', sparsity_threshold, '\n')
-  cat('Density window:', paste(c(density_min, density_max), collapse='-'), '\n')
+  message('Sparsity threshold:', sparsity_threshold, '\n')
+  message('Density window:', paste(c(density_min, density_max), collapse='-'), '\n')
 
   # sparsity cutoff applied to all gradient fractions
   prn = function(x) sum(x > 0) > sparsity_threshold * length(x)

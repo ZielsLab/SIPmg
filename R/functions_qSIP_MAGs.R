@@ -18,6 +18,15 @@
 #'@importFrom rlang .data
 #'@return  data  frame: phyloseq-style sample table
 #'@export
+#'
+#'@examples
+#'data(fractions)
+#'
+#'\donttest{
+#'
+#' ### Making phyloseq table from fractions metadata
+#'samples.object = sample.table(fractions)
+#'}
 
 sample.table = function(fractions_df) {
   fractions_df = tibble::as_tibble(fractions_df) %>% #Ensure loaded file is in tibble format
@@ -39,6 +48,16 @@ sample.table = function(fractions_df) {
 #' The markdown requires loading the standard output files from GTDB-Tk separately for bacteria and archaea
 #'@return phyloseq-style taxonomy table, but for MAGs
 #'@export
+#'
+#'@examples
+#'data(taxonomy_tibble)
+#'
+#'\donttest{
+#'
+#'### Making phyloseq table from taxonomy metadata
+#'taxonomy.object = tax.table(taxonomy_tibble)
+#'}
+#'
 
 tax.table = function(taxonomy) {
   `.` <- user_genome <- taxa <- NULL
@@ -69,6 +88,21 @@ tax.table = function(taxonomy) {
 #'@param samples sample information table
 #'@return phyloseq object for MAGs
 #'@export
+#'
+#'@examples
+#'
+#'data(mag.table,taxonomy.object,samples.object,fractions,taxonomy_tibble)
+#'###Making phyloseq table from fractions metadata
+#'samples.object = sample.table(fractions)
+#'taxonomy.object = tax.table(taxonomy_tibble)
+#'
+#'
+#'\donttest{
+#'
+#' ### Making master phyloseq table from scaled MAG data, taxa and fractions phyloseq data
+#'phylo.qSIP = phylo.table(mag.table,taxonomy.object,samples.object)
+#'}
+#'
 phylo.table = function(mag,taxa,samples) {
   phyloseq::phyloseq(mag, taxa, samples)
 }
@@ -159,6 +193,18 @@ qSIP_atom_excess_format_MAGs = function(physeq, control_expr, treatment_rep){
 #' @param Gi GC content of the MAG
 #' @return A list of 2 data.frame objects. 'W' contains the weighted mean buoyant density (W) values for each OTU in each treatment/control. 'A' contains the atom fraction excess values for each OTU. For the 'A' table, the 'Z' column is buoyant density shift, and the 'A' column is atom fraction excess.
 #' @export
+#'
+#' @examples
+#' data(phylo.qSIP,GC_content)
+#' ### Making atomx table
+#' \donttest{
+#' ## Not run::
+#' ### BD shift (Z) & atom excess (A)
+#' atomX = qSIP_atom_excess_MAGs(phylo.qSIP,
+#'                          control_expr='Isotope=="12C"',
+#'                          treatment_rep='Replicate',
+#'                          Gi = GC_content)
+#'}
 
 qSIP_atom_excess_MAGs = function(physeq,
                                  control_expr,
@@ -277,42 +323,6 @@ sample_W = function(df, n_sample){
   return(atomX)
 }
 
-
-# #Calculate bootstrap CI for atom fraction excess using q-SIP method
-#
-# @param atomX  A list object created by \code{qSIP_atom_excess_MAGs()}
-# @param isotope  The isotope for which the DNA is labeled with ('13C' or '18O')
-# @param n_sample  A vector of length 2. The sample size for data resampling (with replacement) for 1) control samples and 2) treatment samples.
-# @param n_boot  Number of bootstrap replicates.
-# @param a  A numeric value. The alpha for calculating confidence intervals.
-# @param parallel  Parallel processing. See \code{.parallel} option in
-# \code{dplyr::mdply()} for more details.
-# @return A data.frame of atom fraction excess values (A) and atom fraction excess confidence intervals.
-# @export
-
-#qSIP_bootstrap_MAGs = function(atomX, isotope='13C', n_sample=c(3,3),
-#                               n_boot=10, parallel=FALSE, a=0.1){
-  # atom excess for each bootstrap replicate
-#  df_boot_id = data.frame(bootstrap_id = 1:n_boot)
-#  df_boot = plyr::mdply(df_boot_id, .qSIP_bootstrap_MAGs,
-#                        atomX = atomX,
-#                        isotope=isotope,
-#                        n_sample=n_sample,
-#                        .parallel=parallel)
-  # calculating atomX CIs for each OTU
-#  mutate_call1 = lazyeval::interp(~ stats::quantile(A, a/2, na.rm=TRUE),
-#                                  A = as.name("A"))
-#  mutate_call2 = lazyeval::interp(~ stats::quantile(A, 1-a/2, na.rm=TRUE),
-#                                  A = as.name("A"))
-#  dots = stats::setNames(list(mutate_call1, mutate_call2), c("A_CI_low", "A_CI_high"))
-#  df_boot = df_boot %>%
-#    dplyr::group_by_("OTU") %>%
-#    dplyr::summarize_(.dots=dots)
-  # combining with atomX summary data
-#  df_boot = dplyr::inner_join(atomX$A, df_boot, c('OTU'='OTU'))
-#  return(df_boot)
-#}
-
 #' Isotope incorporator list with GTDB taxonomy
 #'
 #' This function provides a table with MAGs and their corresponding GTDB taxonomy
@@ -324,6 +334,17 @@ sample_W = function(df, n_sample){
 #' @param bootstrapped_AFE_table A data frame indicating bootstrapped atom fraction excess values
 #' @return A tibble with two columns, OTU and Taxonomy, with taxonomy of the incorporator MAGs
 #' @export
+#'
+#'@examples
+#'data(taxonomy_tibble,df_atomX_boot)
+#'
+#'\donttest{
+#'
+#' ### Making incorporator taxonomy list
+#'incorporator_list = incorporators_taxonomy(taxonomy = taxonomy_tibble,
+#'          bootstrapped_AFE_table = df_atomX_boot)
+#'}
+#'
 
 incorporators_taxonomy = function(taxonomy, bootstrapped_AFE_table) {
   taxonomy_classification = taxonomy$classification
@@ -355,6 +376,17 @@ incorporators_taxonomy = function(taxonomy, bootstrapped_AFE_table) {
 #' @importFrom dplyr if_else
 #' @return A list of 2 data.frame objects without MAGs which have NAs. 'W' contains the weighted mean buoyant density (W) values for each OTU in each treatment/control. 'A' contains the atom fraction excess values for each OTU. For the 'A' table, the 'Z' column is buoyant density shift, and the 'A' column is atom fraction excess.
 #' @export
+#'
+#' @examples
+#'data(atomX)
+#'
+#'\donttest{
+#'
+#'### Remove NAs in atomX table
+#'atomx_no_na = filter_na(atomX)
+#'}
+#'
+
 
 
 filter_na = function(atomX) {
@@ -386,6 +418,19 @@ filter_na = function(atomX) {
 #' @importFrom dplyr contains
 #' @return A data.frame of atom fraction excess values (A) and atom fraction excess confidence intervals adjusted for multiple testing.
 #' @export
+#'
+#' @examples
+#' data(phylo.qSIP,GC_content)
+#' \donttest{
+#' ### BD shift (Z) & atom excess (A)
+#' atomX = qSIP_atom_excess_MAGs(phylo.qSIP,
+#'                         control_expr='Isotope=="12C"',
+#'                         treatment_rep='Replicate', Gi = GC_content)
+#'
+#' ### Add doParallel::registerDoParallel(num_cores) if parallel bootstrapping is to be done
+#' df_atomX_boot = qSIP_bootstrap_fcr(atomX, n_boot=5, parallel = FALSE)
+#'}
+#'
 
 qSIP_bootstrap_fcr = function(atomX, isotope='13C', n_sample=c(3,3), ci_adjust_method ='fcr',
                                         n_boot=10, parallel=FALSE, a=0.1){

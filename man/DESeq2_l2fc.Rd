@@ -44,20 +44,14 @@ or just heavy fraction samples ('heavy')}
 dataframe of HRSIP results
 }
 \description{
-The phyloseq object will be filtered to 1) just OTUs
-that pass the sparsity cutoff 2) just samples in the user-defined
-'heavy' fractions. The log2 fold change (l2fc) is calculated
-between labeled treatment and control gradients.
-}
-\details{
 The 'use_geo_mean' parameter uses geometric means on all non-zero abundances
 for estimateSizeFactors instead of using the default log-tranformed geometric means.
 }
 \examples{
-data(physeq_S2D2)
-\dontrun{
-df_l2fc = DESeq2_l2fc(physeq_S2D2, density_min=1.71, density_max=1.75, design=~Substrate)
-head(df_l2fc)
+data(phylo.qSIP)
+\donttest{
+
+df_l2fc = DESeq2_l2fc(phylo.qSIP, density_min=1.71, density_max=1.75, design=~Isotope)
 }
 
 }

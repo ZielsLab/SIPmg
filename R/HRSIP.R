@@ -27,7 +27,7 @@ filter_l2fc = function(df_l2fc, padj_cutoff=0.1){
 
   ## best sparsity cutoff
   BEST_SPAR_THRESH = as.numeric(df_l2fc_s[1,'sparsity_threshold'])
-  cat('Sparsity threshold with the most rejected hypotheses:', BEST_SPAR_THRESH, '\n')
+  message('Sparsity threshold with the most rejected hypotheses:', BEST_SPAR_THRESH, '\n')
   ### filtering
   mutate_call = lazyeval::interp(~ x==BEST_SPAR_THRESH,
                                  x=as.name('sparsity_threshold'))
@@ -89,26 +89,21 @@ filter_l2fc = function(df_l2fc, padj_cutoff=0.1){
 #' @export
 #'
 #' @examples
-#' data(physeq_S2D2_l)
+#' data(phylo.qSIP)
 #'
-#' \dontrun{
-#' # HR-SIP on just 1 treatment-control comparison
-#' ## 1st item in list of phyloseq objects
-#' physeq = physeq_S2D2_l[[1]]
+#' \donttest{
 #' ## HR-SIP
-#' ### Note: treatment-control samples differentiated with 'design=~Substrate'
-#' df_l2fc = HRSIP(physeq, design=~Substrate)
-#' head(df_l2fc)
+#' ### Note: treatment-control samples differentiated with 'design=~Isotope'
+#' df_l2fc = HRSIP(phylo.qSIP, design=~Isotope)
+#' ## Same, but multiple BD windows (MW-HR-SIP). For parallel processing change to parallel = TRUE
+#' ### Windows = 1.7-1.74, 1.72-1.75, and 1.73 - 1.76
+#' windows = data.frame(density_min=c(1.71,1.72, 1.73), density_max=c(1.74,1.75,1.76))
+#' df_l2fc = HRSIP(phylo.qSIP,
+#'                 design=~Isotope,
+#'                 density_windows = windows,
+#'                 padj_cutoff = 0.05,
+#'                 parallel=FALSE)
 #'
-#' ## Same, but multiple BD windows (MW-HR-SIP) & run in parallel
-#' ### Windows = 1.7-1.73 & 1.72-1.75
-#' doParallel::registerDoParallel(2)
-#' dw = data.frame(density_min=c(1.7, 1.72), density_max=c(1.73, 1.75))
-#' df_l2fc = HRSIP(physeq_S2D1_l[[1]],
-#'                 design=~Substrate,
-#'                 density_windows=dw,
-#'                 parallel=TRUE)
-#' head(df_l2fc)
 #' }
 #'
 HRSIP = function(physeq,

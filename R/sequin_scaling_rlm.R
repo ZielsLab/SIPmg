@@ -20,10 +20,20 @@
 #'  - plots: linear regression plots for scaling MAG coverage values to absolute abundance (optional)
 #'  - scale_fac: a master tibble with all of the intermediate values in above calculations
 #'@export
+#'
+#'@examples
+#'data(f_tibble, sequins, seq_dil)
+#'
+#'\donttest{
+#'
+#'### scaling sequins from coverage values
+#'scaled_features_rlm = scale_features_rlm(f_tibble,sequins, seq_dil)
+#'}
+#'
 
 scale_features_rlm <- function(f_tibble, sequin_meta, seq_dilution,
                                    log_trans = TRUE, coe_of_variation=250,
-                                   lod_limit = 0, save_plots = T, plot_dir="sequin_scaling_plots_rlm"){
+                                   lod_limit = 0, save_plots = T, plot_dir=tempdir()){
   Sample <- cov_tab <- seq_cov <- Dilution <- seq_group <- slope <- intercept <- mag_ab <- NULL
   seq_det <- grouped_seq_cov <- seq_cov_filt <- lod <- fit <- log_scale <- mag_cov <- NULL
   # Retrieve sample names from feature tibble
@@ -131,25 +141,25 @@ scale_features_rlm <- function(f_tibble, sequin_meta, seq_dilution,
       plots = ifelse(log_scale == "TRUE" , # check log_trans input
                      purrr::map(seq_cov_filt, # log-scaled plot if true
                                 ~ ggplot2::ggplot(data=. , ggplot2::aes(x=log10(Coverage), y= log10(Concentration))) +
-                                  geom_point(ggplot2::aes(shape = threshold_detection)) +
-                                  geom_smooth(method = MASS::rlm) +
+                                  ggplot2::geom_point(ggplot2::aes(shape = threshold_detection)) +
+                                  ggplot2::geom_smooth(method = MASS::rlm) +
                                   ggpubr::stat_regline_equation(label.x= -0.1, label.y = 3) +
                                   ggpubr::stat_cor(ggplot2::aes(label = paste(..rr.label.., ..p.label.., sep = "~`,`~")), label.x = -0.1, label.y = 3.5) +
-                                  xlab("Coverage (log[read depth])") +
-                                  ylab("DNA Concentration (log[attamoles/uL])") +
-                                  scale_shape(name = "Coefficient of variation", labels = c(paste("below the threshold (",coe_of_variation,")"), paste("above the threshold(",coe_of_variation,")"))) +
-                                  theme_bw()
+                                  ggplot2::xlab("Coverage (log[read depth])") +
+                                  ggplot2::ylab("DNA Concentration (log[attamoles/uL])") +
+                                  ggplot2::scale_shape(name = "Coefficient of variation", labels = c(paste("below the threshold (",coe_of_variation,")"), paste("above the threshold(",coe_of_variation,")"))) +
+                                  ggplot2::theme_bw()
                      ),
                      purrr::map(seq_cov_filt, # non-scaled plot if true
                                 ~ ggplot2::ggplot(data=. , ggplot2::aes(x=Coverage, y= Concentration)) +
-                                  geom_point(ggplot2::aes(shape = threshold_detection)) +
-                                  geom_smooth(method = MASS::rlm) +
+                                  ggplot2::geom_point(ggplot2::aes(shape = threshold_detection)) +
+                                  ggplot2::geom_smooth(method = MASS::rlm) +
                                   ggpubr::stat_regline_equation(label.x= 0, label.y = 1000) +
                                   ggpubr::stat_cor(ggplot2::aes(label = paste(..rr.label.., ..p.label.., sep = "~`,`~")), label.x = 0, label.y = 100000) +
-                                  xlab("Coverage (read depth)") +
-                                  ylab("DNA Concentration (attamoles/uL)") +
-                                  scale_shape(name = "Coefficient of variation", labels = c(paste("below the threshold (",coe_of_variation,")"), paste("above the threshold(",coe_of_variation,")"))) +
-                                  theme_bw()
+                                  ggplot2::xlab("Coverage (read depth)") +
+                                  ggplot2::ylab("DNA Concentration (attamoles/uL)") +
+                                  ggplot2::scale_shape(name = "Coefficient of variation", labels = c(paste("below the threshold (",coe_of_variation,")"), paste("above the threshold(",coe_of_variation,")"))) +
+                                  ggplot2::theme_bw()
                      )
       )
     ) %>%

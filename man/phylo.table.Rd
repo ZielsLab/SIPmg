@@ -20,3 +20,18 @@ phyloseq object for MAGs
 Creates a phyloseq-style object using processed phyloseq objects for otu
 table (here, MAG table), taxa table, and sample table
 }
+\examples{
+
+data(mag.table,taxonomy.object,samples.object,fractions,taxonomy_tibble)
+###Making phyloseq table from fractions metadata
+samples.object = sample.table(fractions)
+taxonomy.object = tax.table(taxonomy_tibble)
+
+
+\donttest{
+
+### Making master phyloseq table from scaled MAG data, taxa and fractions phyloseq data
+phylo.qSIP = phylo.table(mag.table,taxonomy.object,samples.object)
+}
+
+}

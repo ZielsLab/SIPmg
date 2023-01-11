@@ -41,3 +41,11 @@ tibble containing normalized coverage in required format with MAG name as first 
 \description{
 Normalize feature coverages to estimate absolute abundance or relative coverage using MAG/contig coverage values with or without multiplying total DNA concentration of the fraction
 }
+\examples{
+
+data(f_tibble)
+\donttest{
+rel.cov = coverage_normalization(f_tibble)
+}
+
+}

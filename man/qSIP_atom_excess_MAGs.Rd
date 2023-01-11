@@ -33,3 +33,15 @@ A list of 2 data.frame objects. 'W' contains the weighted mean buoyant density (
 \description{
 Calculate atom fraction excess using q-SIP method
 }
+\examples{
+data(phylo.qSIP,GC_content)
+### Making atomx table
+\donttest{
+## Not run::
+### BD shift (Z) & atom excess (A)
+atomX = qSIP_atom_excess_MAGs(phylo.qSIP,
+                         control_expr='Isotope=="12C"',
+                         treatment_rep='Replicate',
+                         Gi = GC_content)
+}
+}

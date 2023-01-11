@@ -20,6 +20,14 @@
 #'@importFrom data.table setnames
 #'@return tibble containing normalized coverage in required format with MAG name as first column and the normalized coverage values in each sample as the rest of the columns.
 #'@export
+#'
+#'@examples
+#'
+#'data(f_tibble)
+#' \donttest{
+#' rel.cov = coverage_normalization(f_tibble)
+#' }
+#'
 
 coverage_normalization = function(f_tibble, contig_coverage, sequencing_yield, fractions_df, approach = "relative_coverage"){
   Feature <- relative_coverage <- `DNA_concentration(ng/uL)` <- yield <- relative_abundance <- dna_conc <- sequins <- MAG <- Sample <- full_join <-  NULL
@@ -73,7 +81,7 @@ coverage_normalization = function(f_tibble, contig_coverage, sequencing_yield, f
     rm(absolute_abundance)
     return(absolute_abundance_all)
   } else {
-    print("Error: Approach not recognized. If you want to use sequin scaling, check out scale_features functions")
+    stop("Error: Approach not recognized. If you want to use sequin scaling, check out scale_features functions")
   }
 }
 

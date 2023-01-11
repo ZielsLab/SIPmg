@@ -1,4 +1,4 @@
 Package description:
 SIPmg is a statistical analysis package as part of a stable isotope probing (SIP) metagenomics study to identify isotope incorporating MAGs.The package utilizes either the [qSIP model](https://journals.asm.org/doi/abs/10.1128/AEM.02280-15), ΔBD method, or DeSeq2-based methods such as HR-SIP and [MW-HR-SIP](https://www.frontiersin.org/articles/10.3389/fmicb.2018.00570/full) based on the [HTSSIP package](https://journals.plos.org/plosone/article?id=10.1371/journal.pone.0189616). For more information on HTSSIP R package, please visit their [vignette](https://cran.r-project.org/web/packages/HTSSIP/vignettes/HTSSIP_intro.html)
 
-For more information about SIPmg and how to use it, please see the SIPmg [vignette]()
+For more information about SIPmg and how to use it, please see the SIPmg [vignette](https://zielslab.github.io/SIPmg.github.io/)

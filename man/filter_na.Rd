@@ -15,3 +15,13 @@ A list of 2 data.frame objects without MAGs which have NAs. 'W' contains the wei
 \description{
 This function enables removing NAs from the atomX table.
 }
+\examples{
+data(atomX)
+
+\donttest{
+
+### Remove NAs in atomX table
+atomx_no_na = filter_na(atomX)
+}
+
+}

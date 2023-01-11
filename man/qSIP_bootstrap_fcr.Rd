@@ -35,3 +35,16 @@ A data.frame of atom fraction excess values (A) and atom fraction excess confide
 \description{
 Calculate adjusted bootstrap CI after for multiple testing for atom fraction excess using q-SIP method. Multiple hypothesis tests are corrected by
 }
+\examples{
+data(phylo.qSIP,GC_content)
+\donttest{
+### BD shift (Z) & atom excess (A)
+atomX = qSIP_atom_excess_MAGs(phylo.qSIP,
+                        control_expr='Isotope=="12C"',
+                        treatment_rep='Replicate', Gi = GC_content)
+
+### Add doParallel::registerDoParallel(num_cores) if parallel bootstrapping is to be done
+df_atomX_boot = qSIP_bootstrap_fcr(atomX, n_boot=5, parallel = FALSE)
+}
+
+}

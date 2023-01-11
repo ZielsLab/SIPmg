@@ -28,3 +28,12 @@ containing data on fraction number, number of replicates, buoyant density
 calculated from a refractometer, type of isotope, and DNA concentration
 of each fraction, and isotope type. See below for information on "fractions" file.
 }
+\examples{
+data(fractions)
+
+\donttest{
+
+### Making phyloseq table from fractions metadata
+samples.object = sample.table(fractions)
+}
+}

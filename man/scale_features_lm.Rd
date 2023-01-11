@@ -12,7 +12,7 @@ scale_features_lm(
   coe_of_variation = 250,
   lod_limit = 0,
   save_plots = T,
-  plot_dir = "sequin_scaling_plots_lm",
+  plot_dir = tempdir(),
   cook_filtering = T
 )
 }
@@ -48,4 +48,14 @@ a list of tibbles containing
 }
 \description{
 Calculates global scaling factors for features (contigs or bins),based on linear regression of sequin coverage. Options include log-transformations of coverage, as well as filtering features based on limit of detection. This function must be called first, before the feature abundance table, feature detection table, and plots are retrieved.
+}
+\examples{
+data(f_tibble, sequins, seq_dil)
+
+\donttest{
+
+### scaling sequins from coverage values
+scaled_features_lm = scale_features_lm(f_tibble,sequin_meta, seq_dil)
+}
+
 }

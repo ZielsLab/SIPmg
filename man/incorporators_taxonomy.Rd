@@ -20,3 +20,14 @@ A tibble with two columns, OTU and Taxonomy, with taxonomy of the incorporator M
 This function provides a table with MAGs and their corresponding GTDB taxonomy
 as an output. This would be useful in identifying the taxa that have incorporation
 }
+\examples{
+data(taxonomy_tibble,df_atomX_boot)
+
+\donttest{
+
+### Making incorporator taxonomy list
+incorporator_list = incorporators_taxonomy(taxonomy = taxonomy_tibble,
+         bootstrapped_AFE_table = df_atomX_boot)
+}
+
+}
