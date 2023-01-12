@@ -14,7 +14,8 @@ Authors@R:
            family = "Ziels",
            role = c("aut"),
            email = "ziels@civil.ubc.ca"))
-Description: Statistical analysis as part of a stable isotope probing (SIP) metagenomics study to identify isotope incorporating taxa recovered as metagenome-assembled genomes (MAGs) - Helpful reading and a vignette in bookdown format is provided on the package site.
+Description: Statistical analysis as part of a stable isotope probing (SIP) metagenomics study to identify isotope incorporating taxa recovered as metagenome-assembled genomes (MAGs). 
+    Helpful reading and a vignette in bookdown format is provided on the package site<https://zielslab.github.io/SIPmg.github.io/>.
 URL: https://zielslab.github.io/SIPmg.github.io/
 BugReports: https://github.com/ZielsLab/SIPmg
 License: GPL-2

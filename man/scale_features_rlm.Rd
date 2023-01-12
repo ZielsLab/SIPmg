@@ -11,7 +11,7 @@ scale_features_rlm(
   log_trans = TRUE,
   coe_of_variation = 250,
   lod_limit = 0,
-  save_plots = T,
+  save_plots = TRUE,
   plot_dir = tempdir()
 )
 }

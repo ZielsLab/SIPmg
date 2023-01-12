@@ -33,7 +33,7 @@
 
 scale_features_rlm <- function(f_tibble, sequin_meta, seq_dilution,
                                    log_trans = TRUE, coe_of_variation=250,
-                                   lod_limit = 0, save_plots = T, plot_dir=tempdir()){
+                                   lod_limit = 0, save_plots = TRUE, plot_dir=tempdir()){
   Sample <- cov_tab <- seq_cov <- Dilution <- seq_group <- slope <- intercept <- mag_ab <- NULL
   seq_det <- grouped_seq_cov <- seq_cov_filt <- lod <- fit <- log_scale <- mag_cov <- NULL
   # Retrieve sample names from feature tibble
