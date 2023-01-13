@@ -1,4 +1,5 @@
 ---
+author: "Pranav Sampara"
 title: "SIPmg-vignette"
 output: rmarkdown::html_vignette
 vignette: >
@@ -21,9 +22,9 @@ The SIPmg R package was designed to enable the exploration and statistical analy
 
 Please check out this introductory vignette to qSIP metagenomics, before checking out vignettes on:
 
-[Coverage normalization and scaling based on linear regression model][Scaling coverage data]
+[Coverage normalization and scaling based on linear regression model][https://zielslab.github.io/SIPmg.github.io/scaling-coverage-data.html]
 
-[Identification of incorporators based on qSIP, ΔBD, or DESeq2 methods][SIP metagenomics and identification of isotope incorporators]
+[Identification of incorporators based on qSIP, ΔBD, or DESeq2 methods][https://zielslab.github.io/SIPmg.github.io/identifying-incorporators.html]
 
 # Background
 
@@ -78,7 +79,7 @@ Overall, the package can perform the following:
 2. Statistical analysis based on either of 
   + AFE mathematical model by [Hungate et al. (2015)](https://journals.asm.org/doi/10.1128/AEM.02280-15) or
   + Delta buoyant density $AFE_{ΔBD}$ = $\frac{W_{Lab}- W_{Light}}{I_{max}}$.        Where Imax is the maximum linear shift in DNA BD (upon 100% labeling), as        discussed by [Birnie and Rickwood (1978)](https://www.ncbi.nlm.nih.gov/pmc/articles/PMC2595786/)
-  + Analyses as offered by [HTS-SIP](https://cran.r-project.org/web/packages/HTSSIP/index.html)
+  + Analyses as offered by [HTS-SIP](https://CRAN.R-project.org/package=HTSSIP)
   
 3. Data visualization for identification of isotope incorporators.
 
@@ -96,15 +97,15 @@ For this data, MetaSIPSim (developed by [Barnett et al, 2020](https://bmcbioinfo
 ```{r Load libraries}
 #Load required libraries
 
-list.of.packages <- c("tidyverse", "HTSSIP", "ggpubr","data.table")
-new.packages <- list.of.packages[!(list.of.packages %in% installed.packages()[,"Package"])]
-if(length(new.packages)) install.packages(new.packages, quiet = T, dependencies = T, repos = "http://cran.us.r-project.org")
+#list.of.packages <- c("tidyverse", "HTSSIP", "ggpubr","data.table")
+#new.packages <- list.of.packages[!(list.of.packages %in% #installed.packages()[,"Package"])]
+#if(length(new.packages)) install.packages(new.packages, quiet = TRUE, #dependencies = TRUE, repos = "http://cran.us.r-project.org")
 
-if (!require("BiocManager", quietly = TRUE))
-    install.packages("BiocManager")
-BiocManager::install("phyloseq")
+#if (!require("BiocManager", quietly = TRUE))
+#    install.packages("BiocManager")
+#BiocManager::install("phyloseq")
 
-BiocManager::install("EBImage")
+#BiocManager::install("EBImage")
 
 library(tidyverse)
 library(phyloseq)
@@ -172,7 +173,7 @@ A taxonomy file in the GTDB output format (.tsv format). Load the bacteria and a
 
 ### MAG absolute concentrations
 
-MAG absolute concentrations obtained from scaling_sequins.R. \n
+MAG absolute concentrations. \n
 `mag_tab` object obtained from the above script is to be used as the input here
 
 ### GC content
@@ -233,7 +234,7 @@ If linear regression is used, the function `scale_features_lm` is used. The func
 
 If robust linear regression is used, the outliers impact on the regression models is minimized. For robust linear regression, `scale_features_rlm` is used. The functions in `sequin_scaling_rlm.R` are used for this step. In this example workflow, robust linear regression is used to scale coverage data in log10 scale. 
 
-For more discussion on the coice of regression method and comparison of the two methods please see this [vignette][Scaling coverage data]
+For more discussion on the coice of regression method and comparison of the two methods please see this [vignette][https://zielslab.github.io/SIPmg.github.io/scaling-coverage-data.html]
 
 ### This function uses the following datasets:
 
@@ -337,7 +338,7 @@ cat('Number of incorporators:', n_incorp, '\n')
 print(incorporator_list, n = nrow(incorporator_list))
 ```
 
-It appears that not all incorporators were identified with the bootstrapping method. This could be due to the model unable to detect the incorporators. Another way to detect incorporators, as mentioned above, is to test with the ΔBD method or with the HR-SIP or MW-HR-SIP methods. For a more detailed discussion, please refer this [vignette][qSIP metagenomics and identification of isotope incorporators]
+It appears that not all incorporators were identified with the bootstrapping method. This could be due to the model unable to detect the incorporators. Another way to detect incorporators, as mentioned above, is to test with the ΔBD method or with the HR-SIP or MW-HR-SIP methods. For a more detailed discussion, please refer this [vignette][https://zielslab.github.io/SIPmg.github.io/identifying-incorporators.html]
 
 # Scaling coverage data
 
@@ -377,7 +378,7 @@ Ordinary least squares regression can be very sensitive to outliers, resulting a
 
 See [these]( https://statisticsbyjim.com/basics/remove-outliers/) [discussions]( https://stats.stackexchange.com/questions/175/how-should-outliers-be-dealt-with-in-linear-regression-analysis) and more for better insights into handling outliers. 
 
-Robust linear regression is an alternative to this situation. Robust linear regression assigns appropriate weights to the data points, minimizing the influence of outliers on the model performance, without deleting data. In this pipeline, a Huber loss function from the [`MASS` R package](https://cran.r-project.org/web/packages/MASS/MASS.pdf) was used for robust linear regression.
+Robust linear regression is an alternative to this situation. Robust linear regression assigns appropriate weights to the data points, minimizing the influence of outliers on the model performance, without deleting data. In this pipeline, a Huber loss function from the [`MASS` R package][https://CRAN.R-project.org/package=MASS] was used for robust linear regression.
 
 The user is free to choose between the two methods for regression. 
 
@@ -414,7 +415,7 @@ For both scaling functions the following data and parameters are required
 
 3.	Whether or not log10 scaling to be performed (a BOOLEAN value of TRUE or FALSE).
 
-4.	Coefficient of variation. In this dataset, a higher coefficient of variation compared to the value used in the [introduction vignette][Coefficient of variation] is used to allow data scaling to occur.
+4.	Coefficient of variation. In this dataset, a higher coefficient of variation compared to the value used in the [introduction vignette][https://zielslab.github.io/SIPmg.github.io/quick-example.html] is used to allow data scaling to occur.
 
 If the robust linear regression is chosen, the function is `scale_features_rlm` which is performed the function file `sequin_scaling_rlm.R`.
 
@@ -434,7 +435,7 @@ mag_tab_scaled_lm <- SIPmg::scale_features_lm(f_tibble, sequins, seq_dil, log_sc
 
 ## Comparison of the fits
 
-```{r load images, echo = F}
+```{r load images, echo = FALSE}
 rlm_example = EBImage::readImage("rlm-example.png")
 rlm_example = EBImage::resize(rlm_example,dim(rlm_example)[1]/2)
 
@@ -483,7 +484,7 @@ EBImage::display(filtered_lm_example)
 ```
 
 ## What if there were no sequins added in the study
-In our study, we realized that the sequin-scaled data provided the best correlation (Spearman correlation coefficient = 0.85), compared to methods without the use of sequins. However, not all studies would have access to sequins or could choose not to add sequins. We tested qSIP methods with absolute concentration of MAGs obtained as a product of fraction DNA concentration and either with MAG relative abundance (as performed by [Greenlon et al.](https://journals.asm.org/doi/10.1128/mSystems.00151-20)) or relative coverage (as performed by [Starr et al.](https://journals.asm.org/doi/10.1128/mSphere.00085-21)), or simply with relative coverage, i.e., without converting the MAG coverages to absolute concentration. We found that without sequins, simply using relative coverage provided better specificity (0.99) and good correlation (Spearman correlation coefficient = 0.76), compared to the other two methods. The user could choose any of the three approaches to obtain normalized coverages using the equation `coverage_normalization()` where the parameter approach would be chosen accordingly (either "greenlon", "starr", or "relative_coverage"). In this example, simple relative coverage will be estimated without converting to absolute concentration based on fraction DNA concentrations. The relative coverage table can then be converted to a phyloseq object to run incorporator identification and/or AFE estimation. For more details, please refer to the [incorporator identification section](SIP metagenomics and identification of isotope incorporators)
+In our study, we realized that the sequin-scaled data provided the best correlation (Spearman correlation coefficient = 0.85), compared to methods without the use of sequins. However, not all studies would have access to sequins or could choose not to add sequins. We tested qSIP methods with absolute concentration of MAGs obtained as a product of fraction DNA concentration and either with MAG relative abundance (as performed by [Greenlon et al.](https://journals.asm.org/doi/10.1128/mSystems.00151-20)) or relative coverage (as performed by [Starr et al.](https://journals.asm.org/doi/10.1128/mSphere.00085-21)), or simply with relative coverage, i.e., without converting the MAG coverages to absolute concentration. We found that without sequins, simply using relative coverage provided better specificity (0.99) and good correlation (Spearman correlation coefficient = 0.76), compared to the other two methods. The user could choose any of the three approaches to obtain normalized coverages using the equation `coverage_normalization()` where the parameter approach would be chosen accordingly (either "greenlon", "starr", or "relative_coverage"). In this example, simple relative coverage will be estimated without converting to absolute concentration based on fraction DNA concentrations. The relative coverage table can then be converted to a phyloseq object to run incorporator identification and/or AFE estimation. For more details, please refer to the [incorporator identification section][https://zielslab.github.io/SIPmg.github.io/identifying-incorporators.html]
 
 ```{r, estimating relative coverage}
 f_tibble <- readr::read_csv("mock_input_data/coverage_metadata.csv")
@@ -506,7 +507,7 @@ The isotope incorporators could be identified using the below methods:
   + Delta buoyant density $AFE_{ΔBD}$ = $\frac{W_{Lab}- W_{Light}}{I_{max}}$.        Where $I_{max}$ is the maximum linear shift in DNA BD (upon 100% labeling), as        discussed by [Birnie and Rickwood (1978)](https://www.ncbi.nlm.nih.gov/pmc/articles/PMC2595786/)
   + MW-HR-SIP [Youngblut et al. ](https://www.frontiersin.org/articles/10.3389/fmicb.2018.00570/full)
 
-While the first two methods gives a quantitative estimate of isotopic enrichment in a taxon to determine if it is an incorporator, the third method relies on differential abundance analysis over multiple overlapping windows. Please refer to Youngblut et al. and [HTS-SIP R package](https://cran.r-project.org/web/packages/HTSSIP/index.html) for more details.
+While the first two methods gives a quantitative estimate of isotopic enrichment in a taxon to determine if it is an incorporator, the third method relies on differential abundance analysis over multiple overlapping windows. Please refer to Youngblut et al. and [HTS-SIP R package](https://CRAN.R-project.org/package=HTSSIP) for more details.
 
 
 ## Comparison of the methods
@@ -516,7 +517,7 @@ While the first two methods gives a quantitative estimate of isotopic enrichment
 Isotope incorporators from the introductory vignette were identified using the AFE method
 Reproducing the code here, we have
 
-```{r Load data 3, echo = F}
+```{r Load data 3, echo = FALSE}
 ## Load data
 #Coverage metadata
 #Uncomment if your coverage data is in the format mentioned above for this file. Remains commented if you are using the output from `checkm coverage`
@@ -547,7 +548,7 @@ fractions = readr::read_csv("mock_input_data/fractions.csv")
 
 ```
 
-```{r estimate absolute concentrations 2, echo = F}
+```{r estimate absolute concentrations 2, echo = FALSE}
 taxonomy_tibble = dplyr::bind_rows(gtdbtk_bac_summary, gtdbtk_archaea) #Combine bacteria and archaea taxonomy files if it has not been done yet
 #mag_tab is a tibble with absolute concentrations of MAGs obtained by scaling MAG coverages using linear regression models on sequin coverages and concentration
 
@@ -558,7 +559,7 @@ mag_tab_scaled_lm <- SIPmg::scale_features_lm(f_tibble, sequins, seq_dil, log_sc
 mag_tab = as.matrix(mag_tab_scaled_lm$mag_tab) #Extract absolute abundances as a matrix
 ```
 
-```{r Make phyloseq objects 2, echo = F}
+```{r Make phyloseq objects 2, echo = FALSE}
 
 mag.table = phyloseq::otu_table(mag_tab, taxa_are_rows = TRUE) #Phyloseq OTU table
 

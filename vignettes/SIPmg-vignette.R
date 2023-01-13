@@ -7,15 +7,15 @@ knitr::opts_chunk$set(
 ## ----Load libraries-----------------------------------------------------------
 #Load required libraries
 
-list.of.packages <- c("tidyverse", "HTSSIP", "ggpubr","data.table")
-new.packages <- list.of.packages[!(list.of.packages %in% installed.packages()[,"Package"])]
-if(length(new.packages)) install.packages(new.packages, quiet = T, dependencies = T, repos = "http://cran.us.r-project.org")
+#list.of.packages <- c("tidyverse", "HTSSIP", "ggpubr","data.table")
+#new.packages <- list.of.packages[!(list.of.packages %in% #installed.packages()[,"Package"])]
+#if(length(new.packages)) install.packages(new.packages, quiet = TRUE, #dependencies = TRUE, repos = "http://cran.us.r-project.org")
 
-if (!require("BiocManager", quietly = TRUE))
-    install.packages("BiocManager")
-BiocManager::install("phyloseq")
+#if (!require("BiocManager", quietly = TRUE))
+#    install.packages("BiocManager")
+#BiocManager::install("phyloseq")
 
-BiocManager::install("EBImage")
+#BiocManager::install("EBImage")
 
 library(tidyverse)
 library(phyloseq)
@@ -138,7 +138,7 @@ mag_tab_scaled_rlm <- SIPmg::scale_features_rlm(f_tibble, sequins, seq_dil, log_
 ## ----linear regression--------------------------------------------------------
 mag_tab_scaled_lm <- SIPmg::scale_features_lm(f_tibble, sequins, seq_dil, log_scale, coe_of_variation = coe_of_variation, cook_filtering = TRUE, save_plots = FALSE)
 
-## ----load images, echo = F----------------------------------------------------
+## ----load images, echo = FALSE------------------------------------------------
 rlm_example = EBImage::readImage("rlm-example.png")
 rlm_example = EBImage::resize(rlm_example,dim(rlm_example)[1]/2)
 
@@ -180,7 +180,7 @@ rel.cov = SIPmg::coverage_normalization(f_tibble = f_tibble, approach = "relativ
 mag.table = phyloseq::otu_table(as.matrix(rel.cov %>% tibble::column_to_rownames(var = "Feature")), taxa_are_rows = TRUE) #Phyloseq OTU table
 
 
-## ----Load data 3, echo = F----------------------------------------------------
+## ----Load data 3, echo = FALSE------------------------------------------------
 ## Load data
 #Coverage metadata
 #Uncomment if your coverage data is in the format mentioned above for this file. Remains commented if you are using the output from `checkm coverage`
@@ -210,7 +210,7 @@ GC_content <- readr::read_csv(file = "mock_input_data/GC_content.csv")
 fractions = readr::read_csv("mock_input_data/fractions.csv")
 
 
-## ----estimate absolute concentrations 2, echo = F-----------------------------
+## ----estimate absolute concentrations 2, echo = FALSE-------------------------
 taxonomy_tibble = dplyr::bind_rows(gtdbtk_bac_summary, gtdbtk_archaea) #Combine bacteria and archaea taxonomy files if it has not been done yet
 #mag_tab is a tibble with absolute concentrations of MAGs obtained by scaling MAG coverages using linear regression models on sequin coverages and concentration
 
@@ -220,7 +220,7 @@ taxonomy_tibble = dplyr::bind_rows(gtdbtk_bac_summary, gtdbtk_archaea) #Combine 
 mag_tab_scaled_lm <- SIPmg::scale_features_lm(f_tibble, sequins, seq_dil, log_scale, coe_of_variation = coe_of_variation, cook_filtering = TRUE, save_plots = FALSE)
 mag_tab = as.matrix(mag_tab_scaled_lm$mag_tab) #Extract absolute abundances as a matrix
 
-## ----Make phyloseq objects 2, echo = F----------------------------------------
+## ----Make phyloseq objects 2, echo = FALSE------------------------------------
 
 mag.table = phyloseq::otu_table(mag_tab, taxa_are_rows = TRUE) #Phyloseq OTU table
 
