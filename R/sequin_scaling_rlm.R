@@ -103,7 +103,7 @@ scale_features_rlm <- function(f_tibble, sequin_meta, seq_dilution,
                                       dplyr::group_by(Concentration) %>%
                                       dplyr::summarise(mean_cov = mean(Coverage),
                                                        sd_cov = stats::sd(Coverage)) %>%
-                                      dplyr::na_if(0) %>%
+      																dplyr::mutate(dplyr::across(dplyr::all_of(c("mean_cov", "sd_cov")), function(col) dplyr::na_if(col, 0))) %>%
                                       dplyr::mutate(coe_var = sd_cov*100/mean_cov) %>%
                                       dplyr::mutate(threshold_detection = coe_var <= coe_of_variation))) %>%
 
