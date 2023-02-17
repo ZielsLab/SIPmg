@@ -109,7 +109,7 @@ scale_features_lm <- function(f_tibble, sequin_meta, seq_dilution,
                                       dplyr::group_by(Concentration) %>%
                                       dplyr::summarise(mean_cov = mean(Coverage),
                                                        sd_cov = stats::sd(Coverage)) %>%
-                                      dplyr::replace(.,.==0,NA) %>%
+                                      replace(.,.==0,NA) %>%
                                       dplyr::mutate(coe_var = sd_cov*100/mean_cov) %>%
                                       dplyr::mutate(threshold_detection = coe_var <= coe_of_variation))) %>%
 
@@ -206,7 +206,7 @@ scale_features_lm <- function(f_tibble, sequin_meta, seq_dilution,
         seq_cov_filt_temp_grouped = purrr::map(seq_cov_filt_temp, ~ dplyr::group_by(., Concentration) %>%
                                                  dplyr::summarise(mean_cov = mean(Coverage),
                                                                   sd_cov = stats::sd(Coverage)) %>%
-                                                 dplyr::replace(.,.==0,NA) %>%
+                                                 replace(.,.==0,NA) %>%
                                                  dplyr::mutate(coe_var = sd_cov*100/mean_cov) %>%
                                                  dplyr::mutate(threshold_detection = coe_var <= coe_of_variation) %>%
                                                  tidyr::drop_na()), #Calculate mean, standard deviation, and coefficient of variation of samples grouped by Concentration
