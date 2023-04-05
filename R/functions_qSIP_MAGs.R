@@ -395,8 +395,8 @@ filter_na = function(atomX) {
   a_w = atomX$W
   a_a = atomX$A
 
-  a_w_1 = a_w %>% dplyr::mutate(OTU_na_list = if_else(is.nan(W), OTU, "A"))
-  na_otu = unique(a_w_1 %>% dplyr::select(OTU_na_list) %>% dplyr::filter(stringr::str_detect(OTU_na_list, "A", negate = T)))
+  a_w_1 = a_w %>% dplyr::mutate(OTU_na_list = if_else(is.nan(W), OTU, "removed"))
+  na_otu = unique(a_w_1 %>% dplyr::select(OTU_na_list) %>% dplyr::filter(stringr::str_detect(OTU_na_list, "removed", negate = T)))
 
   a_w = a_w_1 %>% dplyr::filter(!OTU %in% na_otu$OTU_na_list) %>% dplyr::select(-OTU_na_list)
   a_a = a_a %>% dplyr::filter(!OTU %in% na_otu$OTU_na_list)
