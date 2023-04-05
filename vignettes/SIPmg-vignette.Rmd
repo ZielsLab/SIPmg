@@ -107,7 +107,7 @@ For this data, MetaSIPSim (developed by [Barnett et al, 2020](https://bmcbioinfo
 
 #BiocManager::install("EBImage")
 
-library(tidyverse)
+#library(tidyverse)
 library(phyloseq)
 library(HTSSIP)
 library(ggpubr)
