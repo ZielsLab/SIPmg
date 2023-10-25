@@ -11,7 +11,8 @@ qSIP_bootstrap_fcr(
   ci_adjust_method = "fcr",
   n_boot = 10,
   parallel = FALSE,
-  a = 0.1
+  a = 0.1,
+  Gi
 )
 }
 \arguments{
@@ -28,6 +29,8 @@ qSIP_bootstrap_fcr(
 \item{parallel}{Parallel processing. See \code{.parallel} option in \code{dplyr::mdply()} for more details.}
 
 \item{a}{A numeric value. The alpha for calculating confidence intervals.}
+
+\item{Gi}{The G+C content of unlabeled DNA as a dataframe with "Feature" column having MAGs, contigs, or other features as rows, and a "Gi" column with GC content}
 }
 \value{
 A data.frame of atom fraction excess values (A) and atom fraction excess confidence intervals adjusted for multiple testing.

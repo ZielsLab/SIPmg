@@ -17,7 +17,7 @@ knitr::opts_chunk$set(
 
 #BiocManager::install("EBImage")
 
-library(tidyverse)
+#library(tidyverse)
 library(phyloseq)
 library(HTSSIP)
 library(ggpubr)
@@ -83,7 +83,7 @@ atomX = SIPmg::qSIP_atom_excess_MAGs(phylo.qSIP,
                                treatment_rep='Replicate',
                                Gi = GC_content)
 #Bootstrap confidence intervals
-df_atomX_boot = SIPmg::qSIP_bootstrap_fcr(atomX, n_boot=10) #Change "parallel = FALSE" to compute using a single-core
+df_atomX_boot = SIPmg::qSIP_bootstrap_fcr(atomX, n_boot=10, Gi = GC_content) #Change "parallel = FALSE" to compute using a single-core
 
 
 ## ----Plot atom fraction excess------------------------------------------------
@@ -234,7 +234,7 @@ atomX = SIPmg::qSIP_atom_excess_MAGs(phylo.qSIP,
                                treatment_rep='Replicate',
                                Gi = GC_content)
 #Bootstrap confidence intervals
-df_atomX_boot = SIPmg::qSIP_bootstrap_fcr(atomX, n_boot=10)
+df_atomX_boot = SIPmg::qSIP_bootstrap_fcr(atomX, n_boot=10, Gi = GC_content)
 CI_threshold = 0
 df_atomX_boot = df_atomX_boot %>%
   dplyr::mutate(Incorporator_qSIP = A_CI_fcr_low > CI_threshold,

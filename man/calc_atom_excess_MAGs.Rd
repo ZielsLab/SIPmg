@@ -4,16 +4,16 @@
 \alias{calc_atom_excess_MAGs}
 \title{Calculate atom fraction excess}
 \usage{
-calc_atom_excess_MAGs(Mlab, Mlight, Mheavymax, isotope = "13C")
+calc_atom_excess_MAGs(df_OTU_s1, isotope = "13C")
 }
 \arguments{
+\item{isotope}{The isotope for which the DNA is labeled with ('13C' or '18O')}
+
 \item{Mlab}{The molecular wight of labeled DNA}
 
 \item{Mlight}{The molecular wight of unlabeled DNA}
 
 \item{Mheavymax}{The theoretical maximum molecular weight of fully-labeled DNA}
-
-\item{isotope}{The isotope for which the DNA is labeled with ('13C' or '18O')}
 }
 \value{
 numeric value: atom fraction excess (A)

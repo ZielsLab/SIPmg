@@ -30,9 +30,9 @@
 
 sample.table = function(fractions_df) {
   fractions_df = tibble::as_tibble(fractions_df) %>% #Ensure loaded file is in tibble format
-                                    # Create two columns in the tibble.
-                                    # One being a logical vector identifying control and heavy isotope
-                                    # The other a sample name identifying each fraction and replicate
+    # Create two columns in the tibble.
+    # One being a logical vector identifying control and heavy isotope
+    # The other a sample name identifying each fraction and replicate
     dplyr::mutate(IS_CONTROL = stringr::str_detect(tibble::as_tibble(fractions_df)$Isotope, pattern = "12C|14N|16O")) %>% # Please edit this line to add isotope you may be using as control
     tibble::column_to_rownames(var = "Sample") # Make sample names as row names
   fractions_df.ps = phyloseq::sample_data(fractions_df) #Create the phyloseq-styled sample object
@@ -70,7 +70,7 @@ tax.table = function(taxonomy) {
       utils::tail(., n = 1)
   }
   taxonomy = taxonomy %>% #Using the loaded file for taxonomy, obtain just the Bin and taxonomic classification
-                          # Later make the bins as row names to convert the object to a phyloseq-style taxonomy object
+    # Later make the bins as row names to convert the object to a phyloseq-style taxonomy object
     dplyr::mutate(taxa = taxonomy_list) %>%
     dplyr::select(user_genome, taxa) %>%
     tibble::column_to_rownames(var = "user_genome")
@@ -117,17 +117,19 @@ phylo.table = function(mag,taxa,samples) {
 #' @param Gi  The G+C content of unlabeled DNA
 #' @return numeric value: maximum molecular weight of fully-labeled DNA
 #'
-calc_Mheavymax_MAGs = function(Mlight, isotope='13C', Gi=Gi){
-  isotope = toupper(isotope)
-  if(isotope=='13C'){
-    Mhm = -0.4987282 * Gi + 9.974564 + Mlight
-  } else
-    if(isotope=='18O'){
-      Mhm = 12.07747 + Mlight
-    } else {
-      stop('isotope not recognized')
-    }
-  return(Mhm)
+calc_Mheavymax_MAGs = function(isotope='13C', df_OTU_s1) {
+
+  if (isotope == "13C") {
+    df_OTU_s1 = df_OTU_s1 %>%
+      dplyr::mutate(Mheavymax = -0.4987282 * Gi + 9.974564 + Mlight)
+  } else if (isotope == "18O") {
+    df_OTU_s1 = df_OTU_s %>%
+      mutate(Mheavymax = 12.07747 + Mlight)
+  } else {
+    df_OTU_s1 = df_OTU_s %>%
+      stop("Isotope is not recognized to do qSIP")
+  }
+  return(df_OTU_s1)
 }
 
 #' Calculate atom fraction excess
@@ -140,19 +142,21 @@ calc_Mheavymax_MAGs = function(Mlight, isotope='13C', Gi=Gi){
 #' @param isotope  The isotope for which the DNA is labeled with ('13C' or '18O')
 #' @return numeric value: atom fraction excess (A)
 #'
-calc_atom_excess_MAGs = function(Mlab, Mlight, Mheavymax, isotope='13C'){
+calc_atom_excess_MAGs = function(df_OTU_s1,isotope='13C'){
   isotope=toupper(isotope)
-  if(isotope=='13C'){
+
+  if (isotope == "13C") {
     x = 0.01111233
-  } else
-    if(isotope=='18O'){
-      x = 0.002000429
-    } else {
-      stop('isotope not recognized')
-    }
-  A = (Mlab - Mlight) / (Mheavymax - Mlight) * (1 - x)
-  return(A)
+  } else if (isotope == "18O") {
+    x = 0.002000429
+  } else {
+    stop("Isotope is not recognized to do qSIP")
+  }
+  df_OTU_s1 = dplyr::mutate(df_OTU_s1,
+                            A = (Mlab - Mlight) / (Mheavymax - Mlight) * (1 - x))
+  return(df_OTU_s1)
 }
+
 #' Reformat a phyloseq object of qSIP_atom_excess_MAGs analysis
 #'
 #' @param physeq  A phyloseq object
@@ -166,16 +170,16 @@ qSIP_atom_excess_format_MAGs = function(physeq, control_expr, treatment_rep){
   # formatting input
   cols = c('IS_CONTROL', 'Buoyant_density', treatment_rep)
   df_OTU = HTSSIP::phyloseq2table(physeq,
-                          include_sample_data=TRUE,
-                          sample_col_keep=cols,
-                          control_expr=control_expr)
+                                  include_sample_data=TRUE,
+                                  sample_col_keep=cols,
+                                  control_expr='Isotope=="12C"')
   # removing 'infinite' BD values
   tmp = colnames(df_OTU)
   df_OTU = df_OTU %>%
-    dplyr::mutate_(Buoyant_density = "as.numeric(as.character(Buoyant_density))",
-                   Count = "as.numeric(as.character(Count))") %>%
-    dplyr::filter_('! is.infinite(Buoyant_density)') %>%
-    dplyr::filter_('! is.na(Buoyant_density)') %>%
+    dplyr::mutate(Buoyant_density = as.numeric(as.character(Buoyant_density)),
+                  Count = as.numeric(as.character(Count))) %>%
+    dplyr::filter(! is.infinite(Buoyant_density)) %>%
+    dplyr::filter(! is.na(Buoyant_density)) %>%
     as.data.frame
   colnames(df_OTU) = tmp
   # return
@@ -196,7 +200,7 @@ qSIP_atom_excess_format_MAGs = function(physeq, control_expr, treatment_rep){
 #'
 #' @examples
 #' data(phylo.qSIP,GC_content)
-#' ### Making atomx table
+#' ### Making atomX table
 #' \donttest{
 #' ## Not run::
 #' ### BD shift (Z) & atom excess (A)
@@ -226,40 +230,40 @@ qSIP_atom_excess_MAGs = function(physeq,
     # BD shift (Z)
     df_OTU_W = df_OTU %>%
       # weighted mean buoyant density (W)
-      dplyr::mutate_(Buoyant_density = "as.numeric(as.character(Buoyant_density))",
-                     Count = "as.numeric(as.character(Count))") %>%
-      dplyr::group_by_('IS_CONTROL', 'OTU', treatment_rep) %>%
-      dplyr::summarize_(W = "stats::weighted.mean(Buoyant_density, Count, na.rm=TRUE)") %>%
+      dplyr::mutate(Buoyant_density = as.numeric(as.character(Buoyant_density)),
+                    Count = as.numeric(as.character(Count))) %>%
+      dplyr::group_by(IS_CONTROL, OTU, Replicate) %>%
+      dplyr::summarize(W = stats::weighted.mean(Buoyant_density, Count, na.rm=TRUE)) %>%
       dplyr::ungroup()
   }
   df_OTU_s = df_OTU_W %>%
     # mean W of replicate gradients
-    dplyr::group_by_('IS_CONTROL', 'OTU') %>%
-    dplyr::summarize_(Wm = "mean(W, na.rm=TRUE)") %>%
+    dplyr::group_by(IS_CONTROL, OTU) %>%
+    dplyr::summarize(Wm = mean(W, na.rm=TRUE)) %>%
     # BD shift (Z)
-    dplyr::group_by_('OTU') %>%
-    dplyr::mutate_(IS_CONTROL = "ifelse(IS_CONTROL==TRUE, 'Wlight', 'Wlab')") %>%
-    tidyr::spread("IS_CONTROL", "Wm") %>%
-    dplyr::mutate_(Z = "Wlab - Wlight") %>%
+    dplyr::group_by(OTU) %>%
+    dplyr::mutate(IS_CONTROL = dplyr::if_else(IS_CONTROL==TRUE, 'Wlight', 'Wlab')) %>%
+    tidyr::spread(IS_CONTROL, Wm) %>%
+    dplyr::mutate(Z = Wlab - Wlight) %>%
     dplyr::ungroup()
   # atom excess (A)
-  ## pt1
+  ## Ensuring GC content is not in percentage format, but between 1 and 0
+  gc_syntax = all(dplyr::between(Gi$Gi, 0, 1))
+  if(gc_syntax == FALSE) {
+    Gi = Gi %>% dplyr::mutate(Gi = Gi/100)
+  }
+  ## pt1: Add GC content to the dataframe, then calculate Mlight, and add to the dataframe
   df_OTU_s = df_OTU_s %>%
-    dplyr::left_join(Gi, by="OTU") %>%
-    dplyr::mutate_(Mlight = "0.496 * Gi + 307.691")
-  ## pt2
-  MoreArgs = list(isotope=isotope)
-  dots = list(~mapply(calc_Mheavymax_MAGs, Mlight=Mlight, Gi=Gi, MoreArgs=MoreArgs))
-  dots = stats::setNames(dots, "Mheavymax")
+    dplyr::left_join(Gi %>% setNames(.,c("OTU", "Gi")), by="OTU") %>%
+    dplyr::mutate(Mlight = 0.496 * Gi + 307.691)
+
+  ## pt2: Calculate Mlab and Mheavymax and add to the dataframe
   df_OTU_s = df_OTU_s %>%
-    dplyr::mutate_(.dots=dots)
-  ## pt3
-  dots = list(~mapply(calc_atom_excess_MAGs, Mlab=Mlab, Mlight=Mlight,
-                      Mheavymax=Mheavymax, MoreArgs=MoreArgs))
-  dots = stats::setNames(dots, "A")
-  df_OTU_s = df_OTU_s %>%
-    dplyr::mutate_(Mlab = "(Z / Wlight + 1) * Mlight") %>%
-    dplyr::mutate_(.dots=dots)
+    dplyr::mutate(Mlab = (Z / Wlight + 1) * Mlight)
+  df_OTU_s = calc_Mheavymax_MAGs(isotope = isotope, df_OTU_s1 = df_OTU_s)
+
+  ## pt3: Calculate AFE
+  df_OTU_s = calc_atom_excess_MAGs(isotope = isotope, df_OTU_s1 = df_OTU_s)
   ## flow control: bootstrap
   if(no_boot){
     return(list(W=df_OTU_W, A=df_OTU_s))
@@ -299,7 +303,7 @@ sample_W = function(df, n_sample){
 .qSIP_bootstrap = function(atomX,
                            isotope='13C',
                            n_sample=c(3,3),
-                           bootstrap_id = 1){
+                           bootstrap_id = 1, Gi = Gi){
   data = NULL
   temp = NULL
 
@@ -307,18 +311,18 @@ sample_W = function(df, n_sample){
   n_sample = c(3,3)  # control, treatment
   dots = stats::setNames(list(~lapply(data, sample_W, n_sample=n_sample)), "ret")
   df_OTU_W = atomX$W %>%
-    dplyr::group_by_("OTU") %>%
+    dplyr::group_by(OTU) %>%
     tidyr::nest() %>%
     dplyr::mutate(temp = purrr::map(data, ~sample_W(.x, n_sample))) %>%
     dplyr::select(-data) %>%
     tidyr::unnest(cols = c(temp))
 
   # calculating atom excess
-  atomX = SIPmg::qSIP_atom_excess_MAGs(physeq=NULL,
-                                        df_OTU_W=df_OTU_W,
-                                        control_expr=NULL,
-                                        treatment_rep=NULL,
-                                        isotope=isotope, Gi = GC_content)
+  atomX = qSIP_atom_excess_MAGs(physeq=NULL,
+                                df_OTU_W=df_OTU_W,
+                                control_expr=NULL,
+                                treatment_rep=NULL,
+                                isotope=isotope, Gi = Gi)
   atomX$bootstrap_id = bootstrap_id
   return(atomX)
 }
@@ -415,6 +419,7 @@ filter_na = function(atomX) {
 #' @param a  A numeric value. The alpha for calculating confidence intervals.
 #' @param parallel  Parallel processing. See \code{.parallel} option in \code{dplyr::mdply()} for more details.
 #' @param ci_adjust_method Confidence interval adjustment method. Please choose 'FCR', 'Bonferroni', or 'none' (if no adjustment is needed). Default is FCR and also provides unadjusted CI.
+#' @param Gi The G+C content of unlabeled DNA as a dataframe with "Feature" column having MAGs, contigs, or other features as rows, and a "Gi" column with GC content
 #' @importFrom dplyr contains
 #' @return A data.frame of atom fraction excess values (A) and atom fraction excess confidence intervals adjusted for multiple testing.
 #' @export
@@ -432,73 +437,60 @@ filter_na = function(atomX) {
 #'}
 #'
 
-qSIP_bootstrap_fcr = function(atomX, isotope='13C', n_sample=c(3,3), ci_adjust_method ='fcr',
-                                        n_boot=10, parallel=FALSE, a=0.1){
+qSIP_bootstrap_fcr = function(atomX, isotope="13C", n_sample=c(3,3), ci_adjust_method ='fcr',
+                              n_boot=10, parallel=FALSE, a=0.1, Gi){
   A_CI_low <- Mlight <- Mlab <- Mheavymax <- A <- Z <- delbd_sd <- NULL
   # atom excess for each bootstrap replicate
   if (isotope == "13C" || isotope == "18O") {
-  num_tests = nrow(atomX$A)
-  a_bonferroni = a/num_tests
-  df_boot_id = data.frame(bootstrap_id = 1:n_boot)
-  df_boot = plyr::mdply(df_boot_id, .qSIP_bootstrap,
-                        atomX = atomX,
-                        isotope=isotope,
-                        n_sample=n_sample,
-                        .parallel=parallel)
+    num_tests = nrow(atomX$A)
+    a_bonferroni = a/num_tests
+    df_boot_id = data.frame(bootstrap_id = 1:n_boot)
+    df_boot = plyr::mdply(df_boot_id, .qSIP_bootstrap,
+                          atomX = atomX,
+                          isotope=isotope,
+                          n_sample=n_sample,
+                          .parallel=parallel, Gi = Gi)
 
-  # calculating atomX CIs for each OTU
-  mutate_call1 = lazyeval::interp(~ stats::quantile(A, a/2, na.rm=TRUE),
-                                  A = as.name("A"))
-  mutate_call2 = lazyeval::interp(~ stats::quantile(A, 1-a/2, na.rm=TRUE),
-                                  A = as.name("A"))
-  mutate_call3 = lazyeval::interp(~ stats::quantile(A, a_bonferroni/2, na.rm=TRUE),
-                                  A = as.name("A"))
-  mutate_call4 = lazyeval::interp(~ stats::quantile(A, 1-a_bonferroni/2, na.rm=TRUE),
-                                  A = as.name("A"))
-  mutate_call5 = lazyeval::interp(~ stats::sd(A),
-                                  A = as.name("A"))
-  #mutate_call6 = lazyeval::interp(~ stats::t.test(A, mu = 0, alternative = "greater")$p.value,
-  #                                A = as.name("A"))
-  mutate_call7 = lazyeval::interp(~ stats::sd(Z),
-                                  Z = as.name("Z"))
-  mutate_call8 = lazyeval::interp(~ mean(A),
-                                  A = as.name("A"))
+    # calculating atomX CIs for each OTU
+    df_boot_1 = df_boot %>%
+      dplyr::group_by(OTU) %>%
+      dplyr::summarise(A_CI_low = stats::quantile(A, a/2, na.rm=TRUE),
+                       A_CI_high = stats::quantile(A, a/2, na.rm=TRUE),
+                       A_CI_bonferroni_low = stats::quantile(A, a_bonferroni/2, na.rm=TRUE),
+                       A_CI_bonferroni_high = stats::quantile(A, 1-a_bonferroni/2, na.rm=TRUE),
+                       A_sd = stats::sd(A),
+                       delbd_sd = stats::sd(Z),
+                       A_mean = mean(A))
 
-  dots = stats::setNames(list(mutate_call1, mutate_call2),
-                         c("A_CI_low", "A_CI_high"))
-  df_boot_1 = df_boot %>%
-    dplyr::group_by_("OTU") %>%
-    dplyr::summarize_(.dots=dots)
+    discoveries = df_boot_1 %>%
+      dplyr::filter(A_CI_low > 0) %>%
+      nrow()
 
-  discoveries = df_boot_1 %>%
-    dplyr::filter(A_CI_low > 0) %>%
-    nrow()
+    a_fcr = a*discoveries/num_tests
 
-  a_fcr = a*discoveries/num_tests
-  mutate_call9 = lazyeval::interp(~ stats::quantile(A, a_fcr/2, na.rm=TRUE),
-                                  A = as.name("A"))
-  mutate_call10 = lazyeval::interp(~ stats::quantile(A, 1-a_fcr/2, na.rm=TRUE),
-                                   A = as.name("A"))
+    df_boot = df_boot %>%
+      dplyr::group_by(OTU) %>%
+      dplyr::summarise(A_CI_low = stats::quantile(A, a/2, na.rm=TRUE),
+                       A_CI_high = stats::quantile(A, a/2, na.rm=TRUE),
+                       A_CI_fcr_low = stats::quantile(A, a_fcr/2, na.rm=TRUE),
+                       A_CI_fcr_high = stats::quantile(A, 1-a_fcr/2, na.rm=TRUE),
+                       A_CI_bonferroni_low = stats::quantile(A, a_bonferroni/2, na.rm=TRUE),
+                       A_CI_bonferroni_high = stats::quantile(A, 1-a_bonferroni/2, na.rm=TRUE),
+                       A_sd = stats::sd(A),
+                       delbd_sd = stats::sd(Z),
+                       A_mean = mean(A))
 
-  dots = stats::setNames(list(mutate_call1, mutate_call2, mutate_call3, mutate_call4, mutate_call9, mutate_call10,
-                              mutate_call5, mutate_call7, mutate_call8),
-                         c("A_CI_low", "A_CI_high","A_CI_bonferroni_low", "A_CI_bonferroni_high","A_CI_fcr_low", "A_CI_fcr_high",
-                           "A_sd", "delbd_sd", "A_mean"))
-  df_boot = df_boot %>%
-    dplyr::group_by_("OTU") %>%
-    dplyr::summarize_(.dots=dots)
+    #df_boot = df_boot %>%
+    #  mutate(adj_p = stats::p.adjust(A_p_values, method = "BH"))
 
-  #df_boot = df_boot %>%
-  #  mutate(adj_p = stats::p.adjust(A_p_values, method = "BH"))
-
-  # combining with atomX summary data
-  df_boot = dplyr::inner_join(atomX$A, df_boot, c('OTU'='OTU'))
+    # combining with atomX summary data
+    df_boot = dplyr::inner_join(atomX$A, df_boot, c('OTU'='OTU'))
   } else if (isotope == "15N") {
     df_boot = atomX$A
     df_boot = df_boot %>%
       dplyr::select(-c(Mlight,Mlab,Mheavymax,A))
     message("qSIP model does not exist for 15N - only delta BD based AFE estimates are reported")
-      } else {
+  } else {
     stop("You have used an isotope that does not have a qSIP model or perhaps the notation you used was wrong? In that case please check documentation on how to specify the isotope")
   }
   #df_boot = df_boot %>%
@@ -506,7 +498,7 @@ qSIP_bootstrap_fcr = function(atomX, isotope='13C', n_sample=c(3,3), ci_adjust_m
   if (isotope == "13C") {
     df_boot = df_boot %>%
       dplyr::mutate(A_delbd = Z/0.036,
-             A_delbd_sd = delbd_sd/0.036)
+                    A_delbd_sd = delbd_sd/0.036)
   } else if (isotope == "15N") {
     df_boot = df_boot %>%
       dplyr::mutate(A_delbd = Z/0.016)

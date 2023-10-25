@@ -1,6 +1,6 @@
 Package: SIPmg
 Title: Statistical Analysis to Identify Isotope Incorporating MAGs
-Version: 1.4.1
+Version: 1.5.1
 Authors@R: 
     c(person(given = "Pranav",
            family = "Sampara",
@@ -14,7 +14,7 @@ Authors@R:
            family = "Ziels",
            role = c("aut"),
            email = "ziels@civil.ubc.ca"))
-Description: Statistical analysis as part of a stable isotope probing (SIP) metagenomics study to identify isotope incorporating taxa recovered as metagenome-assembled genomes (MAGs). 
+Description: Statistical analysis as part of a quantitaive stable isotope probing (SIP) metagenomics study to identify isotope incorporating metagenomic features. 
     Helpful reading and a vignette in bookdown format is provided on the package site <https://zielslab.github.io/SIPmg.github.io/>.
 URL: https://zielslab.github.io/SIPmg.github.io/
 BugReports: https://github.com/ZielsLab/SIPmg

@@ -35,7 +35,7 @@ Calculate atom fraction excess using q-SIP method
 }
 \examples{
 data(phylo.qSIP,GC_content)
-### Making atomx table
+### Making atomX table
 \donttest{
 ## Not run::
 ### BD shift (Z) & atom excess (A)

@@ -1,0 +1,265 @@
+
+R version 4.2.2 (2022-10-31 ucrt) -- "Innocent and Trusting"
+Copyright (C) 2022 The R Foundation for Statistical Computing
+Platform: x86_64-w64-mingw32/x64 (64-bit)
+
+R is free software and comes with ABSOLUTELY NO WARRANTY.
+You are welcome to redistribute it under certain conditions.
+Type 'license()' or 'licence()' for distribution details.
+
+  Natural language support but running in an English locale
+
+R is a collaborative project with many contributors.
+Type 'contributors()' for more information and
+'citation()' on how to cite R or R packages in publications.
+
+Type 'demo()' for some demos, 'help()' for on-line help, or
+'help.start()' for an HTML browser interface to help.
+Type 'q()' to quit R.
+
+> pkgname <- "SIPmg"
+> source(file.path(R.home("share"), "R", "examples-header.R"))
+> options(warn = 1)
+> options(pager = "console")
+> library('SIPmg')
+> 
+> base::assign(".oldSearch", base::search(), pos = 'CheckExEnv')
+> base::assign(".old_wd", base::getwd(), pos = 'CheckExEnv')
+> cleanEx()
+> nameEx("DESeq2_l2fc")
+> ### * DESeq2_l2fc
+> 
+> flush(stderr()); flush(stdout())
+> 
+> ### Name: DESeq2_l2fc
+> ### Title: Calculating log2 fold change for HTS-SIP data.
+> ### Aliases: DESeq2_l2fc
+> 
+> ### ** Examples
+> 
+> data(phylo.qSIP)
+> 
+> 
+> 
+> 
+> cleanEx()
+> nameEx("HRSIP")
+> ### * HRSIP
+> 
+> flush(stderr()); flush(stdout())
+> 
+> ### Name: HRSIP
+> ### Title: (MW-)HR-SIP analysis
+> ### Aliases: HRSIP
+> 
+> ### ** Examples
+> 
+> data(phylo.qSIP)
+> 
+> 
+> 
+> 
+> 
+> cleanEx()
+> nameEx("coverage_normalization")
+> ### * coverage_normalization
+> 
+> flush(stderr()); flush(stdout())
+> 
+> ### Name: coverage_normalization
+> ### Title: Normalize feature coverages to estimate absolute abundance or
+> ###   relative coverage using MAG/contig coverage values with or without
+> ###   multiplying total DNA concentration of the fraction
+> ### Aliases: coverage_normalization
+> 
+> ### ** Examples
+> 
+> 
+> data(f_tibble)
+> 
+> 
+> 
+> 
+> cleanEx()
+> nameEx("filter_na")
+> ### * filter_na
+> 
+> flush(stderr()); flush(stdout())
+> 
+> ### Name: filter_na
+> ### Title: Remove MAGs with NAs from atomX table
+> ### Aliases: filter_na
+> 
+> ### ** Examples
+> 
+> data(atomX)
+> 
+> 
+> 
+> 
+> 
+> cleanEx()
+> nameEx("incorporators_taxonomy")
+> ### * incorporators_taxonomy
+> 
+> flush(stderr()); flush(stdout())
+> 
+> ### Name: incorporators_taxonomy
+> ### Title: Isotope incorporator list with GTDB taxonomy
+> ### Aliases: incorporators_taxonomy
+> 
+> ### ** Examples
+> 
+> data(taxonomy_tibble,df_atomX_boot)
+> 
+> 
+> 
+> 
+> 
+> cleanEx()
+> nameEx("phylo.table")
+> ### * phylo.table
+> 
+> flush(stderr()); flush(stdout())
+> 
+> ### Name: phylo.table
+> ### Title: Master phyloseq object using the MAG phyloseq objects
+> ### Aliases: phylo.table
+> 
+> ### ** Examples
+> 
+> 
+> data(mag.table,taxonomy.object,samples.object,fractions,taxonomy_tibble)
+> ###Making phyloseq table from fractions metadata
+> samples.object = sample.table(fractions)
+> taxonomy.object = tax.table(taxonomy_tibble)
+> 
+> 
+> 
+> 
+> 
+> 
+> cleanEx()
+> nameEx("qSIP_atom_excess_MAGs")
+> ### * qSIP_atom_excess_MAGs
+> 
+> flush(stderr()); flush(stdout())
+> 
+> ### Name: qSIP_atom_excess_MAGs
+> ### Title: Calculate atom fraction excess using q-SIP method
+> ### Aliases: qSIP_atom_excess_MAGs
+> 
+> ### ** Examples
+> 
+> data(phylo.qSIP,GC_content)
+> ### Making atomx table
+> 
+> 
+> 
+> cleanEx()
+> nameEx("qSIP_bootstrap_fcr")
+> ### * qSIP_bootstrap_fcr
+> 
+> flush(stderr()); flush(stdout())
+> 
+> ### Name: qSIP_bootstrap_fcr
+> ### Title: Calculate adjusted bootstrap CI after for multiple testing for
+> ###   atom fraction excess using q-SIP method. Multiple hypothesis tests
+> ###   are corrected by
+> ### Aliases: qSIP_bootstrap_fcr
+> 
+> ### ** Examples
+> 
+> data(phylo.qSIP,GC_content)
+> 
+> 
+> 
+> 
+> cleanEx()
+> nameEx("sample.table")
+> ### * sample.table
+> 
+> flush(stderr()); flush(stdout())
+> 
+> ### Name: sample.table
+> ### Title: phyloseq-styled sample table
+> ### Aliases: sample.table
+> 
+> ### ** Examples
+> 
+> data(fractions)
+> 
+> 
+> 
+> 
+> cleanEx()
+> nameEx("scale_features_lm")
+> ### * scale_features_lm
+> 
+> flush(stderr()); flush(stdout())
+> 
+> ### Name: scale_features_lm
+> ### Title: Scale feature coverage values to estimate their absolute
+> ###   abundance
+> ### Aliases: scale_features_lm
+> 
+> ### ** Examples
+> 
+> data(f_tibble, sequins, seq_dil)
+> 
+> 
+> 
+> 
+> 
+> cleanEx()
+> nameEx("scale_features_rlm")
+> ### * scale_features_rlm
+> 
+> flush(stderr()); flush(stdout())
+> 
+> ### Name: scale_features_rlm
+> ### Title: Scale feature coverage values to estimate their absolute
+> ###   abundance
+> ### Aliases: scale_features_rlm
+> 
+> ### ** Examples
+> 
+> data(f_tibble, sequins, seq_dil)
+> 
+> 
+> 
+> 
+> 
+> cleanEx()
+> nameEx("tax.table")
+> ### * tax.table
+> 
+> flush(stderr()); flush(stdout())
+> 
+> ### Name: tax.table
+> ### Title: phyloseq taxa table from GTDB taxonomy input
+> ### Aliases: tax.table
+> 
+> ### ** Examples
+> 
+> data(taxonomy_tibble)
+> 
+> 
+> 
+> 
+> 
+> ### * <FOOTER>
+> ###
+> cleanEx()
+> options(digits = 7L)
+> base::cat("Time elapsed: ", proc.time() - base::get("ptime", pos = 'CheckExEnv'),"\n")
+Time elapsed:  6.69 0.47 7.17 NA NA 
+> grDevices::dev.off()
+null device 
+          1 
+> ###
+> ### Local variables: ***
+> ### mode: outline-minor ***
+> ### outline-regexp: "\\(> \\)?### [*]+" ***
+> ### End: ***
+> quit('no')
