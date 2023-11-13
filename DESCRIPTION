@@ -14,7 +14,7 @@ Authors@R:
            family = "Ziels",
            role = c("aut"),
            email = "ziels@civil.ubc.ca"))
-Description: Statistical analysis as part of a quantitaive stable isotope probing (SIP) metagenomics study to identify isotope incorporating metagenomic features. 
+Description: Statistical analysis as part of a quantitative stable isotope probing (SIP) metagenomics study to identify isotope incorporating metagenomic features. 
     Helpful reading and a vignette in bookdown format is provided on the package site <https://zielslab.github.io/SIPmg.github.io/>.
 URL: https://zielslab.github.io/SIPmg.github.io/
 BugReports: https://github.com/ZielsLab/SIPmg

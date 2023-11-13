@@ -1,6 +1,10 @@
 * using log directory 'C:/Users/psampara/Documents/GitHub/SIPmg/..Rcheck'
-* using R version 4.2.2 (2022-10-31 ucrt)
+* using R version 4.3.0 (2023-04-21 ucrt)
 * using platform: x86_64-w64-mingw32 (64-bit)
+* R was compiled by
+    gcc.exe (GCC) 12.2.0
+    GNU Fortran (GCC) 12.2.0
+* running under: Windows 10 x64 (build 19045)
 * using session charset: UTF-8
 * checking for file './DESCRIPTION' ... ERROR
 Required fields missing or empty:

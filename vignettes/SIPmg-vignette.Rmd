@@ -63,6 +63,8 @@ In quantitative SIP (qSIP), quantitative estimates of isotope incorporation, exp
 
 [Sieradzki ET, Koch BJ, Greenlon A, Sachdeva R, Malmstrom RR, Mau RL, et al. Measurement error and resolution in quantitative stable isotope probing: implications for experimental design. Msystems 2020; 5: e00151-20.](https://journals.asm.org/doi/10.1128/mSystems.00151-20)
 
+[Vyshenska D* and Sampara P* et al. A standardized quantitative analysis strategy for stable isotope probing metagenomics. Msystems 2023; e01280-22](https://journals.asm.org/doi/10.1128/msystems.01280-22)
+
 ### HTSSIP R package
 
 [Youngblut ND, Barnett SE, Buckley DH. HTSSIP: An R package for analysis of high throughput sequencing data from nucleic acid stable isotope probing (SIP) experiments. PLOS ONE 2018; 13: e0189616.](https://journals.plos.org/plosone/article?id=10.1371/journal.pone.0189616)

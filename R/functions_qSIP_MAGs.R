@@ -112,37 +112,33 @@ phylo.table = function(mag,taxa,samples) {
 #' This script was adapted from https://github.com/buckleylab/HTSSIP/blob/master/R/qSIP_atom_excess.R
 #' for use with genome-centric metagenomics. See Hungate et al., 2015 for more details
 #'
-#' @param Mlight  The molecular wight of unlabeled DNA
 #' @param isotope  The isotope for which the DNA is labeled with ('13C' or '18O')
-#' @param Gi  The G+C content of unlabeled DNA
+#' @param df_OTU_s OTU table with BD to estimate AFEs
 #' @return numeric value: maximum molecular weight of fully-labeled DNA
 #'
-calc_Mheavymax_MAGs = function(isotope='13C', df_OTU_s1) {
+calc_Mheavymax_MAGs = function(isotope='13C', df_OTU_s) {
 
   if (isotope == "13C") {
-    df_OTU_s1 = df_OTU_s1 %>%
+    df_OTU_s = df_OTU_s %>%
       dplyr::mutate(Mheavymax = -0.4987282 * Gi + 9.974564 + Mlight)
   } else if (isotope == "18O") {
-    df_OTU_s1 = df_OTU_s %>%
+    df_OTU_s = df_OTU_s %>%
       mutate(Mheavymax = 12.07747 + Mlight)
   } else {
-    df_OTU_s1 = df_OTU_s %>%
+    df_OTU_s = df_OTU_s %>%
       stop("Isotope is not recognized to do qSIP")
   }
-  return(df_OTU_s1)
+  return(df_OTU_s)
 }
 
 #' Calculate atom fraction excess
 #'
 #' See Hungate et al., 2015 for more details
 #'
-#' @param Mlab  The molecular wight of labeled DNA
-#' @param Mlight  The molecular wight of unlabeled DNA
-#' @param Mheavymax  The theoretical maximum molecular weight of fully-labeled DNA
-#' @param isotope  The isotope for which the DNA is labeled with ('13C' or '18O')
+#' @param df_OTU_s OTU table with calculated AFE and delta BDs
 #' @return numeric value: atom fraction excess (A)
 #'
-calc_atom_excess_MAGs = function(df_OTU_s1,isotope='13C'){
+calc_atom_excess_MAGs = function(df_OTU_s,isotope='13C'){
   isotope=toupper(isotope)
 
   if (isotope == "13C") {
@@ -152,9 +148,9 @@ calc_atom_excess_MAGs = function(df_OTU_s1,isotope='13C'){
   } else {
     stop("Isotope is not recognized to do qSIP")
   }
-  df_OTU_s1 = dplyr::mutate(df_OTU_s1,
+  df_OTU_s = dplyr::mutate(df_OTU_s,
                             A = (Mlab - Mlight) / (Mheavymax - Mlight) * (1 - x))
-  return(df_OTU_s1)
+  return(df_OTU_s)
 }
 
 #' Reformat a phyloseq object of qSIP_atom_excess_MAGs analysis
@@ -254,16 +250,16 @@ qSIP_atom_excess_MAGs = function(physeq,
   }
   ## pt1: Add GC content to the dataframe, then calculate Mlight, and add to the dataframe
   df_OTU_s = df_OTU_s %>%
-    dplyr::left_join(Gi %>% setNames(.,c("OTU", "Gi")), by="OTU") %>%
+    dplyr::left_join(Gi %>% stats::setNames(.,c("OTU", "Gi")), by="OTU") %>%
     dplyr::mutate(Mlight = 0.496 * Gi + 307.691)
 
   ## pt2: Calculate Mlab and Mheavymax and add to the dataframe
   df_OTU_s = df_OTU_s %>%
     dplyr::mutate(Mlab = (Z / Wlight + 1) * Mlight)
-  df_OTU_s = calc_Mheavymax_MAGs(isotope = isotope, df_OTU_s1 = df_OTU_s)
+  df_OTU_s = calc_Mheavymax_MAGs(isotope = isotope, df_OTU_s = df_OTU_s)
 
   ## pt3: Calculate AFE
-  df_OTU_s = calc_atom_excess_MAGs(isotope = isotope, df_OTU_s1 = df_OTU_s)
+  df_OTU_s = calc_atom_excess_MAGs(isotope = isotope, df_OTU_s = df_OTU_s)
   ## flow control: bootstrap
   if(no_boot){
     return(list(W=df_OTU_W, A=df_OTU_s))
@@ -471,7 +467,7 @@ qSIP_bootstrap_fcr = function(atomX, isotope="13C", n_sample=c(3,3), ci_adjust_m
     df_boot = df_boot %>%
       dplyr::group_by(OTU) %>%
       dplyr::summarise(A_CI_low = stats::quantile(A, a/2, na.rm=TRUE),
-                       A_CI_high = stats::quantile(A, a/2, na.rm=TRUE),
+                       A_CI_high = stats::quantile(A, 1-a/2, na.rm=TRUE),
                        A_CI_fcr_low = stats::quantile(A, a_fcr/2, na.rm=TRUE),
                        A_CI_fcr_high = stats::quantile(A, 1-a_fcr/2, na.rm=TRUE),
                        A_CI_bonferroni_low = stats::quantile(A, a_bonferroni/2, na.rm=TRUE),

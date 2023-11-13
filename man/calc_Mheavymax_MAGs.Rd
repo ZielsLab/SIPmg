@@ -4,14 +4,12 @@
 \alias{calc_Mheavymax_MAGs}
 \title{Calculate Mheavymax}
 \usage{
-calc_Mheavymax_MAGs(isotope = "13C", df_OTU_s1)
+calc_Mheavymax_MAGs(isotope = "13C", df_OTU_s)
 }
 \arguments{
 \item{isotope}{The isotope for which the DNA is labeled with ('13C' or '18O')}
 
-\item{Mlight}{The molecular wight of unlabeled DNA}
-
-\item{Gi}{The G+C content of unlabeled DNA}
+\item{df_OTU_s}{OTU table with BD to estimate AFEs}
 }
 \value{
 numeric value: maximum molecular weight of fully-labeled DNA
