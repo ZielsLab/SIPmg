@@ -117,13 +117,16 @@ phylo.table = function(mag,taxa,samples) {
 #' @return numeric value: maximum molecular weight of fully-labeled DNA
 #'
 calc_Mheavymax_MAGs = function(isotope='13C', df_OTU_s) {
-
+  Gi <- Mlight <- NULL
   if (isotope == "13C") {
     df_OTU_s = df_OTU_s %>%
       dplyr::mutate(Mheavymax = -0.4987282 * Gi + 9.974564 + Mlight)
   } else if (isotope == "18O") {
     df_OTU_s = df_OTU_s %>%
       mutate(Mheavymax = 12.07747 + Mlight)
+  } else if (isotope == "15N") {
+    df_OTU_s = df_OTU_s %>%
+      mutate(Mheavymax = 0.5024851 * Gi + 3.517396 + Mlight)
   } else {
     df_OTU_s = df_OTU_s %>%
       stop("Isotope is not recognized to do qSIP")
@@ -136,15 +139,19 @@ calc_Mheavymax_MAGs = function(isotope='13C', df_OTU_s) {
 #' See Hungate et al., 2015 for more details
 #'
 #' @param df_OTU_s OTU table with calculated AFE and delta BDs
+#' @param isotope Isotopic substrate used in the experiment
 #' @return numeric value: atom fraction excess (A)
 #'
 calc_atom_excess_MAGs = function(df_OTU_s,isotope='13C'){
+  Mheavymax <- Mlab <- Mlight <- NULL
   isotope=toupper(isotope)
 
   if (isotope == "13C") {
     x = 0.01111233
   } else if (isotope == "18O") {
     x = 0.002000429
+  } else if (isotope == "15N") {
+    x = 0.003663004
   } else {
     stop("Isotope is not recognized to do qSIP")
   }
@@ -164,6 +171,7 @@ calc_atom_excess_MAGs = function(df_OTU_s,isotope='13C'){
 
 qSIP_atom_excess_format_MAGs = function(physeq, control_expr, treatment_rep){
   # formatting input
+  Buoyant_density <- Count <- NULL
   cols = c('IS_CONTROL', 'Buoyant_density', treatment_rep)
   df_OTU = HTSSIP::phyloseq2table(physeq,
                                   include_sample_data=TRUE,
@@ -212,6 +220,7 @@ qSIP_atom_excess_MAGs = function(physeq,
                                  isotope='13C',
                                  df_OTU_W=NULL,
                                  Gi){
+  Buoyant_density <- Count <- IS_CONTROL <- OTU <- Replicate <- W <- Wm <- Wlab <- Wlight <- . <- Z <- Mlight <- NULL
   # formatting input
   if(is.null(df_OTU_W)){
     no_boot = TRUE
@@ -300,8 +309,7 @@ sample_W = function(df, n_sample){
                            isotope='13C',
                            n_sample=c(3,3),
                            bootstrap_id = 1, Gi = Gi){
-  data = NULL
-  temp = NULL
+  data <- temp <- OTU <- NULL
 
   # making a new (subsampled with replacement) dataset
   n_sample = c(3,3)  # control, treatment
@@ -435,9 +443,9 @@ filter_na = function(atomX) {
 
 qSIP_bootstrap_fcr = function(atomX, isotope="13C", n_sample=c(3,3), ci_adjust_method ='fcr',
                               n_boot=10, parallel=FALSE, a=0.1, Gi){
-  A_CI_low <- Mlight <- Mlab <- Mheavymax <- A <- Z <- delbd_sd <- NULL
+  A_CI_low <- Mlight <- Mlab <- Mheavymax <- A <- Z <- delbd_sd <- OTU <-  NULL
   # atom excess for each bootstrap replicate
-  if (isotope == "13C" || isotope == "18O") {
+  if (isotope == "13C" || isotope == "18O" || isotope == "15N") {
     num_tests = nrow(atomX$A)
     a_bonferroni = a/num_tests
     df_boot_id = data.frame(bootstrap_id = 1:n_boot)
@@ -481,11 +489,6 @@ qSIP_bootstrap_fcr = function(atomX, isotope="13C", n_sample=c(3,3), ci_adjust_m
 
     # combining with atomX summary data
     df_boot = dplyr::inner_join(atomX$A, df_boot, c('OTU'='OTU'))
-  } else if (isotope == "15N") {
-    df_boot = atomX$A
-    df_boot = df_boot %>%
-      dplyr::select(-c(Mlight,Mlab,Mheavymax,A))
-    message("qSIP model does not exist for 15N - only delta BD based AFE estimates are reported")
   } else {
     stop("You have used an isotope that does not have a qSIP model or perhaps the notation you used was wrong? In that case please check documentation on how to specify the isotope")
   }

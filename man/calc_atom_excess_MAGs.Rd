@@ -8,6 +8,8 @@ calc_atom_excess_MAGs(df_OTU_s, isotope = "13C")
 }
 \arguments{
 \item{df_OTU_s}{OTU table with calculated AFE and delta BDs}
+
+\item{isotope}{Isotopic substrate used in the experiment}
 }
 \value{
 numeric value: atom fraction excess (A)
