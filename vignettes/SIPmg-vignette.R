@@ -1,4 +1,4 @@
-## ---- include = FALSE---------------------------------------------------------
+## ----include = FALSE----------------------------------------------------------
 knitr::opts_chunk$set(
   collapse = TRUE,
   comment = "#>"
@@ -54,6 +54,7 @@ GC_content <- readr::read_csv(file = "mock_input_data/GC_content.csv")
 
 #Fractions
 fractions = readr::read_csv("mock_input_data/fractions.csv")
+fractions.15N = readr::read_csv("mock_input_data/fractions_15N.csv")
 
 
 ## ----estimate absolute concentrations-----------------------------------------
@@ -75,20 +76,30 @@ mag.table = phyloseq::otu_table(mag_tab, taxa_are_rows = TRUE) #Phyloseq OTU tab
 
 taxonomy.object = SIPmg::tax.table(taxonomy_tibble) # Create a taxonomy phyloseq object
 samples.object = SIPmg::sample.table(fractions) # Create a samples phyloseq object
-phylo.qSIP = SIPmg::phylo.table(mag.table, taxonomy.object, samples.object) # Make a phyloseq table for downstream qSIP analysis
+samples.object.15N = SIPmg::sample.table(fractions.15N)
+phylo.qSIP = SIPmg::phylo.table(mag.table, taxonomy.object, samples.object) 
+phylo.qSIP.15N = SIPmg::phylo.table(mag.table, taxonomy.object, samples.object.15N) # Make a phyloseq table for downstream qSIP analysis
 
 ## ----Calculate atom fraction excess-------------------------------------------
 atomX = SIPmg::qSIP_atom_excess_MAGs(phylo.qSIP,
-                               control_expr='Isotope=="12C"',
+                               control_expr='Isotope=="12C"',isotope = "13C",
+                               treatment_rep='Replicate',
+                               Gi = GC_content)
+atomX.15N = SIPmg::qSIP_atom_excess_MAGs(phylo.qSIP.15N,
+                               control_expr='Isotope=="14N"',isotope = "15N",
                                treatment_rep='Replicate',
                                Gi = GC_content)
 #Bootstrap confidence intervals
-df_atomX_boot = SIPmg::qSIP_bootstrap_fcr(atomX, n_boot=10, Gi = GC_content) #Change "parallel = FALSE" to compute using a single-core
+df_atomX_boot = SIPmg::qSIP_bootstrap_fcr(atomX, n_boot=10, Gi = GC_content)
+df_atomX_boot.15N = SIPmg::qSIP_bootstrap_fcr(atomX.15N, n_boot=10, Gi = GC_content)#Change "parallel = FALSE" to compute using a single-core
 
 
 ## ----Plot atom fraction excess------------------------------------------------
 CI_threshold = 0
 df_atomX_boot = df_atomX_boot %>%
+  dplyr::mutate(Incorporator = A_CI_fcr_low > CI_threshold,
+         OTU = reorder(OTU, -A))
+df_atomX_boot.15N = df_atomX_boot.15N %>%
   dplyr::mutate(Incorporator = A_CI_fcr_low > CI_threshold,
          OTU = reorder(OTU, -A))
 
@@ -108,11 +119,19 @@ ggplot2::ggsave(filename = "atom_fration_excess.pdf", plot = atom_f_excess_plot)
 n_incorp = df_atomX_boot %>%
   dplyr::filter(Incorporator == TRUE) %>%
   nrow 
+n_incorp.15N = df_atomX_boot.15N %>%
+  dplyr::filter(Incorporator == TRUE) %>%
+  nrow 
+
 #Get incorporator list
 incorporator_list = SIPmg::incorporators_taxonomy(taxonomy = taxonomy_tibble, bootstrapped_AFE_table = df_atomX_boot)
+incorporator_list.15N = SIPmg::incorporators_taxonomy(taxonomy = taxonomy_tibble, bootstrapped_AFE_table = df_atomX_boot.15N)
+
 #Print incorporator information
 cat('Number of incorporators:', n_incorp, '\n')
+cat('Number of incorporators if isotope were 15N:', n_incorp.15N, '\n')
 print(incorporator_list, n = nrow(incorporator_list))
+print(incorporator_list.15N, n = nrow(incorporator_list.15N))
 
 ## ----Load data 2, echo = FALSE------------------------------------------------
 ##Load data
@@ -159,7 +178,7 @@ EBImage::display(rlm_example)
 #Linear regression plot without filtering sequin data
 EBImage::display(lm_example)
 
-## ---- outlier sequin coverages------------------------------------------------
+## ----outlier sequin coverages-------------------------------------------------
 
 #Cook's distance threshold of the data set
 4/(length(mag_tab_scaled_lm$scale_fac$cooksd[[3]]))
@@ -174,7 +193,7 @@ EBImage::display(cooksd_example)
 #Linear regression plot with filtered outliers in sequin data
 EBImage::display(filtered_lm_example)
 
-## ---- estimating relative coverage--------------------------------------------
+## ----estimating relative coverage---------------------------------------------
 f_tibble <- readr::read_csv("mock_input_data/coverage_metadata.csv")
 rel.cov = SIPmg::coverage_normalization(f_tibble = f_tibble, approach = "relative_coverage")
 mag.table = phyloseq::otu_table(as.matrix(rel.cov %>% tibble::column_to_rownames(var = "Feature")), taxa_are_rows = TRUE) #Phyloseq OTU table
@@ -246,7 +265,7 @@ df_atomX_boot = df_atomX_boot %>%
                dplyr::select(user_genome, classification) %>%
                dplyr::rename(OTU = user_genome)) 
 
-## ---- MW-HR-SIP---------------------------------------------------------------
+## ----MW-HR-SIP----------------------------------------------------------------
 windows = data.frame(density_min=c(1.71,1.72, 1.73), 
                      density_max=c(1.74,1.75,1.76))
 

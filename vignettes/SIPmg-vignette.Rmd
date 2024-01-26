@@ -94,7 +94,7 @@ For normalizing coverage values please see `pooling_funs.R` \n
 This R markdown primarily uses `Tidyverse`, `phyloseq`, and `HTSSIP` packages \n
 This markdown uses functions from `functions_qSIP_MAGs.R` \n
 
-For this data, MetaSIPSim (developed by [Barnett et al, 2020](https://bmcbioinformatics.biomedcentral.com/articles/10.1186/s12859-020-3372-6)) was used to simulate a data set from a hypothetical SIP workflow performed on the MBARC-26 mock community (as defined in [Singer et al, 2016](https://www.nature.com/articles/sdata201681)). The data set was further augmented with simulated post-fractionation sequin spike-ins and the data set was simulated to have all 26 organisms as incorporators. Some of the 26 organisms also had plasmids, which were assembled as distinct genomic units, adding the total genomic features in the simulated study to be 38
+For this data, MetaSIPSim (developed by [Barnett et al, 2020](https://bmcbioinformatics.biomedcentral.com/articles/10.1186/s12859-020-3372-6)) was used to simulate a data set from a hypothetical SIP workflow performed on the MBARC-26 mock community (as defined in [Singer et al, 2016](https://www.nature.com/articles/sdata201681)). The data set was further augmented with simulated post-fractionation sequin spike-ins and the data set was simulated to have all 26 organisms as incorporators. Some of the 26 organisms also had plasmids, which were assembled as distinct genomic units, adding the total genomic features in the simulated study to be 38. The example below will also cover a case considering the same data but assuming the isotopes were 15N and 14N, instead of 13C and 12C
 
 ```{r Load libraries}
 #Load required libraries
@@ -225,6 +225,7 @@ GC_content <- readr::read_csv(file = "mock_input_data/GC_content.csv")
 
 #Fractions
 fractions = readr::read_csv("mock_input_data/fractions.csv")
+fractions.15N = readr::read_csv("mock_input_data/fractions_15N.csv")
 
 ```
 
@@ -275,7 +276,9 @@ mag.table = phyloseq::otu_table(mag_tab, taxa_are_rows = TRUE) #Phyloseq OTU tab
 
 taxonomy.object = SIPmg::tax.table(taxonomy_tibble) # Create a taxonomy phyloseq object
 samples.object = SIPmg::sample.table(fractions) # Create a samples phyloseq object
-phylo.qSIP = SIPmg::phylo.table(mag.table, taxonomy.object, samples.object) # Make a phyloseq table for downstream qSIP analysis
+samples.object.15N = SIPmg::sample.table(fractions.15N)
+phylo.qSIP = SIPmg::phylo.table(mag.table, taxonomy.object, samples.object) 
+phylo.qSIP.15N = SIPmg::phylo.table(mag.table, taxonomy.object, samples.object.15N) # Make a phyloseq table for downstream qSIP analysis
 ```
 
 ## Estimation of atom fraction excess
@@ -295,11 +298,16 @@ Thanks to [HTSSIP R package](https://journals.plos.org/plosone/article?id=10.137
 
 ```{r Calculate atom fraction excess}
 atomX = SIPmg::qSIP_atom_excess_MAGs(phylo.qSIP,
-                               control_expr='Isotope=="12C"',
+                               control_expr='Isotope=="12C"',isotope = "13C",
+                               treatment_rep='Replicate',
+                               Gi = GC_content)
+atomX.15N = SIPmg::qSIP_atom_excess_MAGs(phylo.qSIP.15N,
+                               control_expr='Isotope=="14N"',isotope = "15N",
                                treatment_rep='Replicate',
                                Gi = GC_content)
 #Bootstrap confidence intervals
-df_atomX_boot = SIPmg::qSIP_bootstrap_fcr(atomX, n_boot=10, Gi = GC_content) #Change "parallel = FALSE" to compute using a single-core
+df_atomX_boot = SIPmg::qSIP_bootstrap_fcr(atomX, n_boot=10, Gi = GC_content)
+df_atomX_boot.15N = SIPmg::qSIP_bootstrap_fcr(atomX.15N, n_boot=10, Gi = GC_content)#Change "parallel = FALSE" to compute using a single-core
 
 ```
 
@@ -311,6 +319,9 @@ Plot the atom fraction excess data with 5 % and 95 % quantiles as the confidence
 ```{r Plot atom fraction excess}
 CI_threshold = 0
 df_atomX_boot = df_atomX_boot %>%
+  dplyr::mutate(Incorporator = A_CI_fcr_low > CI_threshold,
+         OTU = reorder(OTU, -A))
+df_atomX_boot.15N = df_atomX_boot.15N %>%
   dplyr::mutate(Incorporator = A_CI_fcr_low > CI_threshold,
          OTU = reorder(OTU, -A))
 
@@ -333,11 +344,19 @@ ggplot2::ggsave(filename = "atom_fration_excess.pdf", plot = atom_f_excess_plot)
 n_incorp = df_atomX_boot %>%
   dplyr::filter(Incorporator == TRUE) %>%
   nrow 
+n_incorp.15N = df_atomX_boot.15N %>%
+  dplyr::filter(Incorporator == TRUE) %>%
+  nrow 
+
 #Get incorporator list
 incorporator_list = SIPmg::incorporators_taxonomy(taxonomy = taxonomy_tibble, bootstrapped_AFE_table = df_atomX_boot)
+incorporator_list.15N = SIPmg::incorporators_taxonomy(taxonomy = taxonomy_tibble, bootstrapped_AFE_table = df_atomX_boot.15N)
+
 #Print incorporator information
 cat('Number of incorporators:', n_incorp, '\n')
+cat('Number of incorporators if isotope were 15N:', n_incorp.15N, '\n')
 print(incorporator_list, n = nrow(incorporator_list))
+print(incorporator_list.15N, n = nrow(incorporator_list.15N))
 ```
 
 It appears that not all incorporators were identified with the bootstrapping method. This could be due to the model unable to detect the incorporators. Another way to detect incorporators, as mentioned above, is to test with the ΔBD method or with the HR-SIP or MW-HR-SIP methods. For a more detailed discussion, please refer this [vignette][https://zielslab.github.io/SIPmg.github.io/identifying-incorporators.html]
