@@ -5,7 +5,7 @@
 #'@param f_tibble Can be either of
 #' (1) a tibble with first column "Feature" that contains bin IDs, and the rest of the columns represent samples with bins' coverage values.
 #' (2) a tibble as outputted by the program "checkm coverage" from the tool CheckM. Please check CheckM documentation - https://github.com/Ecogenomics/CheckM on the usage for "checkm coverage" program
-#'@param sequin_meta tibble containing sequin names ("Feature column") and concentrations in attamoles/uL ("Concentration") column.
+#'@param sequin_meta tibble containing sequin names ("Feature" column) and concentrations in attamoles/uL ("Concentration" column).
 #'@param seq_dilution tibble with first column "Sample" with **same sample names as in f_tibble**, and a second column "Dilution" showing ratio of sequins added to final sample volume (e.g. a value of 0.01 for a dilution of 1 volume sequin to 99 volumes sample)
 #'@param coe_of_variation Acceptable coefficient of variation for coverage and detection (eg. 20 - for 20 % threshold of coefficient of variation). Coverages above the threshold value will be flagged in the plots.
 #'@param log_trans Boolean (TRUE or FALSE), should coverages and sequin concentrations be log-scaled?
@@ -48,7 +48,7 @@ scale_features_lm <- function(f_tibble, sequin_meta, seq_dilution,
 
   # Merge dilution factors for samples, add log-scaling option
   scale_fac <- scale_fac %>%
-    dplyr::inner_join(seq_dilution, by = "Sample") %>%
+    dplyr::inner_join(seq_dilution %>% setNames(c("Sample", "Dilution")), by = "Sample") %>%
     dplyr::mutate(log_trans = log_trans)
 
   # Make coverage table for features
