@@ -325,7 +325,7 @@ sample_W = function(df, n_sample){
     tidyr::unnest(cols = c(temp))
 
   # calculating atom excess
-  atomX = qSIPmg::qSIP_atom_excess_MAGs(physeq=NULL,
+  atomX = SIPmg::qSIP_atom_excess_MAGs(physeq=NULL,
                                         df_OTU_W=df_OTU_W,
                                         control_expr=NULL,
                                         treatment_rep=NULL,
