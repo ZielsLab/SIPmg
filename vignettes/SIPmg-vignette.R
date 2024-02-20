@@ -90,8 +90,8 @@ atomX.15N = SIPmg::qSIP_atom_excess_MAGs(phylo.qSIP.15N,
                                treatment_rep='Replicate',
                                Gi = GC_content)
 #Bootstrap confidence intervals
-df_atomX_boot = SIPmg::qSIP_bootstrap_fcr(atomX, n_boot=10, Gi = GC_content)
-df_atomX_boot.15N = SIPmg::qSIP_bootstrap_fcr(atomX.15N, n_boot=10, Gi = GC_content)#Change "parallel = FALSE" to compute using a single-core
+df_atomX_boot = SIPmg::qSIP_bootstrap_fcr(atomX, n_boot=10, Gi = GC_content, isotope = "13C")
+df_atomX_boot.15N = SIPmg::qSIP_bootstrap_fcr(atomX.15N, n_boot=10, Gi = GC_content, isotope = "15N")#Change "parallel = FALSE" to compute using a single-core
 
 
 ## ----Plot atom fraction excess------------------------------------------------
@@ -250,10 +250,10 @@ phylo.qSIP = SIPmg::phylo.table(mag.table, taxonomy.object, samples.object) # Ma
 ## ----AFE methodGet bootstrapped AFE table 2-----------------------------------
 atomX = SIPmg::qSIP_atom_excess_MAGs(phylo.qSIP,
                                control_expr='Isotope=="12C"',
-                               treatment_rep='Replicate',
+                               treatment_rep='Replicate',isotope = "13C",
                                Gi = GC_content)
 #Bootstrap confidence intervals
-df_atomX_boot = SIPmg::qSIP_bootstrap_fcr(atomX, n_boot=10, Gi = GC_content)
+df_atomX_boot = SIPmg::qSIP_bootstrap_fcr(atomX, n_boot=10, Gi = GC_content, isotope = "13C")
 CI_threshold = 0
 df_atomX_boot = df_atomX_boot %>%
   dplyr::mutate(Incorporator_qSIP = A_CI_fcr_low > CI_threshold,

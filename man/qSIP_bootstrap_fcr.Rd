@@ -6,7 +6,7 @@
 \usage{
 qSIP_bootstrap_fcr(
   atomX,
-  isotope = "13C",
+  isotope,
   n_sample = c(3, 3),
   ci_adjust_method = "fcr",
   n_boot = 10,
@@ -18,7 +18,7 @@ qSIP_bootstrap_fcr(
 \arguments{
 \item{atomX}{A list object created by \code{qSIP_atom_excess_MAGs()}}
 
-\item{isotope}{The isotope for which the DNA is labeled with ('13C' or '18O')}
+\item{isotope}{The isotope for which the DNA is labeled with ('13C', '15N' or '18O')}
 
 \item{n_sample}{A vector of length 2. The sample size for data resampling (with replacement) for 1) control samples and 2) treatment samples.}
 

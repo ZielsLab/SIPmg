@@ -420,7 +420,7 @@ filter_na = function(atomX) {
 #' Calculate adjusted bootstrap CI after for multiple testing for atom fraction excess using q-SIP method. Multiple hypothesis tests are corrected by
 #
 #' @param atomX  A list object created by \code{qSIP_atom_excess_MAGs()}
-#' @param isotope  The isotope for which the DNA is labeled with ('13C' or '18O')
+#' @param isotope  The isotope for which the DNA is labeled with ('13C', '15N' or '18O')
 #' @param n_sample  A vector of length 2. The sample size for data resampling (with replacement) for 1) control samples and 2) treatment samples.
 #' @param n_boot  Number of bootstrap replicates.
 #' @param a  A numeric value. The alpha for calculating confidence intervals.
@@ -444,7 +444,7 @@ filter_na = function(atomX) {
 #'}
 #'
 
-qSIP_bootstrap_fcr = function(atomX, isotope='13C', n_sample=c(3,3), ci_adjust_method ='fcr',
+qSIP_bootstrap_fcr = function(atomX, isotope, n_sample=c(3,3), ci_adjust_method ='fcr',
                                         n_boot=10, parallel=FALSE, a=0.1, Gi){
   A_CI_low <- Mlight <- Mlab <- Mheavymax <- A <- Z <- delbd_sd <- NULL
   # atom excess for each bootstrap replicate

@@ -42,7 +42,7 @@ scale_features_rlm <- function(f_tibble, sequin_meta, seq_dilution,
 
   # Merge dilution factors for samples, add log-scaling option
   scale_fac <- scale_fac %>%
-    dplyr::inner_join(seq_dilution %>% setNames(c("Sample", "Dilution")), by = "Sample") %>%
+    dplyr::inner_join(seq_dilution %>% stats::setNames(c("Sample", "Dilution")), by = "Sample") %>%
     dplyr::mutate(log_scale = log_trans)
 
   # Make coverage table for features
