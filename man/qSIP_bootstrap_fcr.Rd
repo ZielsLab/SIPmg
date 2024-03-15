@@ -12,7 +12,8 @@ qSIP_bootstrap_fcr(
   n_boot = 10,
   parallel = FALSE,
   a = 0.1,
-  Gi
+  Gi,
+  show_delbd_AFE = FALSE
 )
 }
 \arguments{
@@ -31,6 +32,8 @@ qSIP_bootstrap_fcr(
 \item{a}{A numeric value. The alpha for calculating confidence intervals.}
 
 \item{Gi}{The G+C content of unlabeled DNA as a dataframe with "Feature" column having MAGs, contigs, or other features as rows, and a "Gi" column with GC content}
+
+\item{show_delbd_AFE}{Show AFE values and incorporator identification estimated based on the delta buoyant density estimates?}
 }
 \value{
 A data.frame of atom fraction excess values (A) and atom fraction excess confidence intervals adjusted for multiple testing.

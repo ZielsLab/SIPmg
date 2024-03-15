@@ -90,7 +90,7 @@ atomX.15N = SIPmg::qSIP_atom_excess_MAGs(phylo.qSIP.15N,
                                treatment_rep='Replicate',
                                Gi = GC_content)
 #Bootstrap confidence intervals
-df_atomX_boot = SIPmg::qSIP_bootstrap_fcr(atomX, n_boot=10, Gi = GC_content, isotope = "13C")
+df_atomX_boot = SIPmg::qSIP_bootstrap_fcr(atomX, n_boot=10, Gi = GC_content, isotope = "13C", show_delbd_AFE = FALSE)
 df_atomX_boot.15N = SIPmg::qSIP_bootstrap_fcr(atomX.15N, n_boot=10, Gi = GC_content, isotope = "15N")#Change "parallel = FALSE" to compute using a single-core
 
 
@@ -103,7 +103,7 @@ df_atomX_boot.15N = df_atomX_boot.15N %>%
   dplyr::mutate(Incorporator = A_CI_fcr_low > CI_threshold,
          OTU = reorder(OTU, -A))
 
-(atom_f_excess_plot = ggplot2::ggplot(df_atomX_boot, aes(OTU, A, ymin=A_CI_low, ymax=A_CI_high, color=Incorporator)) +
+(atom_f_excess_plot = ggplot2::ggplot(df_atomX_boot, aes(OTU, A, ymin=A_CI_fcr_low, ymax=A_CI_fcr_high, color=Incorporator)) +
   geom_pointrange(size=0.25) +
   geom_linerange() +
   geom_hline(yintercept=0, linetype='dashed', alpha=0.5) +
@@ -253,7 +253,7 @@ atomX = SIPmg::qSIP_atom_excess_MAGs(phylo.qSIP,
                                treatment_rep='Replicate',isotope = "13C",
                                Gi = GC_content)
 #Bootstrap confidence intervals
-df_atomX_boot = SIPmg::qSIP_bootstrap_fcr(atomX, n_boot=10, Gi = GC_content, isotope = "13C")
+df_atomX_boot = SIPmg::qSIP_bootstrap_fcr(atomX, n_boot=10, Gi = GC_content, isotope = "13C", show_delbd_AFE = TRUE)
 CI_threshold = 0
 df_atomX_boot = df_atomX_boot %>%
   dplyr::mutate(Incorporator_qSIP = A_CI_fcr_low > CI_threshold,
@@ -286,13 +286,13 @@ mw.hr.sip = mw.hr.sip %>%
 ## ----list incorporators 2-----------------------------------------------------
 #Get incorporator info
 qSIP_incorp = df_atomX_boot %>%
-  dplyr::select(OTU, classification, A, A_sd, Incorporator_qSIP) %>%
+  dplyr::select(OTU, classification, A, Incorporator_qSIP) %>%
   dplyr::filter(Incorporator_qSIP == TRUE) %>%
   dplyr::select(-classification)
 n_qSIP_incorp = nrow(qSIP_incorp)
 
 delbd_incorp = df_atomX_boot %>%
-  dplyr::select(OTU, classification, A_delbd, A_delbd_sd, Incorporator_delbd) %>%
+  dplyr::select(OTU, classification, A_delbd, Incorporator_delbd) %>%
   dplyr::filter(Incorporator_delbd == TRUE) %>%
   dplyr::select(-classification)
 n_delbd_incorp = nrow(delbd_incorp)

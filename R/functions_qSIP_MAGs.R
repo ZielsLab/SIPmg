@@ -218,6 +218,8 @@ qSIP_atom_excess_MAGs = function(physeq,
                                  isotope='13C',
                                  df_OTU_W=NULL,
                                  Gi){
+
+  . <- NULL
   # formatting input
   if(is.null(df_OTU_W)){
     no_boot = TRUE
@@ -427,6 +429,7 @@ filter_na = function(atomX) {
 #' @param parallel  Parallel processing. See \code{.parallel} option in \code{dplyr::mdply()} for more details.
 #' @param ci_adjust_method Confidence interval adjustment method. Please choose 'FCR', 'Bonferroni', or 'none' (if no adjustment is needed). Default is FCR and also provides unadjusted CI.
 #' @param Gi The G+C content of unlabeled DNA as a dataframe with "Feature" column having MAGs, contigs, or other features as rows, and a "Gi" column with GC content
+#' @param show_delbd_AFE Show AFE values and incorporator identification estimated based on the delta buoyant density estimates?
 #' @importFrom dplyr contains
 #' @return A data.frame of atom fraction excess values (A) and atom fraction excess confidence intervals adjusted for multiple testing.
 #' @export
@@ -445,8 +448,9 @@ filter_na = function(atomX) {
 #'
 
 qSIP_bootstrap_fcr = function(atomX, isotope, n_sample=c(3,3), ci_adjust_method ='fcr',
-                                        n_boot=10, parallel=FALSE, a=0.1, Gi){
-  A_CI_low <- Mlight <- Mlab <- Mheavymax <- A <- Z <- delbd_sd <- NULL
+                                        n_boot=10, parallel=FALSE, a=0.1, Gi, show_delbd_AFE = FALSE){
+  A_CI_low <- A_CI_high <- Wlight <- Wlab <- Mlight <- Mlab <- Mheavymax <- A <- Z <- delbd_sd <- NULL
+  count <- cov <- A_mean <- A_sd <- . <- NULL
   # atom excess for each bootstrap replicate
   if (stringr::str_detect(isotope, paste(c("13C","15N","18O"), collapse = "|"))) {
   num_tests = nrow(atomX$A)
@@ -530,15 +534,37 @@ qSIP_bootstrap_fcr = function(atomX, isotope, n_sample=c(3,3), ci_adjust_method 
 
   if (ci_adjust_method == "fcr") {
     df_boot = df_boot %>%
-      dplyr::select(-contains("bonferroni"))
+      dplyr::select(-c(contains("bonferroni"),A_CI_low,A_CI_high, delbd_sd))
   } else if (ci_adjust_method == "bonferroni") {
     df_boot = df_boot %>%
-      dplyr::select(-contains("fcr"))
+      dplyr::select(-c(contains("fcr"), A_CI_low,A_CI_high, delbd_sd))
   } else if (ci_adjust_method == "none") {
     df_boot = df_boot %>%
-      dplyr::select(-contains(c("fcr", "bonferroni")))
+      dplyr::select(-c(contains(c("fcr", "bonferroni")), delbd_sd))
   } else {
     stop("This package does not use the chosen multiple testing method. Please edit in the source code and upload if necessary, thanks!")
   }
+
+  if (df_boot %>%
+      dplyr::mutate(cov = abs(A_sd*100/A_mean)) %>%
+      dplyr::summarise(count = sum(cov > 30)) %>%
+      dplyr::pull(count) > 1) {
+
+    # Print a message if condition is met
+    message("The coefficient of variation of bootstrapped values is >30%.
+          To get more stricter inferences and narrower confidence intervals,
+          please consider increasing the number of bootstraps.
+          With narrower confidence intervals, you may have a lower false positive rate.")
+  }
+
+  if (show_delbd_AFE  == FALSE) {
+  df_boot = dplyr::select(df_boot, -c(Wlight, Wlab, Z, Mlight, Mlab, Mheavymax,
+                                      A_mean,A_sd,contains("delbd")))
+  } else if (show_delbd_AFE == TRUE) {
+    df_boot = dplyr::select(df_boot, -c(Wlight, Wlab, Z, Mlight, Mlab, Mheavymax,
+                                        A_mean,A_sd))
+  }
+
+
   return(df_boot)
 }
