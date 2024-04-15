@@ -310,8 +310,8 @@ atomX.15N = SIPmg::qSIP_atom_excess_MAGs(phylo.qSIP.15N,
                                treatment_rep='Replicate',
                                Gi = GC_content)
 #Bootstrap confidence intervals
-df_atomX_boot = SIPmg::qSIP_bootstrap_fcr(atomX, n_boot=10, Gi = GC_content, isotope = "13C", show_delbd_AFE = FALSE)
-df_atomX_boot.15N = SIPmg::qSIP_bootstrap_fcr(atomX.15N, n_boot=10, Gi = GC_content, isotope = "15N")#Change "parallel = FALSE" to compute using a single-core
+df_atomX_boot = SIPmg::qSIP_bootstrap_fcr(atomX, n_boot=100, Gi = GC_content, isotope = "13C", show_delbd_AFE = FALSE)
+df_atomX_boot.15N = SIPmg::qSIP_bootstrap_fcr(atomX.15N, n_boot=100, Gi = GC_content, isotope = "15N")#Change "parallel = FALSE" to compute using a single-core
 
 ```
 
@@ -459,8 +459,8 @@ mag_tab_scaled_lm <- SIPmg::scale_features_lm(f_tibble, sequins, seq_dil, log_sc
 ```
 
 ## Comparison of the fits
-
 ```{r load images, echo = FALSE}
+# TODO add install.packages for EBImage (Bioc)
 rlm_example = EBImage::readImage("rlm-example.png")
 rlm_example = EBImage::resize(rlm_example,dim(rlm_example)[1]/2)
 

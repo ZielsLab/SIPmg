@@ -428,7 +428,7 @@ filter_na = function(atomX) {
 #'                         treatment_rep='Replicate', Gi = GC_content)
 #'
 #' ### Add doParallel::registerDoParallel(num_cores) if parallel bootstrapping is to be done
-#' df_atomX_boot = qSIP_bootstrap_fcr(atomX, n_boot=5, parallel = FALSE)
+#' df_atomX_boot = qSIP_bootstrap_fcr(atomX, isotope = "13C", n_boot=5, parallel = FALSE)
 #'}
 #'
 
