@@ -1,8 +1,6 @@
 inst/doc
 /Meta/
-.Rproj.user
+.Rproj.user*
 /doc/
-.Rproj.user/shared/notebooks/paths
-.DS_Store
-vignettes/.DS_Store
-vignettes/.Rhistory
+*.DS_Store
+*.Rhistory
