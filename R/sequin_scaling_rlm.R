@@ -37,6 +37,7 @@ scale_features_rlm <- function(f_tibble, sequin_meta, seq_dilution,
   Sample <- cov_tab <- seq_cov <- Dilution <- seq_group <- slope <- intercept <- mag_ab <- NULL
   seq_det <- grouped_seq_cov <- seq_cov_filt <- lod <- fit <- log_scale <- mag_cov <- NULL
   # Retrieve sample names from feature tibble
+  # TODO change so that the sample names can be extracted regardless of Feature column name, so doing it by index instead of my string matching
   scale_fac <- dplyr::tibble(Sample = names(f_tibble) %>%
                                stringr::str_subset(pattern = "Feature", negate = TRUE))
 
@@ -220,8 +221,8 @@ scale_features_rlm <- function(f_tibble, sequin_meta, seq_dilution,
   # return results
   return(results)
 
-  file.remove(plot_dir) #If plots are not saved, this directory will be empty and here it will be removed, if the dir is not empty and a name is not provided the script raises a warning
-
-
+  file.remove(plot_dir) #If plots are not saved, this directory will be empty
+  # and here it will be removed, if the dir is not empty and a name is not
+  # provided the script raises a warning
 }
 
