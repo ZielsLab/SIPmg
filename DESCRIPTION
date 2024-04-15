@@ -13,7 +13,11 @@ Authors@R:
     person(given = "Ryan",
            family = "Ziels",
            role = c("aut"),
-           email = "ziels@civil.ubc.ca"))
+           email = "ziels@civil.ubc.ca"),
+    person(given = "Alma",
+           family = "Garcia Roche",
+           role = c("aut"),
+           email = "almarg98@gmail.com"))
 Description: Statistical analysis as part of a quantitative stable isotope probing (SIP) metagenomics study to identify isotope incorporating metagenomic features. 
     Helpful reading and a vignette in bookdown format is provided on the package site <https://zielslab.github.io/SIPmg.github.io/>.
 URL: https://zielslab.github.io/SIPmg.github.io/
