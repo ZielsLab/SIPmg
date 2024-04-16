@@ -37,9 +37,7 @@ scale_features_rlm <- function(f_tibble, sequin_meta, seq_dilution,
   Sample <- cov_tab <- seq_cov <- Dilution <- seq_group <- slope <- intercept <- mag_ab <- NULL
   seq_det <- grouped_seq_cov <- seq_cov_filt <- lod <- fit <- log_scale <- mag_cov <- NULL
   # Retrieve sample names from feature tibble
-  # TODO change so that the sample names can be extracted regardless of Feature column name, so doing it by index instead of my string matching
-  scale_fac <- dplyr::tibble(Sample = names(f_tibble) %>%
-                               stringr::str_subset(pattern = "Feature", negate = TRUE))
+  scale_fac <- dplyr::tibble(Sample = names(f_tibble)[-1])
 
   # Merge dilution factors for samples, add log-scaling option
   scale_fac <- scale_fac %>%
