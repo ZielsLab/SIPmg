@@ -163,6 +163,9 @@ scale_features_rlm <- function(f_tibble, sequin_meta, seq_dilution,
       )
     ) %>%
 
+    # TODO check if any samples have zero data points or only one data point. This precludes linear regression analysis
+    # TODO filter samples with negative slopes
+
     #flag MAGs below LOD, and scale MAGs by slope and intercept
     dplyr::mutate(
       # Scale MAGs based on linear regression
@@ -218,6 +221,8 @@ scale_features_rlm <- function(f_tibble, sequin_meta, seq_dilution,
 
   # return results
   return(results)
+
+  # TODO reimplement plot generation
 
   file.remove(plot_dir) #If plots are not saved, this directory will be empty
   # and here it will be removed, if the dir is not empty and a name is not

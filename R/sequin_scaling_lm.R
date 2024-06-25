@@ -46,6 +46,7 @@ scale_features_lm <- function(f_tibble, sequin_meta, seq_dilution,
   scale_fac <- dplyr::tibble(Sample = names(f_tibble) %>%
                                stringr::str_subset(pattern = "Feature", negate = TRUE))
 
+  #TODO clean up code
   # Merge dilution factors for samples, add log-scaling option
   scale_fac <- scale_fac %>%
     dplyr::inner_join(seq_dilution %>% stats::setNames(c("Sample", "Dilution")), by = "Sample") %>%
@@ -367,6 +368,7 @@ scale_features_lm <- function(f_tibble, sequin_meta, seq_dilution,
     message(glue::glue("{length(filtered_samples)} samples out of {sum(length(filtered_samples),ncol(mag_tab))} were filtered out, see 'filtered_samples' in output list."))
     }
 
+  #TODO reimplement plot generation to not have these warnings
  file.remove(plot_dir) #If plots are not saved, this directory will be empty and here it will be removed, if the dir is not empty and a name is not provided the script raises a warning
   return(results)
  }
