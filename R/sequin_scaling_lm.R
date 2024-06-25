@@ -150,7 +150,11 @@ scale_features_lm <- function(f_tibble, sequin_meta, seq_dilution,
                                   ggplot2::geom_point(ggplot2::aes(shape = threshold_detection)) +
                                   ggplot2::geom_smooth(method = "lm") +
                                   ggpubr::stat_regline_equation(label.x= -0.1, label.y = 3) +
-                                  ggpubr::stat_cor(ggplot2::aes(label = paste(..rr.label.., ..p.label.., sep = "~`,`~")), label.x = -0.1, label.y = 3.5) +
+                                  ggpubr::stat_cor(ggplot2::aes(label = paste(ggplot2::after_stat(rr.label),
+                                                                              ggplot2::after_stat(p.label),
+                                                                              sep = "~`,`~")
+                                                                ),
+                                                   label.x = -0.1, label.y = 3.5) +
                                   ggplot2::xlab("Coverage (log[read depth])") +
                                   ggplot2::ylab("DNA Concentration (log[attamoles/uL])") +
                                   ggplot2::scale_shape(name = "Coefficient of variation", labels = c(paste("below the threshold (",coe_of_variation,")"), paste("above the threshold(",coe_of_variation,")"))) +
@@ -218,7 +222,12 @@ scale_features_lm <- function(f_tibble, sequin_meta, seq_dilution,
         outliers = purrr::map2(seq_cov_filt_temp, seq_cov_filt_temp_grouped, ~ dplyr::select(.x, -mean_cov, -sd_cov, -coe_var, -threshold_detection) %>%
                                  dplyr::anti_join(., .y, by = "Concentration")), #List outliers in the data
         zero_row_check = purrr::map(seq_cov_filt_round2, ~nrow(.)) # For linear regression, check if any samples have zero data points or only one data point. This precludes linear regression analysis
-      ) %>%
+      )
+    filtered_samples = scale_fac %>%
+      dplyr::filter(zero_row_check == 0) %>%
+      dplyr::pull(Sample)
+
+    scale_fac <- scale_fac %>%
       dplyr::filter(zero_row_check > 0) %>% #Filter samples which have one or zero data points in the seq_cov_filt_round2 tibble
       dplyr::mutate(
         seq_cov_filt_round2 = purrr::map(seq_cov_filt_round2, ~ .x %>%
@@ -231,7 +240,16 @@ scale_features_lm <- function(f_tibble, sequin_meta, seq_dilution,
         ),
         slope_filtered = purrr::map_dbl(fit_filtered_lm, ~ summary(.)$coef[2]), # get slope
         intercept_filtered = purrr::map_dbl(fit_filtered_lm, ~summary(.)$coef[1])
-      ) %>%
+      )
+
+    # save samples that have negative slope to raise warning on lost samples
+    filtered_samples <- scale_fac %>%
+      dplyr::filter(slope_filtered < 0) %>%
+      dplyr::pull(Sample) %>%
+      append(filtered_samples, .)
+
+    # filter samples with negative slope and continue
+    scale_fac <- scale_fac %>%
       dplyr::filter(slope_filtered > 0) %>%
       dplyr::mutate(
         cooksd_filtered = purrr::map(fit_filtered_lm, ~ stats::cooks.distance(.)), #Recalculate Cooks distance to validate if the pipeline to filter out outliers worked
@@ -344,6 +362,10 @@ scale_features_lm <- function(f_tibble, sequin_meta, seq_dilution,
                   "mag_det" = mag_det,
                   "plots" = plots,
                   "scale_fac" = scale_fac)
+  if(length(filtered_samples > 0)){
+    results$filtered_samples = filtered_samples
+    message(glue::glue("{length(filtered_samples)} samples out of {sum(length(filtered_samples),ncol(mag_tab))} were filtered out, see 'filtered_samples' in output list."))
+    }
 
  file.remove(plot_dir) #If plots are not saved, this directory will be empty and here it will be removed, if the dir is not empty and a name is not provided the script raises a warning
   return(results)
