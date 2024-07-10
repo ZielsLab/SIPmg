@@ -41,6 +41,7 @@ scale_features_lm <- function(f_tibble, sequin_meta, seq_dilution,
   seq_det <- grouped_seq_cov <- seq_cov_filt <- lod <- fit <- mag_cov <- slope <- mag_ab <- intercept <- cooksd <- log_scale <- NULL
   seq_cov_filt_temp_grouped <- seq_cov_filt_round2 <- zero_row_check <- fit_filtered_lm <- slope_filtered <- intercept_filtered <- cooksd_filtered <- NULL
   mag_ab_filtered <- mag_det_filtered <- cooksd_plot <- cooksd_plot_filtered <- plots_filtered_lm <- NULL
+  utils::globalVariables(".")
   # Retrieve sample names from feature tibble
   # Retrieve sample names from feature tibble
   scale_fac <- dplyr::tibble(Sample = names(f_tibble) %>%
@@ -129,7 +130,8 @@ scale_features_lm <- function(f_tibble, sequin_meta, seq_dilution,
                                    dplyr::filter(., coe_var <= coe_of_variation) %>% #Remove sequin concentration groups which have high coefficient of variation
                                    dplyr::mutate(
                                      lod = .y))) %>%
-
+# TODO exit with warning when there are no sequins because CoV is too small
+# TODO print messsage about how many sequins are being used for the lm fit
     dplyr::mutate(
       seq_cov_filt = purrr::map(seq_cov_filt, ~ .x %>%
                            dplyr::mutate(

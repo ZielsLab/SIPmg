@@ -35,7 +35,8 @@ scale_features_rlm <- function(f_tibble, sequin_meta, seq_dilution,
                                    log_trans = TRUE, coe_of_variation=250,
                                    lod_limit = 0, save_plots = TRUE, plot_dir=tempdir()){
   Sample <- cov_tab <- seq_cov <- Dilution <- seq_group <- slope <- intercept <- mag_ab <- NULL
-  seq_det <- grouped_seq_cov <- seq_cov_filt <- lod <- fit <- log_scale <- mag_cov <- NULL
+  seq_det <- grouped_seq_cov <- seq_cov_filt <- lod <- fit <- log_scale <- mag_cov <- zero_row_check <- NULL
+  utils::globalVariables(".")
   # Retrieve sample names from feature tibble
   scale_fac <- dplyr::tibble(Sample = names(f_tibble)[-1])
 
@@ -202,6 +203,9 @@ scale_features_rlm <- function(f_tibble, sequin_meta, seq_dilution,
       mag_det = purrr::map(mag_det, ~ dplyr::select(.x, Feature, Concentration)),
       mag_det = purrr::map2(mag_det, Sample, ~ stats::setNames(.x, c("Feature", .y))) #change header back to sample
     )
+
+  # TODO exit when CoV is too small and there are no sequins
+  # TODO print messsage about how many sequins are being used for the lm fit
 
   # compile feature abundance across samples
   mag_tab <- scale_fac$mag_ab %>%
