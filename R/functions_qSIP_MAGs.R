@@ -462,7 +462,9 @@ qSIP_bootstrap_fcr = function(atomX, isotope, n_sample=c(3,3), ci_adjust_method 
                         isotope=isotope,
                         n_sample=n_sample,
                         .parallel=parallel, Gi = Gi)
-
+# TODO add progress bar?
+# TODO fix dplyr syntax "_()"
+# TODO figure out the .dots thing and how it works without the function_() syntax
   # calculating atomX CIs for each OTU
   mutate_call1 = lazyeval::interp(~ stats::quantile(A, a/2, na.rm=TRUE),
                                   A = as.name("A"))
