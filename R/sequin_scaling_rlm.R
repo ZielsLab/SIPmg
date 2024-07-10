@@ -39,6 +39,7 @@ scale_features_rlm <- function(f_tibble, sequin_meta, seq_dilution,
   # Retrieve sample names from feature tibble
   scale_fac <- dplyr::tibble(Sample = names(f_tibble)[-1])
 
+  browser()
   # Merge dilution factors for samples, add log-scaling option
   scale_fac <- scale_fac %>%
     dplyr::inner_join(seq_dilution %>% stats::setNames(c("Sample", "Dilution")), by = "Sample") %>%
@@ -120,8 +121,16 @@ scale_features_rlm <- function(f_tibble, sequin_meta, seq_dilution,
                                    dplyr::filter(Concentration >= .y) %>%
                                    dplyr::filter(., coe_var <= coe_of_variation) %>% #remove zero coverage values before rlm
                                    dplyr::mutate(
-                                     lod = .y))) %>%
+                                     lod = .y)),
+      zero_row_check = purrr::map(seq_cov_filt, ~nrow(.))
+      )
 
+  filtered_samples = scale_fac %>%
+    dplyr::filter(zero_row_check == 0) %>%
+    dplyr::pull(Sample)
+
+  scale_fac <- scale_fac %>%
+    dplyr::filter(zero_row_check > 0) %>%
     dplyr::mutate(
       seq_cov_filt = purrr::map(seq_cov_filt, ~ .x %>%
                                   dplyr::mutate(
@@ -133,8 +142,16 @@ scale_features_rlm <- function(f_tibble, sequin_meta, seq_dilution,
       ),
       slope = purrr::map_dbl(fit, ~ summary(.)$coef[2]), # get slope
       intercept = purrr::map_dbl(fit, ~summary(.)$coef[1]) # get intercept
-    ) %>%
+    )
 
+  # save samples that have negative slope to raise warning on lost samples
+  filtered_samples <- scale_fac %>%
+    dplyr::filter(slope < 0) %>%
+    dplyr::pull(Sample) %>%
+    append(filtered_samples, .)
+
+  scale_fac <- scale_fac %>%
+    dplyr::filter(slope > 0) %>%
     #plot linear regressions
     dplyr::mutate(
       plots = ifelse(log_scale == "TRUE" , # check log_trans input
@@ -162,9 +179,6 @@ scale_features_rlm <- function(f_tibble, sequin_meta, seq_dilution,
                      )
       )
     ) %>%
-
-    # TODO check if any samples have zero data points or only one data point. This precludes linear regression analysis
-    # TODO filter samples with negative slopes
 
     #flag MAGs below LOD, and scale MAGs by slope and intercept
     dplyr::mutate(
@@ -218,6 +232,10 @@ scale_features_rlm <- function(f_tibble, sequin_meta, seq_dilution,
                   "mag_det" = mag_det,
                   "plots" = plots,
                   "scale_fac" = scale_fac)
+  if(length(filtered_samples > 0)){
+    results$filtered_samples = filtered_samples
+    message(glue::glue("{length(filtered_samples)} samples out of {sum(length(filtered_samples),ncol(mag_tab))} were filtered out, see 'filtered_samples' in output list."))
+  }
 
   # return results
   return(results)
