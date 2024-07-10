@@ -36,7 +36,8 @@ scale_features_rlm <- function(f_tibble, sequin_meta, seq_dilution,
                                    lod_limit = 0, save_plots = TRUE, plot_dir=tempdir()){
   Sample <- cov_tab <- seq_cov <- Dilution <- seq_group <- slope <- intercept <- mag_ab <- NULL
   seq_det <- grouped_seq_cov <- seq_cov_filt <- lod <- fit <- log_scale <- mag_cov <- zero_row_check <- NULL
-  utils::globalVariables(".")
+  utils::globalVariables(".", add = FALSE)
+
   # Retrieve sample names from feature tibble
   scale_fac <- dplyr::tibble(Sample = names(f_tibble)[-1])
 
