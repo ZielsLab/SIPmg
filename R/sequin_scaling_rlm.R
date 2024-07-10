@@ -39,7 +39,6 @@ scale_features_rlm <- function(f_tibble, sequin_meta, seq_dilution,
   # Retrieve sample names from feature tibble
   scale_fac <- dplyr::tibble(Sample = names(f_tibble)[-1])
 
-  browser()
   # Merge dilution factors for samples, add log-scaling option
   scale_fac <- scale_fac %>%
     dplyr::inner_join(seq_dilution %>% stats::setNames(c("Sample", "Dilution")), by = "Sample") %>%
