@@ -289,7 +289,7 @@ scale_features_lm <- function(f_tibble, sequin_meta, seq_dilution,
     scale_fac <- scale_fac %>%
       dplyr::filter(slope_filtered > 0)
 
-    if(nrow(scale_fac) == 0) stop("There are no fractions with sufficient sequin data points to carry out the linear regression or fractions with a positive regression slope, please consider increasing the coefficient of variation.")
+    if(nrow(scale_fac) == 0) stop("There are no fractions that passed the filtering (i.e. they have low sequin data points below the coefficient of variation or they have a negative regression slope), please consider increasing the coefficient of variation.")
 
     scale_fac <- scale_fac %>%
       dplyr::mutate(

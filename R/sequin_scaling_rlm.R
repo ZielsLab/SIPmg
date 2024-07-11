@@ -35,8 +35,8 @@ scale_features_rlm <- function(f_tibble, sequin_meta, seq_dilution,
                                    log_trans = TRUE, coe_of_variation=250,
                                    lod_limit = 0, save_plots = TRUE, plot_dir=tempdir()){
   Sample <- cov_tab <- seq_cov <- Dilution <- seq_group <- slope <- intercept <- mag_ab <- NULL
-  seq_det <- grouped_seq_cov <- seq_cov_filt <- lod <- fit <- log_scale <- mag_cov <- zero_row_check <- NULL
-  utils::globalVariables(".", add = FALSE)
+  seq_det <- grouped_seq_cov <- seq_cov_filt <- lod <- fit <- log_scale <- mag_cov <- zero_row_check <- . <- NULL
+  filtered_samples <- character()
 
   # Retrieve sample names from feature tibble
   scale_fac <- dplyr::tibble(Sample = names(f_tibble)[-1])
@@ -126,12 +126,40 @@ scale_features_rlm <- function(f_tibble, sequin_meta, seq_dilution,
       zero_row_check = purrr::map(seq_cov_filt, ~nrow(.))
       )
 
+  scale_fac <- scale_fac %>%
+    dplyr::mutate(
+      number_of_groups = purrr::map_int(scale_fac$grouped_seq_cov, ~ filter(.x, threshold_detection) %>% nrow()),
+      number_of_sequins = purrr::map_int(scale_fac$seq_cov_filt, ~ nrow(.x))
+    )
+
+  if(all(scale_fac$number_of_groups <= 1)) stop("All fractions have 1 or 0 sequin concentration groups below the coefficient of variation, there is no sufficient number of data to carry out the linear regression, please consider increasing the coefficient value.")
+
+  filtered_samples <- scale_fac %>%
+    dplyr::filter(number_of_groups <= 1) %>%
+    dplyr::pull(Sample) %>%
+    append(filtered_samples, .)
+
+  if(nrow(dplyr::filter(scale_fac, number_of_groups <= 1)) > 0){
+    message(glue::glue("{length(filtered_samples)} fractions were removed because they have 1 or 0 sequin concentration groups with a coefficient of variation below the coefficient of variation threshold."))
+  }
+
+  scale_fac <- scale_fac %>%
+    dplyr::filter(number_of_groups > 1)
+
   filtered_samples = scale_fac %>%
     dplyr::filter(zero_row_check == 0) %>%
     dplyr::pull(Sample)
 
+  if(nrow(dplyr::filter(scale_fac, zero_row_check <= 1)) > 0){
+    message(glue::glue("{nrow(filter(scale_fac, zero_row_check <= 1))} fractions were removed because they have 1 or 0 sequin data points after Cook's distance filtering."))
+  }
+
   scale_fac <- scale_fac %>%
-    dplyr::filter(zero_row_check > 0) %>%
+    dplyr::filter(zero_row_check > 0)
+
+  if(nrow(scale_fac) == 0) stop("There are no fractions with sufficient sequin data points to carry out the linear regression, please consider increasing the coefficient of variation. ")
+
+  scale_fac <- scale_fac %>%
     dplyr::mutate(
       seq_cov_filt = purrr::map(seq_cov_filt, ~ .x %>%
                                   dplyr::mutate(
@@ -151,8 +179,17 @@ scale_features_rlm <- function(f_tibble, sequin_meta, seq_dilution,
     dplyr::pull(Sample) %>%
     append(filtered_samples, .)
 
+  if(nrow(filter(scale_fac, slope < 0)) > 0){
+    message(glue::glue("{nrow(filter(scale_fac, slope < 0))} fractions were removed because they have a negative regression slope."))
+  }
+
+  # filter samples with negative slope and continue
   scale_fac <- scale_fac %>%
-    dplyr::filter(slope > 0) %>%
+    dplyr::filter(slope > 0)
+
+  if(nrow(scale_fac) == 0) stop("There are no fractions that passed the filtering (i.e. they have low sequin data points below the coefficient of variation or they have a negative regression slope), please consider increasing the coefficient of variation.")
+
+  scale_fac <- scale_fac %>%
     #plot linear regressions
     dplyr::mutate(
       plots = ifelse(log_scale == "TRUE" , # check log_trans input
