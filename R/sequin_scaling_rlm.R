@@ -151,7 +151,7 @@ scale_features_rlm <- function(f_tibble, sequin_meta, seq_dilution,
     dplyr::pull(Sample)
 
   if(nrow(dplyr::filter(scale_fac, zero_row_check <= 1)) > 0){
-    message(glue::glue("{nrow(filter(scale_fac, zero_row_check <= 1))} fractions were removed because they have 1 or 0 sequin data points"))
+    message(glue::glue("{nrow(dplyr::filter(scale_fac, zero_row_check <= 1))} fractions were removed because they have 1 or 0 sequin data points"))
   }
 
   scale_fac <- scale_fac %>%
@@ -179,8 +179,8 @@ scale_features_rlm <- function(f_tibble, sequin_meta, seq_dilution,
     dplyr::pull(Sample) %>%
     append(filtered_samples, .)
 
-  if(nrow(filter(scale_fac, slope < 0)) > 0){
-    message(glue::glue("{nrow(filter(scale_fac, slope < 0))} fractions were removed because they have a negative regression slope."))
+  if(nrow(dplyr::filter(scale_fac, slope < 0)) > 0){
+    message(glue::glue("{nrow(dplyr::filter(scale_fac, slope < 0))} fractions were removed because they have a negative regression slope."))
   }
 
   # filter samples with negative slope and continue
