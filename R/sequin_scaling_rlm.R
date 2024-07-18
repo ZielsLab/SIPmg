@@ -128,7 +128,7 @@ scale_features_rlm <- function(f_tibble, sequin_meta, seq_dilution,
 
   scale_fac <- scale_fac %>%
     dplyr::mutate(
-      number_of_groups = purrr::map_int(scale_fac$grouped_seq_cov, ~ filter(.x, threshold_detection) %>% nrow()),
+      number_of_groups = purrr::map_int(scale_fac$grouped_seq_cov, ~ filter(.x, coe_var <= coe_of_variation) %>% nrow()),
       number_of_sequins = purrr::map_int(scale_fac$seq_cov_filt, ~ nrow(.x))
     )
 
