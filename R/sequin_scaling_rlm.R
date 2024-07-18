@@ -132,19 +132,19 @@ scale_features_rlm <- function(f_tibble, sequin_meta, seq_dilution,
       number_of_sequins = purrr::map_int(scale_fac$seq_cov_filt, ~ nrow(.x))
     )
 
-  if(all(scale_fac$number_of_groups <= 1)) stop("All fractions have 1 or 0 sequin concentration groups below the coefficient of variation, there is no sufficient number of data to carry out the linear regression, please consider increasing the coefficient value.")
+  if(all(scale_fac$number_of_groups <= 2)) stop("All fractions have 2 or less sequin concentration groups below the coefficient of variation, there is no sufficient number of data to carry out the linear regression, please consider increasing the coefficient value.")
 
   filtered_samples <- scale_fac %>%
-    dplyr::filter(number_of_groups <= 1) %>%
+    dplyr::filter(number_of_groups <= 2) %>%
     dplyr::pull(Sample) %>%
     append(filtered_samples, .)
 
-  if(nrow(dplyr::filter(scale_fac, number_of_groups <= 1)) > 0){
-    message(glue::glue("{length(filtered_samples)} fractions were removed because they have 1 or 0 sequin concentration groups with a coefficient of variation below the coefficient of variation threshold."))
+  if(nrow(dplyr::filter(scale_fac, number_of_groups <= 2)) > 0){
+    message(glue::glue("{length(filtered_samples)} fractions were removed because they have 2 or less sequin concentration groups with a coefficient of variation below the coefficient of variation threshold."))
   }
 
   scale_fac <- scale_fac %>%
-    dplyr::filter(number_of_groups > 1)
+    dplyr::filter(number_of_groups > 2)
 
   filtered_samples = scale_fac %>%
     dplyr::filter(zero_row_check == 0) %>%
