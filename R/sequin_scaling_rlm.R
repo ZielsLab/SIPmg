@@ -151,7 +151,7 @@ scale_features_rlm <- function(f_tibble, sequin_meta, seq_dilution,
     dplyr::pull(Sample)
 
   if(nrow(dplyr::filter(scale_fac, zero_row_check <= 1)) > 0){
-    message(glue::glue("{nrow(filter(scale_fac, zero_row_check <= 1))} fractions were removed because they have 1 or 0 sequin data points after Cook's distance filtering."))
+    message(glue::glue("{nrow(filter(scale_fac, zero_row_check <= 1))} fractions were removed because they have 1 or 0 sequin data points"))
   }
 
   scale_fac <- scale_fac %>%
