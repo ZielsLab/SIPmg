@@ -89,8 +89,7 @@ scale_features_rlm <- function(f_tibble, sequin_meta, seq_dilution,
       seq_det = purrr::map(seq_det, ~ dplyr::mutate(., diff = standards - detected)),
       seq_det = purrr::map(seq_det, ~ dplyr::mutate(., ratio = detected*100/standards)),
       lod = purrr::map_dbl(seq_det, ~ dplyr::filter(., ratio > lod_limit) %>%
-                             dplyr::filter(Concentration == min(Concentration)) %>%
-                             dplyr::pull(Concentration)),
+                             dplyr::pull(Concentration) %>% min()),
       seq_warning = purrr::map_int(seq_det, ~ dplyr::summarise(., Sum = sum(diff)) %>%
                                      dplyr::pull(Sum)) #positive values give warning later
     ) %>%
