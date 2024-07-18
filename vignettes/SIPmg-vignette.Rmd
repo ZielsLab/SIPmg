@@ -254,7 +254,13 @@ taxonomy_tibble = dplyr::bind_rows(gtdbtk_bac_summary, gtdbtk_archaea) #Combine 
 ##Scale MAG coverages to obtain MAG absolute concentrations and save scaling plots in the working directory
 #For rlm scaling using scale_features_rlm
 #For rlm scaling using scale_features_lm
-mag_tab_scaled <- SIPmg::scale_features_rlm(f_tibble, sequins, seq_dil, log_scale, coe_of_variation = coe_of_variation, save_plots = FALSE)
+mag_tab_scaled <- SIPmg::scale_features_rlm(f_tibble = f_tibble,
+																		 sequin_meta = sequins,
+																		 seq_dilution = seq_dil,
+																		 coe_of_variation = coe_of_variation,
+																		 log_trans = log_scale,
+																		 save_plots = FALSE)
+
 mag_tab = as.matrix(mag_tab_scaled$mag_tab) #Extract absolute abundances as a matrix
 ```
 
@@ -428,7 +434,7 @@ seq_dil = readr::read_csv(file = "mock_input_data/seq_dilution_outliers.csv")
 log_scale = TRUE
 
 #coe_of_variation. Acceptable coefficient of variation for coverage and detection (eg. 20 - for 20 % threshold of coefficient of variation) (Coverages above the threshold value will be flagged in the plots)
-coe_of_variation = 50
+coe_of_variation = 250
 
 ```
 
@@ -445,7 +451,12 @@ For both scaling functions the following data and parameters are required
 If the robust linear regression is chosen, the function is `scale_features_rlm` which is performed the function file `sequin_scaling_rlm.R`.
 
 ```{r robust linear regression}
-mag_tab_scaled_rlm <- SIPmg::scale_features_rlm(f_tibble, sequins, seq_dil, log_scale, coe_of_variation = coe_of_variation, save_plots = FALSE)
+mag_tab_scaled_rlm <- SIPmg::scale_features_rlm(f_tibble = f_tibble,
+																		 sequin_meta = sequins,
+																		 seq_dilution = seq_dil,
+																		 coe_of_variation = coe_of_variation,
+																		 log_trans = log_scale,
+																		 save_plots = FALSE)
 ```
 
 
@@ -455,7 +466,13 @@ If the user chooses linear regression, they can choose to perform outlier filter
 
 
 ```{r linear regression}
-mag_tab_scaled_lm <- SIPmg::scale_features_lm(f_tibble, sequins, seq_dil, log_scale, coe_of_variation = coe_of_variation, cook_filtering = TRUE, save_plots = FALSE)
+mag_tab_scaled_lm <- SIPmg::scale_features_lm(f_tibble = f_tibble,
+																		 sequin_meta = sequins,
+																		 seq_dilution = seq_dil,
+																		 coe_of_variation = coe_of_variation,
+																		 log_trans = log_scale,
+																		 cook_filtering = TRUE,
+																		 save_plots = FALSE)
 ```
 
 ## Comparison of the fits
