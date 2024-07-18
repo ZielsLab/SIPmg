@@ -39,6 +39,7 @@ scale_features_lm <- function(f_tibble, sequin_meta, seq_dilution,
                                   cook_filtering = TRUE){
   Sample <- cov_tab <- seq_cov <- Dilution <- seq_group  <- influential_data <- seq_cov_filt_temp <- NULL
   seq_det <- grouped_seq_cov <- seq_cov_filt <- lod <- fit <- mag_cov <- slope <- mag_ab <- intercept <- cooksd <- log_scale <- NULL
+  number_of_groups <- NULL
   seq_cov_filt_temp_grouped <- seq_cov_filt_round2 <- zero_row_check <- fit_filtered_lm <- slope_filtered <- intercept_filtered <- cooksd_filtered <- NULL
   mag_ab_filtered <- mag_det_filtered <- cooksd_plot <- cooksd_plot_filtered <- plots_filtered_lm <- . <- NULL
   filtered_samples <- character()
