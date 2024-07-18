@@ -96,8 +96,7 @@ scale_features_lm <- function(f_tibble, sequin_meta, seq_dilution,
       seq_det = purrr::map(seq_det, ~ dplyr::mutate(., diff = standards - detected)),
       seq_det = purrr::map(seq_det, ~ dplyr::mutate(., ratio = detected*100/standards)),
       lod = purrr::map_dbl(seq_det, ~ dplyr::filter(., ratio > lod_limit) %>%
-                             dplyr::filter(Concentration == min(Concentration)) %>%
-                             dplyr::pull(Concentration)),
+                             dplyr::pull(Concentration) %>% min()),
       seq_warning = purrr::map_int(seq_det, ~ dplyr::summarise(., Sum = sum(diff)) %>%
                                      dplyr::pull(Sum)) #positive values give warning later
     ) %>%
@@ -135,7 +134,7 @@ scale_features_lm <- function(f_tibble, sequin_meta, seq_dilution,
   # get the number of sequin concentration groups and the total number of sequins
   scale_fac <- scale_fac %>%
     dplyr::mutate(
-      number_of_groups = purrr::map_int(scale_fac$grouped_seq_cov, ~ filter(.x, threshold_detection) %>% nrow()),
+      number_of_groups = purrr::map_int(scale_fac$grouped_seq_cov, ~ dplyr::filter(.x, threshold_detection) %>% nrow()),
       number_of_sequins = purrr::map_int(scale_fac$seq_cov_filt, ~ nrow(.x))
     )
 
@@ -255,7 +254,7 @@ scale_features_lm <- function(f_tibble, sequin_meta, seq_dilution,
       append(filtered_samples, .)
 
     if(nrow(dplyr::filter(scale_fac, zero_row_check <= 1)) > 0){
-      message(glue::glue("{nrow(filter(scale_fac, zero_row_check <= 1))} fractions were removed because they have 1 or 0 sequin data points after Cook's distance filtering."))
+      message(glue::glue("{nrow(dplyr::filter(scale_fac, zero_row_check <= 1))} fractions were removed because they have 1 or 0 sequin data points after Cook's distance filtering."))
     }
 
     scale_fac <- scale_fac %>%
@@ -283,8 +282,8 @@ scale_features_lm <- function(f_tibble, sequin_meta, seq_dilution,
       dplyr::pull(Sample) %>%
       append(filtered_samples, .)
 
-    if(nrow(filter(scale_fac, slope_filtered < 0)) > 0){
-      message(glue::glue("{nrow(filter(scale_fac, slope_filtered < 0))} fractions were removed because they have a negative regression slope."))
+    if(nrow(dplyr::filter(scale_fac, slope_filtered < 0)) > 0){
+      message(glue::glue("{nrow(dplyr::filter(scale_fac, slope_filtered < 0))} fractions were removed because they have a negative regression slope."))
     }
 
     # filter samples with negative slope and continue
