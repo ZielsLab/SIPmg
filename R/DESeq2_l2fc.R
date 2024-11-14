@@ -66,6 +66,9 @@ DESeq2_l2fc = function(physeq, density_min, density_max, design,
   # removing 0-abundance taxa
   physeq = phyloseq::filter_taxa(physeq, function(x) sum(x > 0) > 0 * length(x), TRUE)
 
+  # remove 0-abundance samples
+  physeq = phyloseq::prune_samples(as.integer(phyloseq::sample_sums(physeq)) > 1, physeq)
+
   # sparsity cutoff applied to just heavy fractions
   if(sparsity_apply=='heavy'){
     physeq = phyloseq::filter_taxa(physeq, prn, TRUE)
